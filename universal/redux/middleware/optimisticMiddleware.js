@@ -17,38 +17,20 @@ export default function (store) {
     }
     const {type, meta, payload} = action;
     const {table} = meta;
-    //const schema = rootSchema[table];
+    const schema = rootSchema[table];
 
     //Schema validation
-    //if (!schema) return dispatchAction('Cannot find schema on client', false);
-    //action.payload.id = '';
-    //const schemaError = Joi.validate(action.payload, schema).error;
-    //if (schemaError) return dispatchAction(schemaError.message, false);
-    //if (!meta.isOptimistic) return next(action); //if we don't want to optimistically update (not sure why)
+    if (!schema) return dispatchAction('Cannot find schema on client', false);
+    const schemaError = Joi.validate(action.payload, schema).error;
+    if (schemaError) return dispatchAction(schemaError.message, false);
+    if (!meta.isOptimistic) return next(action); //if we don't want to optimistically update (not sure why)
     let transactionID = nextTransactionID++;
     next(Object.assign({}, action, {optimist: {type: BEGIN, id: transactionID}})); //execute optimistic update
     socket.emit(type, payload, table, err => {
-      if (err) {
-        next({
-          type: type + _ERROR,
-          err,
-          payload,
-          meta: {synced: true},
-          optimist: {type: REVERT, id: transactionID}
-        });
-        return;
-      }
-      next({
-        type: type +  _SUCCESS,
-        payload,
-        meta: {synced: true},
-        optimist: {type: COMMIT, id: transactionID}
-      });
-      //dispatchAction(err, true); //complete transaction
+      dispatchAction(err, true); //complete transaction
     });
     function dispatchAction(error, willRevert) {
-      if (error) debugger;
-      console.log(error ? (willRevert && {type: REVERT, id: transactionID}) : {type: COMMIT, id: transactionID});
+      //payload.text += ' (server)';
       next({
         type: type + (error ? _ERROR : _SUCCESS),
         error,
