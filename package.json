@@ -1,0 +1,51 @@
+{
+  "name": "meatier",
+  "version": "0.1.0",
+  "description": "Like meteor, but meatier",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./server/server.babel.js",
+    "resetdb": "node ./server/resetdb.babel.js"
+  },
+  "author": "Matt Krick <matt.krick@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^5.8.29",
+    "babel-eslint": "^3.1.9",
+    "babel-loader": "^5.3.3",
+    "react-transform-catch-errors": "^1.0.0",
+    "react-transform-hmr": "^1.0.1",
+    "babel-plugin-react-transform": "^1.1.1",
+    "redbox-react": "^1.1.1",
+    "webpack": "^1.12.2",
+    "webpack-dev-middleware": "^1.2.0",
+    "webpack-hot-middleware": "^2.4.1"
+  },
+  "dependencies": {
+    "deep-equal": "^1.0.1",
+    "es6-promisify": "^3.0.0",
+    "express": "^4.13.3",
+    "history": "^1.13.0",
+    "humps": "^1.0.0",
+    "joi": "^7.0.0",
+    "node-libs-browser": "^0.5.3",
+    "node-uuid": "^1.4.3",
+    "piping": "^0.3.0",
+    "pretty-error": "^1.2.0",
+    "query-string": "^3.0.0",
+    "react": "^0.14.1",
+    "react-dom": "^0.14.1",
+    "react-redux": "^4.0.0",
+    "react-router": "^1.0.0-rc3",
+    "redux": "^3.0.4",
+    "redux-logger": "^2.0.4",
+    "redux-optimist": "0.0.2",
+    "redux-router": "^1.0.0-beta3",
+    "redux-thunk": "^1.0.0",
+    "rethinkdb": "^2.1.1",
+    "serve-static": "^1.10.0",
+    "socket.io": "^1.3.7",
+    "socket.io-client": "^1.3.7",
+    "xss": "^0.2.7"
+  }
+}
