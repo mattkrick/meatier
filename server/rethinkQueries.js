@@ -12,18 +12,21 @@ function connect() {
 
 export function liveUpdates(io) {
   //console.log('Setting up listener...');
-  connect()
-    .then(conn => {
-      r
-        .table(LANES)
-        .changes().run(conn, (err, cursor) => {
-          console.log('Listening for lane changes...');
+  let subs = ['lanes', 'notes'];
+  subs.forEach(table => {
+    connect()
+      .then(conn => {
+        r
+          .table(table)
+          .changes().run(conn, (err, cursor) => {
+          console.log(`Listening for ${table} changes...`);
           cursor.each((err, change) => {
             //console.log('Change detected, emitting:', LANES_CHANGE, change);
-            io.emit(DOCS_CHANGE, change, LANES);
+            io.emit(DOCS_CHANGE, change, table);
           });
         });
-    });
+      });
+  })
 }
 //export function liveUpdates(io) {
 //  console.log('Setting up listener...');
@@ -43,15 +46,18 @@ export function liveUpdates(io) {
 //  })
 //}
 
-
-export function getState() {
+function readTable(table) {
   return connect()
     .then(conn => {
       return r
-        .table('lanes')
+        .table(table)
         .orderBy('id').run(conn)
         .then(cursor => cursor.toArray());
     });
+}
+
+export function getState(subs) {
+  return Promise.all(subs.map(readTable))
 }
 
 export function addDocToDB(document, table) {

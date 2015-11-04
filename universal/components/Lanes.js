@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import Lane from './Lane.js';
+import LaneContainer from '../containers/LaneContainer.js';
 
 export default class Lanes extends Component {
   static propTypes = {
@@ -17,6 +17,6 @@ export default class Lanes extends Component {
   renderLane(lane) {
     const {actions} = this.props;
     //const laneNotes = notes.filter(note => note.laneId === lane.id);
-    return <Lane key={`lane${lane.id}`} lane={lane} actions={actions}/>;
+    return <LaneContainer key={`lane${lane.id}`} formKey={`lane${lane.id}`} initialValues={lane} lane={lane} actions={actions}/>;
   }
 }

@@ -1,18 +1,16 @@
 import {BEGIN, COMMIT, REVERT} from 'redux-optimist';
 import io from 'socket.io-client';
-const socket = io.connect(); //should be at top?
+const socket = io.connect();
 import {findInState} from '../helpers.js';
 import rootSchema from '../schemas.js';
 import Joi from 'joi';
-//import promisify from 'es6-promisify';
 
-//const validate = promisify(Joi.validate);
 const _SUCCESS = '_SUCCESS';
 const _ERROR = '_ERROR';
 let nextTransactionID = 0;
 export default function (store) {
   return next => action => {
-    if (action.type !== 'ADD_DOC') {
+    if (!action.meta || action.meta.synced !== false) {
       return next(action); //skip changes coming from DB (supersedes optimism)
     }
     const {type, meta, payload} = action;
@@ -30,7 +28,8 @@ export default function (store) {
       dispatchAction(err, true); //complete transaction
     });
     function dispatchAction(error, willRevert) {
-      //payload.text += ' (server)';
+      //payload.id = '';
+      //payload.id += ' (server)';
       next({
         type: type + (error ? _ERROR : _SUCCESS),
         error,

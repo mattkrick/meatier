@@ -3,10 +3,6 @@ import uuid from 'node-uuid';
 import Joi from 'joi';
 
 export const LANES = 'lanes'; //rethinkdb table name
-//export const LANES_CHANGE = 'LANES_CHANGE'; //socket message
-//export const handleChange = {
-//  [LANES_CHANGE]: LANES //if socket emits the key event, use the value table lookup
-//};
 
 export const laneSchema = Joi.object().keys({
   id: Joi.string().min(3).max(36).required(),
@@ -25,6 +21,10 @@ export function addLane() {
       synced: false
     }
   });
+}
+
+export function editLane(id, isEditing) {
+  return {type: types.IS_EDITING_LANE, id, isEditing}
 }
 
 export const actions = {

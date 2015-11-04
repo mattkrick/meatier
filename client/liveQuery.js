@@ -9,13 +9,9 @@ import handleChangefeed from '../universal/redux/handleChangefeed.js';
 
 export default function liveQuery(store) {
   const socket = io();
-  //const actions = Object.keys(changefeedHandler);
-  //actions.forEach(action => {
     socket.on('DOCS_CHANGE', (change, table) => {
       handleChangefeed(store, table, camelizeKeys(change));
-      //console.log('received change from db', change, table);
     });
-  //});
   return socket;
 }
 
