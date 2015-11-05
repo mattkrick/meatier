@@ -7,7 +7,7 @@ import http from 'http';
 import {ADD_DOC, UPDATE_DOC, DELETE_DOC} from '../universal/redux/ducks/docs.js';
 import createSSR from './createSSR.js';
 import {liveUpdates} from './databaseQueries.js';
-import {handleAddDoc, handleUpdateDoc} from './serverValidation';
+import {handleAddDoc, handleUpdateDoc, handleDeleteDoc} from './serverValidation';
 
 //import promisify from 'es6-promisify';
 
@@ -37,6 +37,7 @@ if (require("piping")()) {
   io.on('connection', function (socket) {
     socket.on(ADD_DOC, handleAddDoc);
     socket.on(UPDATE_DOC, handleUpdateDoc);
+    socket.on(DELETE_DOC, handleDeleteDoc);
   });
   httpServer.listen(port);
 }

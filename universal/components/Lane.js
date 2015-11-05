@@ -13,16 +13,15 @@ export default class Lane extends Component {
   render() {
     const {actions:{updateLane, deleteLane},
       noteActions: {addNote}, lane, dispatch, initialValues, formKey} = this.props;
+    const formProps = {dispatch, formKey, initialValues};
+    //console.log('DELETE LANE', deleteLane);
     return (
       <div className="lane">
         <div className="lane-header">
           <EditableContainer item={lane}
-                    //editItem={editLane}
                     updateItem={updateLane}
                     deleteItem={deleteLane}
-                    dispatch={dispatch}
-                    formKey={formKey}
-                    initialValues={initialValues}/>
+                    {...formProps}/>
           <div className="lane-add-note">
             <button onClick={() =>addNote(lane.id)}>+</button>
           </div>

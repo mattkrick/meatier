@@ -10,12 +10,12 @@ export default function handleChangefeed(store, table, changedDocs) {
   if (!newVal) {
     //we know a lane was deleted, but did you do it?
     const localIdx = findInState(data, oldVal.id);
-    if (localIdx !== -1){
+    if (localIdx !== -1) {
       //if it's in our local data, someone else did it!
       store.dispatch(deleteDoc(oldVal.id));
-      return;
     }
     //if it's not in our local data, we deleted it & we already executed a success action
+    return;
   }
   const localIdx = findInState(data, newVal.id);
   const action = {

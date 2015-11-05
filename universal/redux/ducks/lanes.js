@@ -4,11 +4,23 @@ import Joi from 'joi';
 
 export const LANES = 'lanes'; //rethinkdb table name
 
+/*
+* Schemas
+*/
 export const laneTextSchema = Joi.string().max(200).trim().required();
 export const laneSchema = Joi.object().keys({
   id: Joi.string().min(3).max(36).required(),
   text: laneTextSchema
 });
+
+/*
+*Action creators
+*/
+const meta = {
+  table: LANES,
+  isOptimistic: true,
+  synced: false
+};
 
 export function addLane() {
   return addDoc({
@@ -16,11 +28,7 @@ export function addLane() {
       id: uuid.v4(),
       text: 'New lane'
     },
-    meta: {
-      table: LANES,
-      isOptimistic: true,
-      synced: false
-    }
+    meta
   });
 }
 
@@ -29,17 +37,23 @@ export function updateLane(id, text) {
     payload: {
       id, text
     },
-    meta: {
-      table: LANES,
-      isOptimistic: true,
-      synced: false
-    }
+    meta
+  });
+}
+
+export function deleteLane(id) {
+  return deleteDoc({
+    payload: {
+      id
+    },
+    meta
   });
 }
 
 export const actions = {
   addLane,
-  updateLane
+  updateLane,
+  deleteLane
 };
 
 

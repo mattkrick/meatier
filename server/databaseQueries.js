@@ -75,12 +75,17 @@ export function updateDocInDB(subDoc, id, table) {
     });
 }
 
-export function deleteEvent(id) {
+export function deleteDocInDB(id, table) {
   return connect()
     .then(conn => {
       return r
-        .table('lanes')
+        .table(table)
         .get(id).delete().run(conn)
-        .then(() => ({id: id, deleted: true}));
+        .then(response => {
+          if (response.errors) {
+            throw 'Document not found'
+          }
+          return response.deleted; //should be 1
+        });
     });
 }

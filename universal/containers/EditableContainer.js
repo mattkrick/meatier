@@ -16,8 +16,10 @@ const formDetails = {form: 'laneNameField', fields: [fieldName], validate};
 @reduxForm(formDetails)
 export default class EditableContainer extends Component {
   static PropTypes = {
-    item: PropTypes.object.isRequired
-  }
+    item: PropTypes.object.isRequired,
+    deleteItem: PropTypes.func.isRequired,
+    updateItem: PropTypes.func.isRequired,
+  };
 
   constructor(props) {
     super(props);
@@ -75,7 +77,7 @@ export default class EditableContainer extends Component {
     return (
       <span onClick={formProps.onFocus}>
         <span className="text">{text}</span>
-        <button className="delete" onClick={() => deleteItem(id)}>x</button>
+        <button className="delete" onClick={() => this.props.deleteItem(id)}>x</button>
       </span>
     );
   }
