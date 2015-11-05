@@ -4,10 +4,10 @@ import webpack from 'webpack';
 import config from '../webpack.config.js';
 import SocketIO from 'socket.io';
 import http from 'http';
-import {ADD_DOC} from '../universal/redux/ducks/docs.js';
+import {ADD_DOC, UPDATE_DOC, DELETE_DOC} from '../universal/redux/ducks/docs.js';
 import createSSR from './createSSR.js';
-import {liveUpdates} from './rethinkQueries.js';
-import {handleAddDoc} from './socketQueries';
+import {liveUpdates} from './databaseQueries.js';
+import {handleAddDoc, handleUpdateDoc} from './serverValidation';
 
 //import promisify from 'es6-promisify';
 
@@ -36,6 +36,7 @@ if (require("piping")()) {
 //setup websockets
   io.on('connection', function (socket) {
     socket.on(ADD_DOC, handleAddDoc);
+    socket.on(UPDATE_DOC, handleUpdateDoc);
   });
   httpServer.listen(port);
 }

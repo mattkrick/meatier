@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import Editable from './Editable.js';
+import EditableContainer from '../containers/EditableContainer.js';
 
 
 export default class Lane extends Component {
@@ -7,17 +7,17 @@ export default class Lane extends Component {
     actions: PropTypes.object.isRequired,
     noteActions: PropTypes.object.isRequired,
     lane: PropTypes.object.isRequired,
-    notes: PropTypes.object.isRequired
+    notes: PropTypes.array.isRequired
   };
 
   render() {
-    const {actions:{updateLane, editLane, deleteLane},
+    const {actions:{updateLane, deleteLane},
       noteActions: {addNote}, lane, dispatch, initialValues, formKey} = this.props;
     return (
       <div className="lane">
         <div className="lane-header">
-          <Editable item={lane}
-                    editItem={editLane}
+          <EditableContainer item={lane}
+                    //editItem={editLane}
                     updateItem={updateLane}
                     deleteItem={deleteLane}
                     dispatch={dispatch}

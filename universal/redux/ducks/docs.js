@@ -15,6 +15,7 @@ const DELETE_DOC_SUCCESS = 'DELETE_DOC_SUCCESS';
 const ADD_DOC_ERROR = 'ADD_DOC_ERROR';
 const UPDATE_DOC_ERROR = 'UPDATE_DOC_ERROR';
 const DELETE_DOC_ERROR = 'DELETE_DOC_ERROR';
+//const IS_EDITING_DOC = 'IS_EDITING_DOC';
 
 const initialState = {
   synced: false,
@@ -86,18 +87,3 @@ export function updateDoc(action) {
     ...action
   };
 }
-
-//export const actions = {
-//  addDoc,
-//  updateDoc,
-//  deleteDoc
-//};
-
-//export const handleChange = {
-//  [DOCS_CHANGE]: {
-//    add: addDoc,
-//    update: updateDoc,
-//    delete: deleteDoc,
-//    stateKey: 'DOCS'
-//  }
-//};

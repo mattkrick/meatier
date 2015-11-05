@@ -1,17 +1,21 @@
-export function addImmutable(newEvent, events) {
-  return [newEvent, ...events]
+export function addImmutable(newAction, subState) {
+  return [newAction, ...subState]
 }
 
-export function updateImmutable(newEvent, events) {
-  return events.map(event =>
-      event.id === newEvent.id ? newEvent : event
+export function updateImmutable(newAction, subState) {
+  return subState.map(event =>
+      event.id === newAction.id ? Object.assign({},event,newAction) : event
   )
 }
 
-export function deleteImmutable(id, events) {
-  return events.filter(event => event.id !== id);
+export function deleteImmutable(id, subState) {
+  return subState.filter(event => event.id !== id);
 }
 
-export function findInState(events, id) {
-  return events.findIndex(event => event.id === id);
+export function findInState(subState, id) {
+  return subState.findIndex(event => event.id === id);
 }
+
+//export function editImmutable(id, subState) {
+//  return subState.
+//}

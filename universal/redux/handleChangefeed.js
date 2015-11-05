@@ -1,6 +1,6 @@
 import {findInState} from './helpers.js';
 import {addDoc, updateDoc, deleteDoc} from './ducks/docs.js';
-
+import deepEqual from 'deep-equal';
 
 export default function handleChangefeed(store, table, changedDocs) {
   const state = store.getState();

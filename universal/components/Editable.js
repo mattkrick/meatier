@@ -1,26 +1,5 @@
 import React, {PropTypes, Component} from 'react';
-import {reduxForm} from 'redux-form';
-import {laneSchema} from '../redux/ducks/lanes';
-import Joi from 'joi';
 
-
-
-const validate = values => {
-  console.log('values', values);
-  const results = Joi.validate(values, laneSchema);
-  console.log('errors', results.errors);
-
-  const errors = {};
-  if (!values.laneName) {
-    errors.username = 'Required';
-  } else if (values.username.length > 15) {
-    errors.username = 'Must be 15 characters or less';
-  }
-  return errors;
-};
-
-const formDetails = {form: 'laneName', fields: ['laneName'], validate};
-@reduxForm(formDetails)
 export default class Editable extends Component {
   constructor(props) {
     super(props);
@@ -29,9 +8,6 @@ export default class Editable extends Component {
     this.renderEdit = this.renderEdit.bind(this);
     this.renderItem = this.renderItem.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
-    this.state = {
-      isEditing: false
-    };
 
   }
 
@@ -42,6 +18,7 @@ export default class Editable extends Component {
   }
   render() {
     const {isEditing} = this.state;
+    console.log('e props', this.props);
     return (
       <div>
         {isEditing ? this.renderEdit() : this.renderItem()}

@@ -6,7 +6,7 @@ import {reduxReactRouter, match} from 'redux-router/server';
 import { createStore ,compose } from 'redux';
 import PrettyError from 'pretty-error';
 import qs from 'query-string';
-import {getState} from './rethinkQueries.js';
+import {getState} from './databaseQueries.js';
 import rootReducer from '../universal/redux/reducer.js';
 import routes from '../universal/routes.js';
 import Html from './Html.js';

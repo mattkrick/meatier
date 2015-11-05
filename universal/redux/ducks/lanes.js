@@ -4,9 +4,10 @@ import Joi from 'joi';
 
 export const LANES = 'lanes'; //rethinkdb table name
 
+export const laneTextSchema = Joi.string().max(200).trim().required();
 export const laneSchema = Joi.object().keys({
   id: Joi.string().min(3).max(36).required(),
-  text: Joi.string().max(200).required()
+  text: laneTextSchema
 });
 
 export function addLane() {
@@ -23,12 +24,22 @@ export function addLane() {
   });
 }
 
-export function editLane(id, isEditing) {
-  return {type: types.IS_EDITING_LANE, id, isEditing}
+export function updateLane(id, text) {
+  return updateDoc({
+    payload: {
+      id, text
+    },
+    meta: {
+      table: LANES,
+      isOptimistic: true,
+      synced: false
+    }
+  });
 }
 
 export const actions = {
-  addLane
+  addLane,
+  updateLane
 };
 
 

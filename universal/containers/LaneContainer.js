@@ -7,6 +7,9 @@ import Lane from '../components/Lane.js';
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LaneContainer extends Component {
+  //constructor(props) {
+    //this.setState
+  //}
   static propTypes = {
     actions: PropTypes.object.isRequired,
     lane: PropTypes.object.isRequired,
@@ -14,6 +17,7 @@ export default class LaneContainer extends Component {
   };
 
   render() {
+    //console.log('notes:', this.props.notes);
     return <Lane {...this.props}/>
   }
 }

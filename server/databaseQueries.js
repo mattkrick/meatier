@@ -28,23 +28,6 @@ export function liveUpdates(io) {
       });
   })
 }
-//export function liveUpdates(io) {
-//  console.log('Setting up listener...');
-//  connect().then(conn => {
-//    console.log(tables);
-//
-//    Promise.all(tables.map((table) => {
-//      console.log(table)
-//      r.table[table].changes().run(conn, (err, cursor) => {
-//        console.log('Listening for changes...');
-//        cursor.each((err, change) => {
-//          console.log('Change detected', change);
-//          io.emit('event-change', change);
-//        });
-//      });
-//    }));
-//  })
-//}
 
 function readTable(table) {
   return connect()
@@ -63,8 +46,6 @@ export function getState(subs) {
 export function addDocToDB(document, table) {
   return connect()
     .then(conn => {
-      //document.createdAt = new Date();
-      //document, table.text = xss(document, table.text);
       return r
         .table(table)
         .insert(document).run(conn)
@@ -77,15 +58,20 @@ export function addDocToDB(document, table) {
     });
 }
 
-export function updateEvent(id, event) {
-  event.updated = new Date();
-  event.text = xss(event.text);
+export function updateDocInDB(subDoc, id, table) {
+  //event.updated = new Date();
+  //event.text = xss(event.text);
   return connect()
     .then(conn => {
       return r
-        .table('lanes')
-        .get(id).update(event).run(conn)
-        .then(() => event);
+        .table(table)
+        .get(id).update(subDoc).run(conn)
+        .then(response => {
+          if (response.errors) {
+            throw 'Document not found'
+          }
+          return response.replaced; //should be 1
+        });
     });
 }
 
