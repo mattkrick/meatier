@@ -1,15 +1,15 @@
-import createHistory from 'history/lib/createMemoryHistory';
+import createHistory from '../../node_modules/history/lib/createMemoryHistory';
 import React from 'react';
-import {renderToString} from 'react-dom/server';
+import {renderToString} from '../../node_modules/react-dom/server';
 import { Provider } from 'react-redux';
-import {reduxReactRouter, match} from 'redux-router/server';
+import {reduxReactRouter, match} from '../../node_modules/redux-router/server';
 import { createStore ,compose } from 'redux';
 import PrettyError from 'pretty-error';
 import qs from 'query-string';
 import {getState} from './databaseQueries.js';
 import rootReducer from '../universal/redux/reducer.js';
 import routes from '../universal/routes.js';
-import Html from './Html.js';
+import Html from './../universal/components/Html.js';
 import DevTools from '../universal/containers/DevTools';
 
 const pretty = new PrettyError();
@@ -20,6 +20,7 @@ export default function createSSR(req, res) {
       userId: 'baseUser'
     }
   };
+  //if (__DEVELOPMENT__) webpackIsomorphicTools.refresh();
   getState(subs)
     .then(initialTables => {
       subs.map((table, idx) => {
@@ -35,8 +36,12 @@ export default function createSSR(req, res) {
       //const store = compose(DevTools.instrument())reduxReactRouter({routes, createHistory})(createStore)(rootReducer, initialState);
       hydrateOnClient(store);
     });
-  function hydrateOnClient(store, routerState) {
-    res.send('<!doctype html>\n' + renderToString(<Html routerState={routerState} title='Quack Quack' store={store}/>));
+  function hydrateOnClient(store) {
+    //console.log('hydarting', initialState);
+    const ssrText = renderToString(<Html title='Quack Quack' store={store}/>);
+    //const ssrText = renderToString(<Html assets={webpackIsomorphicTools.assets()} title='Quack Quack' store={store}/>);
+    //console.log(ssrText);
+    res.send('<!doctype html>\n' + ssrText);
   }
 }
 //console.log('store', store.getState());

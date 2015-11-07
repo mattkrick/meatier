@@ -3,7 +3,7 @@ import Joi from 'joi';
 import {addDocToDB, updateDocInDB, deleteDocInDB} from './databaseQueries';
 
 export function handleAddDoc(payload, table, cb) {
-  const schema = rootSchema[table];
+  const schema = rootSchema[table] && rootSchema[table].full;
   if (!schema) return cb('Cannot find schema on server');
 
   const schemaError = Joi.validate(payload, schema).error;
@@ -15,7 +15,7 @@ export function handleAddDoc(payload, table, cb) {
 }
 
 export function handleUpdateDoc(payload, table, cb) {
-  const schema = rootSchema[table];
+  const schema = rootSchema[table] && rootSchema[table].full;
   if (!schema) return cb('Cannot find schema on server');
   const schemaError = Joi.validate(payload, schema).error;
   if (schemaError) return cb(schemaError.message);

@@ -23,7 +23,8 @@ const initialState = {
   data: []
 };
 
-export default function reducer(state = initialState, action = {}) {
+export default function reducer(state = initialState, action = {}, table) {
+  if (!action.meta || !table || action.meta.table !== table) return state;
   switch (action.type) {
     case ADD_DOC:
       return Object.assign({}, state, {

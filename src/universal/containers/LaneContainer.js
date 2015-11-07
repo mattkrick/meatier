@@ -3,21 +3,19 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {actions as noteActions} from '../redux/ducks/notes.js';
 import Lane from '../components/Lane.js';
-//import {createSelector} from 'reselect';
+//import {createSelector} from 'reselect'; //TODO
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LaneContainer extends Component {
-  //constructor(props) {
-    //this.setState
-  //}
   static propTypes = {
-    actions: PropTypes.object.isRequired,
+    laneActions: PropTypes.object.isRequired,
     lane: PropTypes.object.isRequired,
-    notes: PropTypes.array.isRequired
+    notes: PropTypes.array.isRequired,
+    noteActions: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired
   };
 
   render() {
-    //console.log('notes:', this.props.notes);
     return <Lane {...this.props}/>
   }
 }
