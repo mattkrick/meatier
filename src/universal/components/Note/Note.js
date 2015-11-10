@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {DragSource, DropTarget} from 'react-dnd';
 import { findDOMNode } from 'react-dom';
-import {NOTE} from '../redux/ducks/notes';
+import {NOTE} from '../../redux/ducks/notes';
 
 const noteSource = {
   beginDrag(props) {

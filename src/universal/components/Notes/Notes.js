@@ -1,8 +1,9 @@
 import React, {Component, PropTypes} from 'react';
-import EditableContainer from '../containers/EditableContainer';
-import {NOTE} from '../redux/ducks/notes';
+import EditableContainer from '../Editable/EditableContainer';
+import {NOTE} from '../../redux/ducks/notes';
 import {DropTarget} from 'react-dnd';
-import Note from './Note';
+import Note from './../Note/Note';
+import styles from './Notes.css';
 
 const noteTarget = {
   hover(inTargetProps, monitor) {
@@ -24,14 +25,14 @@ export default class Notes extends Component {
 
   render() {
     const {notes,connectDropTarget} = this.props;
-    return connectDropTarget(<ul className="notes">{notes.map(this.renderNote)}</ul>);
+    return connectDropTarget(<ul className={styles.notes}>{notes.map(this.renderNote)}</ul>);
   }
 
   renderNote(note, index) {
     console.log('note props', this.props);
     const {updateNote, deleteNote, moveNote} = this.props.noteActions;
     return (
-      <Note className="note" note={note} key={`note${note.id}`} onMove={moveNote} index={index}>
+      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={moveNote} index={index}>
         <EditableContainer item={note}
                            updateItem={updateNote}
                            deleteItem={deleteNote}

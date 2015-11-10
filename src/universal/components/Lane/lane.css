@@ -1,0 +1,39 @@
+@value colors: '../../styles/colors.css';
+@value primary, secondary from colors;
+
+.lane {
+  display: inline-block;
+
+  margin: 1em;
+
+  background-color: #efefef;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+
+  min-width: 10em;
+  vertical-align: top;
+}
+
+.header {
+  overflow: auto;
+
+  padding: 1em;
+
+  color: #fff;
+  background-color: secondary;
+
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+}
+
+.addNote {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-left: 0.5em;
+}
+
+.addNote button {
+  background-color: #fdfdfd;
+  border: 1px solid #ccc;
+}

@@ -1,8 +1,7 @@
 import r from 'rethinkdb';
 import configFile from './rethink.config.js';
-import {LANES} from '../universal/redux/ducks/lanes.js'
-import {DOCS_CHANGE} from '../universal/redux/ducks/docs.js'
-//import xss from 'xss';
+import {LANES} from '../universal/redux/ducks/lanes.js';
+import {DOCS_CHANGE} from '../universal/redux/mamaDuck';
 
 const {tables, ...config } = configFile;
 

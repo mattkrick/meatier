@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {actions as laneActions} from '../redux/ducks/lanes.js';
-import Kanban from '../components/Kanban/Kanban.js';
+import {actions as laneActions} from '../../redux/ducks/lanes.js';
+import Kanban from './Kanban';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
@@ -18,6 +18,7 @@ export default class KanbanContainer extends Component {
   render() {
     return <Kanban addLane={this.props.laneActions.addLane} {...this.props}/>
   }
+    //return <div>Hi!</div>
 }
 
 function mapStateToProps(state) {

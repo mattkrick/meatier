@@ -1,9 +1,9 @@
-import rootSchema from '../universal/redux/schemas.js';
+import tableLookup from '../universal/redux/mamaDuck';
 import Joi from 'joi';
 import {addDocToDB, updateDocInDB, deleteDocInDB} from './databaseQueries';
 
 export function handleAddDoc(payload, table, cb) {
-  const schema = rootSchema[table] && rootSchema[table].full;
+  const schema = tableLookup[table] && tableLookup[table].schema.full;
   if (!schema) return cb('Cannot find schema on server');
 
   const schemaError = Joi.validate(payload, schema).error;
@@ -15,7 +15,7 @@ export function handleAddDoc(payload, table, cb) {
 }
 
 export function handleUpdateDoc(payload, table, cb) {
-  const schema = rootSchema[table] && rootSchema[table].full;
+  const schema = tableLookup[table] && tableLookup[table].schema.full;
   if (!schema) return cb('Cannot find schema on server');
   const schemaError = Joi.validate(payload, schema).error;
   if (schemaError) return cb(schemaError.message);
@@ -27,8 +27,6 @@ export function handleUpdateDoc(payload, table, cb) {
 }
 
 export function handleDeleteDoc(payload, table, cb) {
-  const schema = rootSchema[table];
-  if (!schema) return cb('Invalid table passed to server');
   delay(500)
     .then(() => deleteDocInDB(payload.id, table))
     .then(success => cb(null, success))

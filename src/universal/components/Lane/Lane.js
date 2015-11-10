@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
-import EditableContainer from '../containers/EditableContainer.js';
-import Notes from './Notes';
+import EditableContainer from '../Editable/EditableContainer.js';
+import Notes from './../Notes/Notes';
+import styles from './Lane.css';
 
 export default class Lane extends Component {
   static propTypes = {
@@ -17,8 +18,8 @@ export default class Lane extends Component {
     const laneProps = {dispatch, formKey, initialValues};
     const noteProps = {notes, noteActions: modNoteActions, laneId: lane.id};
     return (
-      <div className="lane">
-        <div className="lane-header">
+      <div className={styles.lane}>
+        <div className={styles.header}>
           <EditableContainer {...laneProps}
             item={lane}
             updateItem={updateLane}
@@ -26,8 +27,8 @@ export default class Lane extends Component {
             fields={["laneName"]}
             form="laneNameForm"
           />
-          <div className="lane-add-note">
-            <button onClick={() => addNote(lane.id, notes.length)}>+</button>
+          <div className={styles.addNote}>
+            <button onClick={() => addNote(lane.id, notes.length)}>Add a note</button>
           </div>
         </div>
         <Notes {...noteProps} dispatch={dispatch}/>

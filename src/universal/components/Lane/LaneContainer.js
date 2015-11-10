@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {actions as noteActions} from '../redux/ducks/notes.js';
-import Lane from '../components/Lane.js';
+import {actions as noteActions} from '../../redux/ducks/notes.js';
+import Lane from './Lane';
 //import {createSelector} from 'reselect'; //TODO
 
 @connect(mapStateToProps, mapDispatchToProps)

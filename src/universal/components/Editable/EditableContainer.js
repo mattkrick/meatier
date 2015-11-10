@@ -1,8 +1,8 @@
 import React, {PropTypes, Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {laneTextSchema} from '../redux/ducks/lanes';
+import {laneTextSchema} from '../../redux/ducks/lanes';
 import Joi from 'joi';
-import Editable from '../components/Editable';
+import Editable from './Editable';
 import _ from 'lodash';
 
 //const fieldName = 'laneName';

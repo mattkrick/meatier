@@ -1,0 +1,52 @@
+@value colors: '../../styles/colors.css';
+@value primary, secondary from colors;
+
+@value layout: '../../styles/layout.css';
+@value maxWidth from layout;
+
+
+.header {
+  background: secondary;
+  color: #fff;
+
+}
+
+.container {
+  margin: 0 auto;
+  padding: 20px 0;
+  max-width: maxWidth;
+}
+
+.brand {
+  color: primary;
+  text-decoration: none;
+  font-size: 1.75em; /* ~28px */
+}
+
+.brandTxt {
+  margin-left: 10px;
+}
+
+.nav {
+  float: right;
+  margin-top: 6px;
+}
+
+.banner {
+  text-align: center;
+}
+
+.bannerTitle {
+  margin: 0;
+  padding: 10px;
+  font-weight: normal;
+  font-size: 4em;
+  line-height: 1em;
+}
+
+.bannerDesc {
+  padding: 0;
+  color: rgba(255, 255, 255, .5);
+  font-size: 1.25em;
+  margin: 0;
+}

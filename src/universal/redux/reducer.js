@@ -5,14 +5,15 @@ import {LANES} from './ducks/lanes';
 import {NOTES} from './ducks/notes';
 import optimist from 'redux-optimist';
 import user from './ducks/user.js';
-import docs from './ducks/docs.js';
+import lanes from './ducks/lanes';
+import notes from './ducks/notes';
 
 function reducer(state, action) {
   return {
     router: routerStateReducer(state.router, action),
     user: user(state.user, action),
-    [LANES]: docs(state.lanes, action, LANES),
-    [NOTES]: docs(state.notes, action, NOTES),
+    [LANES]: lanes(state.lanes, action),
+    [NOTES]: notes(state.notes, action),
     form: formReducer(state.form, action)
   }
 }

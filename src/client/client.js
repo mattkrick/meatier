@@ -13,13 +13,10 @@ import rootReducer from '../universal/redux/reducer.js';
 import routes from '../universal/routes.js';
 import { getOrSetUserId } from './userId';
 import {setUserId} from '../universal/redux/ducks/user.js';
-import Root from '../universal/components/Root.js';
+import Root from '../universal/components/Root/Root.js';
 
-//import './style/pure.css';
-//import './style/main.css';
-//import './style/spinner.css';
-
-const initialState = window.__INITIAL_STATE__;
+const initialState = {};
+//const initialState = window.__INITIAL_STATE__;
 console.log(initialState);
 const loggerMiddleware = createLogger({
   level: 'info',
@@ -31,7 +28,7 @@ let finalCreateStore = compose(
   DevTools.instrument())(createStore);
   finalCreateStore = reduxReactRouter({createHistory})(finalCreateStore);
   const store = finalCreateStore(rootReducer, initialState);
-console.log(store.getState());
+//console.log(store.getState());
 
 render(<Root store={store}/>, document.getElementById('root'));
 
