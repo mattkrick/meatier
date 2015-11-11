@@ -4,10 +4,12 @@ import webpack from 'webpack';
 import config from '../webpack/webpack.config.js';
 import SocketIO from 'socket.io';
 import http from 'http';
-import {ADD_DOC, UPDATE_DOC, DELETE_DOC} from '../universal/redux/ducks/docs.js';
+//import {ADD_DOC, UPDATE_DOC, DELETE_DOC} from '../universal/redux/ducks/docs.js';
+import {LOAD_LANES, ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes';
+
 import createSSR from './createSSR.js';
 import {liveUpdates} from './databaseQueries.js';
-import {handleAddDoc, handleUpdateDoc, handleDeleteDoc} from './serverValidation';
+import {handleAddDoc, handleUpdateDoc, handleDeleteDoc, handleLoadLanes} from './serverValidation';
 
 //import promisify from 'es6-promisify';
 
@@ -30,18 +32,19 @@ if (require("piping")()) {
   //compiler.plugin('done', function(stats) {
   //  console.log(Object.keys(stats));
   //});
-    app.get('*', createSSR);
-
+  app.get('*', createSSR);
+  httpServer.listen(port);
 
 //listen to the db for new data
-  liveUpdates(io);
+//  liveUpdates(io);
 
 //setup websockets
   io.on('connection', function (socket) {
-    socket.on(ADD_DOC, handleAddDoc);
-    socket.on(UPDATE_DOC, handleUpdateDoc);
-    socket.on(DELETE_DOC, handleDeleteDoc);
+    socket.on(ADD_LANE, handleAddDoc);
+    socket.on(UPDATE_LANE, handleUpdateDoc);
+    socket.on(DELETE_LANE, handleDeleteDoc);
+    socket.on(LOAD_LANES, handleLoadLanes);
   });
-  httpServer.listen(port);
+
 }
 

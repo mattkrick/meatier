@@ -1,22 +1,26 @@
 import {addImmutable, updateImmutable, deleteImmutable} from '../helpers.js';
 import uuid from 'node-uuid';
 import Joi from 'joi';
+import io from 'socket.io-client';
+
 
 /*
  * Action types
  */
 export const LANES = 'lanes'; //db table
 //export const LANES_CHANGE = 'LANES_CHANGE'; // socket message
+export const LOAD_LANES = 'LOAD_LANES';
 export const ADD_LANE = 'ADD_LANE';
 export const UPDATE_LANE = 'UPDATE_LANE';
 export const DELETE_LANE = 'DELETE_LANE';
 const ADD_LANE_SUCCESS = 'ADD_LANE_SUCCESS';
 const UPDATE_LANE_SUCCESS = 'UPDATE_LANE_SUCCESS';
 const DELETE_LANE_SUCCESS = 'DELETE_LANE_SUCCESS';
+//const LOAD_LANES_SUCCESS = 'LOAD_LANES_SUCCESS';
 const ADD_LANE_ERROR = 'ADD_LANE_ERROR';
 const UPDATE_LANE_ERROR = 'UPDATE_LANE_ERROR';
 const DELETE_LANE_ERROR = 'DELETE_LANE_ERROR';
-
+const LOAD_LANES_ERROR = 'LOAD_LANES_ERROR';
 /*
  * Schemas
  */
@@ -45,6 +49,9 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   //if (!action.meta || !table || action.meta.table !== table) return state;
   switch (action.type) {
+    case LOAD_LANES:
+      //caching?
+      return Object.assign({}, action.payload);
     case ADD_LANE:
       return Object.assign({}, state, {
         synced: action.meta && action.meta.synced || false,
@@ -74,6 +81,7 @@ export default function reducer(state = initialState, action = {}) {
     case ADD_LANE_ERROR:
     case UPDATE_LANE_ERROR:
     case DELETE_LANE_ERROR:
+    case LOAD_LANES_ERROR:
       return Object.assign({}, state, {
         synced: true,
         error: action.error || 'Error'
@@ -92,6 +100,32 @@ const baseMeta = {
   isOptimistic: true,
   synced: false
 };
+
+export function loadLanes(payload) {
+  return {
+    type: LOAD_LANES,
+    payload
+  };
+}
+
+export function getAllLanes() {
+  const socket = io();
+  return dispatch => {
+    console.log('emitting load all lanes');
+    socket.emit(LOAD_LANES, (error, lanes) => {
+      if (error) {
+        dispatch({type: LOAD_LANES_ERROR});
+        return;
+      }
+      const payload = {
+        data: lanes,
+        synced: true,
+        error: null
+      };
+      dispatch(loadLanes(payload));
+    });
+  }
+}
 
 export function addLane(payload, meta) {
   return {
@@ -125,7 +159,8 @@ export function deleteLane(id, meta) {
 export const laneActions = {
   addDoc: addLane,
   updateDoc: updateLane,
-  deleteDoc: deleteLane
+  deleteDoc: deleteLane,
+  loadDoc: loadLanes
 };
 
 

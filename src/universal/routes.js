@@ -8,7 +8,7 @@ import NotFound from './components/NotFound/NotFound'
 
 export default (
   <Route path="/" component={App}>
-    <IndexRoute component={KanbanContainer}/>
+    <IndexRoute component={KanbanContainer} />
     <Route path="/kanban" component={KanbanContainer}/>
     <Route path="*" component={NotFound} status={404}/>
   </Route>

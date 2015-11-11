@@ -29,7 +29,7 @@ let finalCreateStore = compose(
   finalCreateStore = reduxReactRouter({createHistory})(finalCreateStore);
   const store = finalCreateStore(rootReducer, initialState);
 //console.log(store.getState());
-
+window.store = store;
 render(<Root store={store}/>, document.getElementById('root'));
 
 // Now that we have rendered...

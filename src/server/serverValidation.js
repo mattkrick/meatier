@@ -1,6 +1,6 @@
 import tableLookup from '../universal/redux/mamaDuck';
 import Joi from 'joi';
-import {addDocToDB, updateDocInDB, deleteDocInDB} from './databaseQueries';
+import {addDocToDB, updateDocInDB, deleteDocInDB, readTable} from './databaseQueries';
 
 export function handleAddDoc(payload, table, cb) {
   const schema = tableLookup[table] && tableLookup[table].schema.full;
@@ -38,4 +38,16 @@ function delay(ms) {
   return new Promise(function (resolve, reject) {
     setTimeout(resolve, ms);
   });
+}
+
+export function handleLoadLanes(cb) {
+  console.log('handling load lanes');
+  readTable('lanes')
+    .then(data => {
+      console.log('success! sending full cb')
+      cb(null,data);
+    })
+    .catch(error => {
+      cb(error);
+    })
 }
