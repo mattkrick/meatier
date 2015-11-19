@@ -1,12 +1,14 @@
-export function publishLanes(io) {
+export function sendTodosByUserId(io, userId) {
+  //How to auth? By linking a client socketId to a user in a lookup table?
   connect()
     .then(conn => {
       r
-        .table(table)
+        .table('todos')
+        .filter(todos => todos("userId").eq(userId))
         .changes().run(conn, (err, cursor) => {
-        console.log(`Listening for ${table} changes...`);
         cursor.each((err, change) => {
-          io.emit(DOCS_CHANGE, change, table);
+          //Do I emit a unique message? namespace?  How do I handle 2 clients using the same userId?
+          io.emit('TODO_CHANGE', change);
         });
       });
     });

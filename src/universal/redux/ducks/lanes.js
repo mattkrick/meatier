@@ -1,8 +1,24 @@
 import {addImmutable, updateImmutable, deleteImmutable} from '../helpers.js';
 import uuid from 'node-uuid';
-import Joi from 'joi';
+//import Joi from 'joi';
 import io from 'socket.io-client';
+//import thinky from '../../utils/thinky';
+import Joi from 'joi';
 
+/*
+ * Schema
+ */
+
+const laneTextSchema = Joi.string().max(200).trim().required();
+const fullLaneSchema = Joi.object().keys({
+  id: Joi.string().min(3).max(36).required(),
+  text: laneTextSchema
+});
+
+export const laneSchema = {
+  full: fullLaneSchema,
+  text: laneTextSchema
+};
 
 /*
  * Action types
@@ -21,20 +37,6 @@ const ADD_LANE_ERROR = 'ADD_LANE_ERROR';
 const UPDATE_LANE_ERROR = 'UPDATE_LANE_ERROR';
 const DELETE_LANE_ERROR = 'DELETE_LANE_ERROR';
 const LOAD_LANES_ERROR = 'LOAD_LANES_ERROR';
-/*
- * Schemas
- */
-
-const laneTextSchema = Joi.string().max(200).trim().required();
-const fullLaneSchema = Joi.object().keys({
-  id: Joi.string().min(3).max(36).required(),
-  text: laneTextSchema
-});
-
-export const laneSchema = {
-  full: fullLaneSchema,
-  text: laneTextSchema
-};
 
 
 /*
@@ -47,7 +49,6 @@ const initialState = {
 };
 
 export default function reducer(state = initialState, action = {}) {
-  //if (!action.meta || !table || action.meta.table !== table) return state;
   switch (action.type) {
     case LOAD_LANES:
       //caching?

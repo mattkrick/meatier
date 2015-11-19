@@ -2,7 +2,6 @@
 @value primary from colors;
 
 .kanban {
-  min-height: 600px;
 }
 
 .title {

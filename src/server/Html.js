@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-import {ReduxRouter} from 'redux-router';
 import { Provider } from 'react-redux';
 //import Foo from '../universal/components/Foo.js';
 //Injects the server rendered state and app into a basic html template

@@ -15,6 +15,9 @@ body :global {
   margin: 0;
 }
 
+.component {
+  min-height: 600px;
+}
 /*
  * Remove text-shadow in selection highlight:
  * https://twitter.com/miketaylr/status/12228805301

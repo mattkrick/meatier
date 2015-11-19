@@ -25,11 +25,9 @@ export default class KanbanContainer extends Component {
 
   constructor(props, context) {
     super(props, context);
-    console.log('context', context, props);
   }
 
   componentWillMount() {
-    console.log('will mount');
     const store = this.context.store;
     //store.dispatch()
     store.dispatch(getAllLanes());

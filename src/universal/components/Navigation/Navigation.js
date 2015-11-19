@@ -9,6 +9,7 @@ class Navigation extends Component {
 
   static propTypes = {
     className: PropTypes.string,
+    isAuthenticated: PropTypes.bool.isRequired
   };
 
   render() {
@@ -16,11 +17,26 @@ class Navigation extends Component {
       <div className={classNames(this.props.className, 'Navigation')} role="navigation">
         <Link to="/kanban" className={classNames(styles.link, styles.highlight)}>Kanban</Link>
         <span className="spacer"> | </span>
-        <Link to="/login" className={classNames(styles.link, styles.highlight)}>Login</Link>
-        <span className="spacer">or</span>
-        <Link to="/register" className={classNames(styles.link, styles.highlight)}>Register</Link>
+        {this.renderAuthButtons()}
       </div>
     );
+  }
+
+  renderAuthButtons() {
+    if (this.props.isAuthenticated) {
+      return (
+        <span>
+          <Link to="/logout" className={classNames(styles.link, styles.highlight)}>Logout</Link>
+        </span>
+      )
+    } else {
+      return (
+        <span><Link to="/login" className={classNames(styles.link, styles.highlight)}>Login</Link>
+          <span className="spacer">or</span>
+          <Link to="/signup" className={classNames(styles.link, styles.highlight)}>Sign up</Link>
+        </span>
+      )
+    }
   }
 
 }

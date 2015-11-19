@@ -1,7 +1,7 @@
 import r from 'rethinkdb';
 import config from './rethink.config.js';
-import {LANES} from '../universal/redux/ducks/lanes.js';
-import {DOCS_CHANGE} from '../universal/redux/mamaDuck';
+import {LANES} from '../../universal/redux/ducks/lanes.js';
+import {DOCS_CHANGE} from '../../universal/redux/mamaDuck';
 
 //const {tables, ...config } = config;
 
