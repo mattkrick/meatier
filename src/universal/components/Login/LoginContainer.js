@@ -21,17 +21,17 @@ export default class LoginContainer extends Component {
   };
 
   render() {
-    console.log(this.props.isAuthenticated);
     return <Login {...this.props}/>
   }
 }
 
 function mapStateToProps(state) {
-  const {auth: {isAuthenticating, isAuthenticated, error}} = state;
+  const {auth: {isAuthenticating, isAuthenticated, error}, routing: {path}} = state;
   return {
     isAuthenticating,
     isAuthenticated,
-    error
+    error,
+    path
   }
 }
 

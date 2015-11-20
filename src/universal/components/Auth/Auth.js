@@ -1,26 +1,34 @@
 import React, { Component, PropTypes } from 'react';
-import TextField from '../../../../node_modules/material-ui/lib/text-field';
+import TextField from 'material-ui/lib/text-field';
+import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './Auth.css';
 
 export default class Auth extends Component {
   static PropTypes = {
+    location: PropTypes.object,
+    isAuthenticating: PropTypes.bool.isRequired,
+    authError: PropTypes.string,
     fields: PropTypes.object.isRequired,
-    handleSubmit: PropTypes.func.isRequired
+    handleSubmit: PropTypes.func.isRequired,
+    authType: PropTypes.string.isRequired,
+    authFunc: PropTypes.func.isRequired
   };
 
   render() {
-    const {fields: {email, password}} = this.props;
+    const {fields: {email, password}, handleSubmit, authType, isAuthenticating} = this.props;
     return (
       <div className={styles.loginForm}>
-        <h3>Login</h3>
-        <form className={styles.loginForm}>
+        <h3>{authType}</h3>
+        <span>{this.props.authError}</span>
+        <form className={styles.loginForm} onSubmit={handleSubmit(::this.onSubmit)}>
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
 
           <TextField {...email}
             type="text"
             hintText="name@email.com"
             errorText={email.touched && email.error || ''}
-            floatingLabelText="Email"/>
+            floatingLabelText="Email"
+          />
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
 
           <TextField {...password}
@@ -32,20 +40,21 @@ export default class Auth extends Component {
 
           <div className={styles.loginButton}>
             <RaisedButton
-              label="Log in"
+              label={authType}
               secondary={true}
               type='submit'
-              disabled={this.props.isAuthenticating}
-              onClick={::this.login}/>
+              disabled={isAuthenticating}
+              onClick={handleSubmit(::this.onSubmit)}
+            />
           </div>
         </form>
       </div>
     );
   }
 
-  login(e) {
-    e.preventDefault();
+  onSubmit(data) {
+    //auth substate handles the error, so we don't need to use a promise here & pass it through reduxform
     const redirectRoute = this.props.location.query.next || '/'; //todo fix location
-    //this.props.authActions.loginUser(this.refs.email.value, this.refs.password.value, redirectRoute);
+    this.props.authFunc(data.email, data.password, redirectRoute);
   }
 }

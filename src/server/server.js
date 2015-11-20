@@ -6,7 +6,7 @@ import http from 'http';
 import bodyParser from 'body-parser';
 
 import config from '../webpack/webpack.config.js';
-import {login, signup, loginToken} from './controllers/auth';
+import {login, signup, loginToken, checkEmail} from './controllers/auth';
 import {LOAD_LANES, ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes';
 import createSSR from './createSSR.js';
 import {liveUpdates} from './database/databaseQueries.js';
@@ -36,6 +36,7 @@ if (require("piping")()) {
   authRouter.route('/login').post(login);
   authRouter.route('/login-token').post(loginToken);
   authRouter.route('/signup').post(signup);
+  authRouter.route('/check-email').post(checkEmail);
 
   //server-side rendering
   app.get('*', createSSR);

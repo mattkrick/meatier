@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch';
-import {createReducer} from '../utils';
 import jwtDecode from 'jwt-decode';
 import { updatePath } from 'redux-simple-router';
 import Joi from 'joi';
+import {postJSON, parseJSON, hostUrl} from '../../utils/utils';
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_ERROR = 'LOGIN_USER_ERROR';
@@ -17,19 +17,20 @@ export const LOGOUT_USER = 'LOGOUT_USER';
 export const FETCH_PROTECTED_DATA_REQUEST = 'FETCH_PROTECTED_DATA_REQUEST';
 export const RECEIVE_PROTECTED_DATA = 'RECEIVE_PROTECTED_DATA';
 
+export const authSchemaEmail = Joi.string().email().label('Email').required().options({
+  language: {
+    any: {
+      required: '!!Required',
+      empty: '!!Required'
+    },
+    string: {
+      email: '!!That\'s not an email!'
+    }
+  }
+});
 
 export const authSchema = Joi.object().keys({
-  email: Joi.string().email().label('Email').required().options({
-    language: {
-      any: {
-        required: '!!Required',
-        empty: '!!Required'
-      },
-      string: {
-        email: '!!That\'s not an email!'
-      }
-    }
-  }),
+  email: authSchemaEmail,
   password: Joi.string().min(6).label('Password').required().options({
     language: {
       any: {
@@ -54,11 +55,13 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOGIN_USER_REQUEST:
+    case SIGNUP_USER_REQUEST:
       return Object.assign({}, state, {
         error: null,
         isAuthenticating: true
       });
     case LOGIN_USER_SUCCESS:
+    case SIGNUP_USER_SUCCESS:
       const {token, user} = action.payload;
       return Object.assign({}, state, {
         error: null,
@@ -68,6 +71,7 @@ export default function reducer(state = initialState, action = {}) {
         user
       });
     case LOGIN_USER_ERROR:
+    case SIGNUP_USER_ERROR:
       return Object.assign({}, state, {
         error: action.error,
         isAuthenticating: false,
@@ -108,22 +112,17 @@ export function loginUserRequest() {
   }
 }
 
-export function signupUserSuccess(token) {
+export function signupUserSuccess(payload) {
   return {
     type: SIGNUP_USER_SUCCESS,
-    payload: {
-      token: token
-    }
+    payload
   }
 }
 
 export function signupUserError(error) {
   return {
     type: SIGNUP_USER_ERROR,
-    payload: {
-      status: error.response.status,
-      statusText: error.response.statusText
-    }
+    error
   }
 }
 
@@ -140,22 +139,20 @@ export function logout() {
 }
 
 export function loginUser(email, password, redirect) {
-  return function (dispatch) {
+  return async function (dispatch) {
     dispatch(loginUserRequest());
-    return postJSON('/auth/login', {email, password})
-      .then(parseJSON)
-      .then(res => {
-        const {token, user, error} = res;
-        if (token) {
-          const payload = {token, user};
-          const redirect = redirect || '/';
-          localStorage.setItem('Meatier.token', token);
-          dispatch(loginUserSuccess(payload));
-          dispatch(updatePath(redirect));
-        } else {
-          dispatch(loginUserError(error || 'Unknown server error. Try again'));
-        }
-      })
+    let res = await postJSON('/auth/login', {email, password});
+    let parsedRes = await parseJSON(res);
+    const {token, user, error} = parsedRes;
+    if (token) {
+      const payload = {token, user};
+      const redirect = redirect || '/';
+      localStorage.setItem('Meatier.token', token);
+      dispatch(loginUserSuccess(payload));
+      dispatch(updatePath(redirect));
+    } else {
+      dispatch(loginUserError(error || 'Unknown server error. Try again'));
+    }
   }
 }
 
@@ -187,40 +184,21 @@ export function logoutAndRedirect() {
 }
 
 export function signupUser(email, password, redirect) {
-  return function (dispatch) {
+  return async function (dispatch) {
     dispatch(signupUserRequest());
-    return postJSON('/auth/login', {email, password})
-      .then(parseJSON)
-      .then(response => {
-        let redirect = redirect || '/';
-        dispatch(signupUserSuccess(response.token));
-        dispatch(updatePath(redirect));
-      })
-      .catch(error => {
-        dispatch(signupUserError(error));
-      })
+    let res = await postJSON('/auth/signup', {email, password});
+    let parsedRes = await parseJSON(res);
+    const {token, user, error} = parsedRes;
+    if (token) {
+      const payload = {token, user};
+      const redirect = redirect || '/';
+      localStorage.setItem('Meatier.token', token);
+      dispatch(signupUserSuccess(payload));
+      dispatch(updatePath(redirect));
+    } else {
+      dispatch(signupUserError(error || 'Unknown server error. Try again'));
+    }
   }
-}
-
-export function parseJSON(response) {
-  return response.json()
-}
-
-export function hostUrl() {
-  const {host, protocol} = window.location;
-  return `${protocol}//${host}`;
-}
-
-export function postJSON(route, obj) {
-  return fetch(hostUrl() + route, {
-    method: 'post',
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(obj)
-  })
 }
 
 export const authActions = {

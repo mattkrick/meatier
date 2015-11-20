@@ -13,6 +13,7 @@ import rootReducer from '../universal/redux/reducer.js';
 import { getOrSetUserId } from './userId';
 //import {setUserId} from '../universal/redux/ducks/user.js';
 import Root from '../universal/components/Root/Root.js';
+import polyfill from 'babel-polyfill';
 
 const initialState = {};
 //const initialState = window.__INITIAL_STATE__;

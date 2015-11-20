@@ -1,4 +1,15 @@
 import thinky from './_utils';
+import bcrypt from 'bcrypt';
+import promisify from 'es6-promisify';
+import Joi from 'joi';
+//import {authSchema} from '../../../universal/redux/ducks/auth';
+//import {parsedJoiErrors} from '../../../universal/utils/utils'
+//
+//
+////return parsedJoiErrors(results.error);
+//
+const compare = promisify(bcrypt.compare);
+const hash = promisify(bcrypt.hash);
 
 const {type, r} = thinky;
 
@@ -13,68 +24,73 @@ const User = thinky.createModel("users", {
   enforce_extra: 'strict'
 });
 User.ensureIndex("email");
-User.defineStatic("getView", function() {
-  return this.without('password');
-});
 
 
-export function loginDB(email, password) {
-  return new Promise(function (resolve, reject) {
-    User.getAll(email, {index: 'email'}).limit(1).run()
-      .then((users) => {
-        const user = users[0];
-        if (!user || user.password !== password) {
-          reject(new Error('Incorrect email or password'));
-        }
-        delete user.password;
-        delete user.createdAt;
-        resolve(user);
-      })
-      .catch(() => {
-        reject(new Error('Error logging on, please try again'));
-      })
-  })
+export async function loginDB(email, password) {
+  let users;
+  try {
+    users = await findEmailDB(email);
+  } catch(error) {
+    throw new Error('Error reaching database, please try again');
+  }
+  const user = users[0];
+  if (!user) {
+    console.log('incorrect email');
+    throw new Error('Incorrect email');
+  }
+  let isCorrectPass = await compare(password, user.password);
+  if (isCorrectPass) {
+    delete user.password;
+    delete user.createdAt;
+    return user;
+  } else {
+    throw new Error('Incorrect password');
+  }
 }
 
-export function loginWithIdDB(id) {
+export async function loginWithIdDB(id) {
   //be careful, this issues a login without verifying the password (since token already did that)
-  return new Promise(function (resolve, reject) {
-    User.get(id).run()
-      .then((user) => {
-        delete user.password;
-        delete user.createdAt;
-        resolve(user);
-      })
-      .catch(() => {
-        reject(new Error('Error logging on, please try again'));
-      })
-  })
+  let user;
+  try {
+    user = await User.get(id).run();
+  } catch (error) {
+    throw new Error('Error reaching database, please try again');
+  }
+  delete user.password;
+  delete user.createdAt;
+  return user;
 }
 
-export function signupDB(email, password, cb) {
-  return new Promise(function (resolve, reject) {
-    User.getAll(email, {index: 'email'}).run()
-      .then((user) => {
-        if (user || user.length > 0) {
-          if (user.password === password) { //log the forgetful fool in
-            resolve(user);
-          } else {
-            reject(new Error('Email already exists in database'));
-          }
-        }
-        User.save({
-            email,
-            password
-          })
-          .then(user => resolve(user))
-          .catch(() => {
-            reject(new Error('Error signing up, please try again'));
-          })
-      })
-    .catch(() => {
-      //TODO: don't repeat catch clause
-      reject(new Error('Error signing up, please try again'));
-    })
-  });
+export async function signupDB(email, password) {
+  let users;
+  try {
+    users = await findEmailDB(email);
+  } catch (error) {
+    throw new Error('Error reaching database, please try again');
+  }
+  const user = users[0];
+  if (user) {
+    let isCorrectPass = await compare(password, user.password);
+    if (isCorrectPass) {
+      //log the fool in anyways
+      delete user.password;
+      delete user.createdAt;
+      return user;
+    } else {
+      throw new Error('Email already exists in database');
+    }
+  } else {
+    const hashedPass = await hash(password, 10); //production should use 12+
+    let newUser;
+    try {
+      newUser = await User.save({email, password: hashedPass});
+    } catch (error) {
+      throw new Error(error);
+    }
+    return newUser;
+  }
 }
 
+export function findEmailDB(email) {
+  return User.getAll(email, {index: 'email'}).limit(1).run();
+}

@@ -6,5 +6,6 @@
 //    return;
 //  }
 //}
-require('babel-core/register');
+require('babel-core/register')({optional: ['es7.asyncFunctions']});
+//require("babel-polyfill"); // for regenrator runtime
 require('./server');

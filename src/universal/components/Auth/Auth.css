@@ -1,5 +1,9 @@
-.AuthForm {
+.loginForm {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.loginButton {
+  padding-top: 24px;
 }
