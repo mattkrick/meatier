@@ -23,5 +23,3 @@ export default class Kanban extends Component {
     );
   }
 }
-
-

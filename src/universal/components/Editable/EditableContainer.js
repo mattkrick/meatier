@@ -8,9 +8,7 @@ import _ from 'lodash';
 //const fieldName = 'laneName';
 const validate = values => {
   const results = Joi.validate(values[fieldName], laneTextSchema);
-  console.log('ERRORS:', results.errors);
   return results.errors || {};
-
 };
 
 @reduxForm()

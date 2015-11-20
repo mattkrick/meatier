@@ -1,9 +1,9 @@
 import r from 'rethinkdb';
-import configFile from './rethink.config.js';
-import {LANES} from '../universal/redux/ducks/lanes.js';
-import {DOCS_CHANGE} from '../universal/redux/mamaDuck';
+import config from './rethink.config.js';
+import {LANES} from '../../universal/redux/ducks/lanes.js';
+import {DOCS_CHANGE} from '../../universal/redux/mamaDuck';
 
-const {tables, ...config } = configFile;
+//const {tables, ...config } = config;
 
 function connect() {
   return r.connect(config);
@@ -28,7 +28,7 @@ export function liveUpdates(io) {
   })
 }
 
-function readTable(table) {
+export function readTable(table) {
   return connect()
     .then(conn => {
       return r

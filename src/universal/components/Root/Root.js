@@ -1,13 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import {IndexRoute, Route} from 'react-router';
+import {IndexRoute, Router, Route} from 'react-router';
 import { createStore,compose, combineReducers } from 'redux';
-import {
-  ReduxRouter,
-  routerStateReducer,
-  reduxReactRouter,
-  pushState
-} from 'redux-router';
 
 import { Provider, connect } from 'react-redux';
 import DevTools from '../../containers/DevTools';
@@ -19,9 +13,9 @@ export default class Root extends Component {
     return (
       <Provider store={this.props.store}>
         <div>
-          <ReduxRouter>
+          <Router history={this.props.history}>
             {routes}
-          </ReduxRouter>
+          </Router>
           <DevTools/>
         </div>
       </Provider>

@@ -12,7 +12,6 @@ export default class Lanes extends Component {
   }
   render() {
     const {data} = this.props.lanes;
-    console.log('DATA:', data);
     return <div className="lanes">{data.map(this.renderLane)}</div>;
   }
 

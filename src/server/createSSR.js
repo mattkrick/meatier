@@ -2,11 +2,10 @@ import createHistory from '../../node_modules/history/lib/createMemoryHistory';
 import React from 'react';
 import {renderToString} from '../../node_modules/react-dom/server';
 import { Provider } from 'react-redux';
-import {reduxReactRouter, match} from '../../node_modules/redux-router/server';
 import { createStore ,compose } from 'redux';
 import PrettyError from 'pretty-error';
 import qs from 'query-string';
-import {getState} from './databaseQueries.js';
+import {getState} from './database/databaseQueries.js';
 import rootReducer from '../universal/redux/reducer.js';
 //import routes from '../universal/routes.js';
 import Html from './Html.js';
@@ -20,20 +19,20 @@ export default function createSSR(req, res) {
       userId: 'baseUser'
     }
   };
-  getState(subs)
-    .then(initialTables => {
-      subs.map((table, idx) => {
-        initialState[table] = {
-          error: null,
-          synced: true,
-          data: initialTables[idx]
-        }
-      });
+  //getState(subs)
+  //  .then(initialTables => {
+  //    subs.map((table, idx) => {
+  //      initialState[table] = {
+  //        error: null,
+  //        synced: true,
+  //        data: initialTables[idx]
+  //      }
+  //    });
       //let finalCreateStore = compose(DevTools.instrument())(createStore);
       //let finalCreateStore = reduxReactRouter({routes, createHistory})(createStore);
       const store = createStore(rootReducer, initialState);
       hydrateOnClient(store);
-    });
+    //});
   function hydrateOnClient(store) {
 
     res.send('<!doctype html>\n' + renderToString(<Html title='Quack Quack' store={store}/>));

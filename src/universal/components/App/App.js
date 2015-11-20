@@ -1,28 +1,25 @@
-/*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
-
 import React, { PropTypes, Component } from 'react';
 import styles from './App.css';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import injectTapeEventPlugin from 'react-tap-event-plugin';
 
-//@withContext
-////@withStyles(styles)
-class App extends Component {
-
+export default class App extends Component {
   static propTypes = {
-    children: PropTypes.element.isRequired
+    children: PropTypes.element.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired
   };
 
   render() {
+    const {isAuthenticated, children} = this.props;
     return (
       <div className={styles.app}>
-        <Header />
-        {this.props.children}
+        <Header isAuthenticated={isAuthenticated}/>
+        <div className={styles.component}>
+          {children}
+        </div>
         <Footer />
       </div>
     )
   }
-
 }
-
-export default App;

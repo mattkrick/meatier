@@ -29,7 +29,6 @@ export default class Notes extends Component {
   }
 
   renderNote(note, index) {
-    console.log('note props', this.props);
     const {updateNote, deleteNote, moveNote} = this.props.noteActions;
     return (
       <Note className={styles.note} note={note} key={`note${note.id}`} onMove={moveNote} index={index}>
