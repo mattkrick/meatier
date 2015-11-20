@@ -112,7 +112,6 @@ export function loadLanes(payload) {
 export function getAllLanes() {
   const socket = io();
   return dispatch => {
-    console.log('emitting load all lanes');
     socket.emit(LOAD_LANES, (error, lanes) => {
       if (error) {
         dispatch({type: LOAD_LANES_ERROR});

@@ -11,13 +11,11 @@ export const SIGNUP_USER_REQUEST = 'SIGNUP_USER_REQUEST';
 export const SIGNUP_USER_ERROR = 'SIGNUP_USER_ERROR';
 export const SIGNUP_USER_SUCCESS = 'SIGNUP_USER_SUCCESS';
 export const LOGOUT_USER = 'LOGOUT_USER';
-//export const VERIFY_TOKEN_REQUEST = 'VERIFY_TOKEN_REQUEST';
-//export const VERIFY_TOKEN_SUCCESS = 'VERIFY_TOKEN_SUCCESS';
-//export const VERIFY_TOKEN_ERROR = 'VERIFY_TOKEN_ERROR';
 export const FETCH_PROTECTED_DATA_REQUEST = 'FETCH_PROTECTED_DATA_REQUEST';
 export const RECEIVE_PROTECTED_DATA = 'RECEIVE_PROTECTED_DATA';
 
 export const authSchemaEmail = Joi.string().email().label('Email').required().options({
+  //TODO add tdl regex: !/^([a-z\u00a1-\uffff]{2,}|xn[a-z0-9-]{2,})$/i.test(tld)
   language: {
     any: {
       required: '!!Required',
@@ -146,7 +144,7 @@ export function loginUser(email, password, redirect) {
     const {token, user, error} = parsedRes;
     if (token) {
       const payload = {token, user};
-      const redirect = redirect || '/';
+      redirect = redirect || '/';
       localStorage.setItem('Meatier.token', token);
       dispatch(loginUserSuccess(payload));
       dispatch(updatePath(redirect));

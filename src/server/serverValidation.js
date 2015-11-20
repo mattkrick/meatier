@@ -41,10 +41,8 @@ function delay(ms) {
 }
 
 export function handleLoadLanes(cb) {
-  console.log('handling load lanes');
   readTable('lanes')
     .then(data => {
-      console.log('success! sending full cb')
       cb(null,data);
     })
     .catch(error => {

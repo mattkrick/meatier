@@ -35,7 +35,6 @@ export async function loginDB(email, password) {
   }
   const user = users[0];
   if (!user) {
-    console.log('incorrect email');
     throw new Error('Incorrect email');
   }
   let isCorrectPass = await compare(password, user.password);

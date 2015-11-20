@@ -24,10 +24,9 @@ export default class AuthContainer extends Component {
   };
 
   render() {
-    console.log('error', this.props.auth);
     const {authActions, path, ...props} = this.props;
     let authType, authFunc;
-    if (path === '/login') {
+    if (path.indexOf('/login') !== -1) {
       authType = 'Login';
       authFunc = authActions.loginUser
     } else {
@@ -40,7 +39,6 @@ export default class AuthContainer extends Component {
 
 function mapStateToProps(state) {
   const {auth: {isAuthenticating, isAuthenticated, error}, routing: {path}} = state;
-  console.log('err', error);
   return {
     isAuthenticating,
     isAuthenticated,
@@ -70,24 +68,28 @@ function validate(values) {
 }
 
 function asyncValidate(values, dispatch, props) {
-  console.log(props);
   return new Promise((resolve, reject) => {
     postJSON('/auth/check-email', {email: values.email})
       .then(parseJSON)
       .then(parsedRes => {
-        if (props.path === '/login') {
-          if (parsedRes.isValid && parsedRes.exists) {
-            resolve();
-          } else {
-            reject({email: parsedRes.error})
-          }
+        if (parsedRes.isValid) {
+          resolve()
         } else {
-          if (parsedRes.isValid && parsedRes.exists === false) {
-            resolve();
-          } else {
-            reject({email: parsedRes.error});
-          }
+          reject({email: parsedRes.error})
         }
+        //if (props.path === '/login') {
+        //  if (parsedRes.isValid && parsedRes.exists) {
+        //    resolve();
+        //  } else {
+        //    reject({email: parsedRes.error})
+        //  }
+        //} else {
+        //  if (parsedRes.isValid && parsedRes.exists === false) {
+        //    resolve();
+        //  } else {
+        //    reject({email: parsedRes.error});
+        //  }
+        //}
       })
   });
 }

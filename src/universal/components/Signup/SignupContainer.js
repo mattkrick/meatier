@@ -15,7 +15,6 @@ export default class SignupContainer extends Component {
   };
 
   render() {
-    console.log('log', this.props);
     return <Signup {...this.props}/>
   }
 }

@@ -54,6 +54,7 @@ export default class Auth extends Component {
 
   onSubmit(data) {
     //auth substate handles the error, so we don't need to use a promise here & pass it through reduxform
+    //console.log('this.props', this.props);
     const redirectRoute = this.props.location.query.next || '/'; //todo fix location
     this.props.authFunc(data.email, data.password, redirectRoute);
   }

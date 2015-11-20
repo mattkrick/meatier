@@ -9,7 +9,6 @@ class Header extends Component {
     isAuthenticated: PropTypes.bool.isRequired
   };
   render() {
-    console.log('this.pr', this.props);
     return (
       <div className={styles.header}>
         <div className={styles.container}>

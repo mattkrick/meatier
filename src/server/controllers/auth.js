@@ -50,6 +50,8 @@ export async function checkEmail(req, res) {
   const errors = parsedJoiErrors(results.error);
   if (errors.email) {
     return res.status(200).json({isValid: false, error: errors.email});
+  } else {
+    return res.status(200).json({isValid: true, error: null});
   }
   //used to see if the email exists in db. since we auto-login from signup screen, this isn't necessary
   //let users;
