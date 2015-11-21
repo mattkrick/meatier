@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {laneActions} from '../../redux/ducks/lanes.js';
-import Kanban from './Kanban';
+import Kanban from '../../components/Kanban/Kanban';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 //import liveQuery from '../../../client/liveQuery';
 import {getAllLanes} from '../../redux/ducks/lanes';
+import socketCluster from 'socketcluster-client';
 //import {getState} from '../../../server/databaseQueries';
 
 
@@ -31,6 +32,11 @@ export default class KanbanContainer extends Component {
     const store = this.context.store;
     //store.dispatch()
     store.dispatch(getAllLanes());
+    const socket = socketCluster.connect();
+    socket.on('connect', function () {
+      console.log('CONNECTED');
+    });
+    socket.emit('here i be bitches');
     //liveQuery(store);
     //const subs = ['lanes'];
     //debugger;

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import EditableContainer from '../Editable/EditableContainer';
+import EditableContainer from '../../containers/Editable/EditableContainer.js';
 import {NOTE} from '../../redux/ducks/notes';
 import {DropTarget} from 'react-dnd';
 import Note from './../Note/Note';

@@ -15,22 +15,21 @@ import { getOrSetUserId } from './userId';
 import Root from '../universal/components/Root/Root.js';
 import polyfill from 'babel-polyfill';
 
-const initialState = {};
-//const initialState = window.__INITIAL_STATE__;
+const initialState = window.__INITIAL_STATE__ || {};
 const loggerMiddleware = createLogger({
   level: 'info',
   collapsed: true
 });
 const history = createHistory();
 
-let finalCreateStore = compose(
+const finalCreateStore = compose(
   applyMiddleware(optimisticMiddleware,thunkMiddleware, loggerMiddleware),
   DevTools.instrument())(createStore);
   //finalCreateStore = syncReduxAndRouter(history, finalCreateStore);
   const store = finalCreateStore(rootReducer, initialState);
   syncReduxAndRouter(history, store);
-window.store = store;
+window.store = store; //debug
 render(<Root store={store} history={history}/>, document.getElementById('root'));
 
 // Now that we have rendered...
-liveQuery(store);
+//liveQuery(store);

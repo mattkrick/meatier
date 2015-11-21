@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import LaneContainer from '../Lane/LaneContainer.js';
+import LaneContainer from '../../containers/Lane/LaneContainer.js';
 
 export default class Lanes extends Component {
   static propTypes = {
