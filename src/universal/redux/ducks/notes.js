@@ -28,14 +28,14 @@ const MOVE_NOTE_ERROR = 'MOVE_NOTE_ERROR';
 const noteTextSchema = Joi.string().max(200).trim().required();
 const fullNoteSchema = Joi.object().keys({
   id: Joi.string().min(3).max(36).required(),
-  text: noteTextSchema,
+  title: noteTextSchema,
   laneId: Joi.string().min(3).max(36),
   laneIdx: Joi.number().integer()
 });
 
 export const noteSchema = {
   full: fullNoteSchema,
-  text: noteTextSchema
+  title: noteTextSchema
 };
 
 
@@ -116,17 +116,17 @@ export function addNote() {
     type: ADD_NOTE,
     payload: {
       id: uuid.v4(),
-      text: 'New note'
+      title: 'New note'
     },
     meta
   };
 }
 
-export function updateNote(id, text) {
+export function updateNote(id, title) {
   return {
     type: UPDATE_NOTE,
     payload: {
-      id, text
+      id, title
     },
     meta
   };

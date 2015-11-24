@@ -24,8 +24,8 @@ export default class Lane extends Component {
             item={lane}
             updateItem={updateLane}
             deleteItem={deleteLane}
-            fields={["laneName"]}
-            form="laneNameForm"
+            fields={["laneTitle"]}
+            form="laneTitleForm"
           />
           <div className={styles.addNote}>
             <button onClick={() => addNote(lane.id, notes.length)}>Add a note</button>

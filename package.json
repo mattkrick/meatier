@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/server/server.babel.js",
-    "resetdb": "node ./src/server/resetdb.babel.js",
+    "resetdb": "node ./src/server/database/resetdb.babel.js",
     "test": "jest"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
@@ -75,10 +75,9 @@
     "reselect": "^2.0.0",
     "rethinkdb": "^2.1.1",
     "serve-static": "^1.10.0",
-    "socket.io": "^1.3.7",
-    "socket.io-client": "^1.3.7",
-    "socketcluster": "^2.5.3",
+    "socketcluster": "^3.0.0",
     "socketcluster-client": "^2.4.1",
-    "thinky": "^2.1.12"
+    "thinky": "^2.2.0",
+    "url": "^0.11.0"
   }
 }

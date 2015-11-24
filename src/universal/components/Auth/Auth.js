@@ -20,7 +20,7 @@ export default class Auth extends Component {
       <div className={styles.loginForm}>
         <h3>{authType}</h3>
         <span>{this.props.authError}</span>
-        <form className={styles.loginForm} onSubmit={handleSubmit(::this.onSubmit)}>
+        <form className={styles.loginForm} onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
 
           <TextField {...email}
@@ -44,7 +44,7 @@ export default class Auth extends Component {
               secondary={true}
               type='submit'
               disabled={isAuthenticating}
-              onClick={handleSubmit(::this.onSubmit)}
+              onClick={handleSubmit(this.onSubmit.bind(this))}
             />
           </div>
         </form>

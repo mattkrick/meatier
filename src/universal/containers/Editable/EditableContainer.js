@@ -1,13 +1,13 @@
 import React, {PropTypes, Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {laneTextSchema} from '../../redux/ducks/lanes';
+import {laneTitleSchema} from '../../redux/ducks/lanes';
 import Joi from 'joi';
 import Editable from '../../components/Editable/Editable';
 import _ from 'lodash';
 
-//const fieldName = 'laneName';
+const fieldName = 'laneName';
 const validate = values => {
-  const results = Joi.validate(values[fieldName], laneTextSchema);
+  const results = Joi.validate(values[fieldName], laneTitleSchema);
   return results.errors || {};
 };
 

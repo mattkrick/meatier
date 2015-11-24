@@ -17,6 +17,7 @@ export default class Lanes extends Component {
 
   renderLane(lane) {
     const {laneActions} = this.props;
+    //return <div></div>
     return <LaneContainer key={`lane${lane.id}`} formKey={`lane${lane.id}`} initialValues={lane} lane={lane}
                           laneActions={laneActions}/>;
   }

@@ -18,9 +18,10 @@ export default class RequireAuth extends Component {
   }
 
   render() {
+    const {isAuthenticated, isAuthenticating, children} = this.props;
     return (
       <div>
-        {this.props.isAuthenticating ? this.loggingIn() : this.props.children}
+        {isAuthenticated ? children : isAuthenticating ? this.loggingIn() : this.gotoLogin() }
       </div>
     )
   }
@@ -29,7 +30,12 @@ export default class RequireAuth extends Component {
     return (
       <div>Logging in...</div>
     )
+  }
 
+  gotoLogin() {
+    return (
+      <div>Whoops! You're not logged in.</div>
+    )
   }
 }
 

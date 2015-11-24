@@ -9,8 +9,8 @@ export const tables = [{
 },{
   name: 'lanes'
 },{
-  name: 'users',
-  index: 'email'
+  name: 'users'
+  //index: 'email'
 }];
 
 

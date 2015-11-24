@@ -47,7 +47,8 @@ module.exports = {
       //{ test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') },
       {test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
+        include: path.join(__dirname, ".."),
+        //exclude: /node_modules/,
         query: {
           "stage": 0,
           "plugins": ["react-transform"],

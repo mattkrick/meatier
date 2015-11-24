@@ -11,8 +11,8 @@ import {postJSON, parseJSON} from '../../utils/utils';
 
 //use the same form to retain form values (there's really no difference between login and signup, it's just for show)
 @connect(mapStateToProps, mapDispatchToProps)
-@reduxForm({form: 'authForm', fields: ['email', 'password'], asyncValidate, asyncBlurFields: ['email'], validate}) //must come after connect to get the path field
-@requireNoAuth //must come after connect so we have isAuthenticated
+@reduxForm({form: 'authForm', fields: ['email', 'password'], validate}) //must come after connect to get the path field
+@requireNoAuth //must come after connect so we get isAuthenticated
 export default class AuthContainer extends Component {
   static PropTypes = {
     authActions: PropTypes.object.isRequired,
@@ -42,7 +42,7 @@ function mapStateToProps(state) {
   return {
     isAuthenticating,
     isAuthenticated,
-    authError: error, //redux form will override "error"
+    authError: error, //redux-form will override "error"
     path
   }
 }
@@ -67,43 +67,16 @@ function validate(values) {
   return errors;
 }
 
-function asyncValidate(values, dispatch, props) {
-  return new Promise((resolve, reject) => {
-    postJSON('/auth/check-email', {email: values.email})
-      .then(parseJSON)
-      .then(parsedRes => {
-        if (parsedRes.isValid) {
-          resolve()
-        } else {
-          reject({email: parsedRes.error})
-        }
-        //if (props.path === '/login') {
-        //  if (parsedRes.isValid && parsedRes.exists) {
-        //    resolve();
-        //  } else {
-        //    reject({email: parsedRes.error})
-        //  }
-        //} else {
-        //  if (parsedRes.isValid && parsedRes.exists === false) {
-        //    resolve();
-        //  } else {
-        //    reject({email: parsedRes.error});
-        //  }
-        //}
-      })
-  });
-}
-
-//async function asyncValidate(values, dispatch, props) {
-//  console.log(this.props);
-//  let res;
-//  try {
-//    res = await postJSON('/auth/check-email', {email: values.email});
-//  } catch (error) {
-//    console.log('asy err');
-//    throw new Error('Cannot reach database server');
-//  }
-//  let parsedRes = await parseJSON(res);
-//  console.log(parsedRes);
-//  return parsedRes.isValid && parsedRes.exists;
+//function asyncValidate(values, dispatch, props) {
+//  return new Promise((resolve, reject) => {
+//    postJSON('/auth/check-email', {email: values.email})
+//      .then(parseJSON)
+//      .then(parsedRes => {
+//        if (parsedRes.isValid) {
+//          resolve()
+//        } else {
+//          reject({email: parsedRes.error})
+//        }
+//      })
+//  });
 //}

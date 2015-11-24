@@ -1,28 +1,13 @@
-import thinky from './_utils';
-import bcrypt from 'bcrypt';
+import thinky from './thinky';
 import promisify from 'es6-promisify';
-import Joi from 'joi';
-//import {authSchema} from '../../../universal/redux/ducks/auth';
-//import {parsedJoiErrors} from '../../../universal/utils/utils'
-//
-//
-////return parsedJoiErrors(results.error);
-//
+import bcrypt from 'bcrypt';
+
 const compare = promisify(bcrypt.compare);
 const hash = promisify(bcrypt.hash);
 
 const {type, r} = thinky;
 
-const User = thinky.createModel("users", {
-  id: type.string(),
-  name: type.string(),
-  email: type.string().email().required(),
-  isVerified: type.boolean().default(false),
-  password: type.string().required(),
-  createdAt: type.date().default(r.now())
-}, {
-  enforce_extra: 'strict'
-});
+const User = thinky.createModel("users", {});
 User.ensureIndex("email");
 
 
@@ -65,6 +50,7 @@ export async function signupDB(email, password) {
   try {
     users = await findEmailDB(email);
   } catch (error) {
+    console.log(error);
     throw new Error('Error reaching database, please try again');
   }
   const user = users[0];
@@ -82,7 +68,7 @@ export async function signupDB(email, password) {
     const hashedPass = await hash(password, 10); //production should use 12+
     let newUser;
     try {
-      newUser = await User.save({email, password: hashedPass});
+      newUser = await User.save({email, password: hashedPass, createdAt: Date.now(), isVerified: false});
     } catch (error) {
       throw new Error(error);
     }

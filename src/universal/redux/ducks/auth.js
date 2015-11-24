@@ -11,11 +11,8 @@ export const SIGNUP_USER_REQUEST = 'SIGNUP_USER_REQUEST';
 export const SIGNUP_USER_ERROR = 'SIGNUP_USER_ERROR';
 export const SIGNUP_USER_SUCCESS = 'SIGNUP_USER_SUCCESS';
 export const LOGOUT_USER = 'LOGOUT_USER';
-export const FETCH_PROTECTED_DATA_REQUEST = 'FETCH_PROTECTED_DATA_REQUEST';
-export const RECEIVE_PROTECTED_DATA = 'RECEIVE_PROTECTED_DATA';
 
 export const authSchemaEmail = Joi.string().email().label('Email').required().options({
-  //TODO add tdl regex: !/^([a-z\u00a1-\uffff]{2,}|xn[a-z0-9-]{2,})$/i.test(tld)
   language: {
     any: {
       required: '!!Required',
@@ -155,21 +152,15 @@ export function loginUser(email, password, redirect) {
 }
 
 export function loginToken(token) {
-  return function (dispatch) {
+  return async function (dispatch) {
     dispatch(loginUserRequest());
-    return postJSON('/auth/login-token', {token})
-      .then(res => {
-        if (res.status !== 200) {
-          throw new Error('Error logging in with token');
-        }
-        return res;
-      })
-      .then(parseJSON)
-      .then(res => {
-        const payload = {token, user: res.user};
-        dispatch(loginUserSuccess(payload));
-      });
-    //no catch because it's not really an error if someone doesn't have a token
+    let res = await postJSON('/auth/login-token', {token});
+    if (res.status !== 200) {
+      return dispatch(loginUserError('Error logging in with token'));
+    }
+    let parsedRes = await parseJSON(res);
+    const payload = {token, user: parsedRes.user};
+    dispatch(loginUserSuccess(payload));
   }
 }
 

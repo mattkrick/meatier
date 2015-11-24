@@ -19,6 +19,7 @@ export default class Editable extends Component {
   }
 
   render() {
+
     return (
       <div>
         {this.props.isEditing ? this.renderEdit() : this.renderItem()}
@@ -27,14 +28,15 @@ export default class Editable extends Component {
   }
 
   renderEdit() {
-    const {item:{text}, formProps} = this.props;
+
+    const {item:{title}, formProps} = this.props;
     return (
       <form onSubmit={this.onSubmit}>
         <input {...formProps}
           ref={formProps.name}
           type="text"
           autoFocus={true}
-          defaultValue={text}
+          defaultValue={title}
           onSubmit={this.onSubmit}
           onFocus={()=>{}}
           onBlur={this.onSubmit}
@@ -45,18 +47,18 @@ export default class Editable extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    const {item:{id, text}, formProps, handleSubmit} = this.props;
+    const {item:{id, title}, formProps, handleSubmit} = this.props;
     const val = this.refs[formProps.name].value;
     formProps.onBlur();
-    if (text === val) return;
+    if (title === val) return;
     handleSubmit(this.props.updateItem(id, val));
   }
 
   renderItem() {
-    const {item:{id, text}, formProps} = this.props;
+    const {item:{id, title}, formProps} = this.props;
     return (
       <span onClick={formProps.onFocus}>
-        <span className="text">{text}</span>
+        <span className="title">{title}</span>
         <button className="delete" onClick={() => this.props.deleteItem(id)}>x</button>
       </span>
     );
