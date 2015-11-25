@@ -15,7 +15,6 @@ import {postJSON, parseJSON} from '../../utils/utils';
 @requireNoAuth //must come after connect so we get isAuthenticated
 export default class AuthContainer extends Component {
   static PropTypes = {
-    authActions: PropTypes.object.isRequired,
     location: PropTypes.object,
     isAuthenticating: PropTypes.bool.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,

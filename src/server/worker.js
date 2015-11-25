@@ -13,6 +13,7 @@ import createSSR from './createSSR.js';
 import subscribeMiddleware from './publish/subscribeMiddleware';
 import thinky from './database/models/thinky';
 import subscribeHandler from './publish/subscribeHandler';
+import {addLane, deleteLane} from './controllers/lanes';
 
 const compiler = webpack(config);
 const authRouter = express.Router();
@@ -51,14 +52,15 @@ module.exports.run = function (worker) {
   scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, subscribeMiddleware);
 
   scServer.on('connection', function (socket) {
+    socket.docQueue = new Set();
     console.log('connected');
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', function (socket) {
       console.log('disconnected');
     });
-    socket.on('ADD_LANE', data => {
-      console.log('got data', data);
-    })
+    socket.on('ADD_LANE', addLane)
+    socket.on('DELETE_LANE', deleteLane)
+
   });
 
 }

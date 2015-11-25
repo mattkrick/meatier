@@ -12,12 +12,14 @@ export const SIGNUP_USER_ERROR = 'SIGNUP_USER_ERROR';
 export const SIGNUP_USER_SUCCESS = 'SIGNUP_USER_SUCCESS';
 export const LOGOUT_USER = 'LOGOUT_USER';
 
+const anyErrors = {
+  required: '!!Required',
+  empty: '!!Required'
+};
+
 export const authSchemaEmail = Joi.string().email().label('Email').required().options({
   language: {
-    any: {
-      required: '!!Required',
-      empty: '!!Required'
-    },
+    any: anyErrors,
     string: {
       email: '!!That\'s not an email!'
     }
@@ -28,10 +30,7 @@ export const authSchema = Joi.object().keys({
   email: authSchemaEmail,
   password: Joi.string().min(6).label('Password').required().options({
     language: {
-      any: {
-        required: '!!Required',
-        empty: '!!Required'
-      },
+      any: anyErrors,
       string: {
         min: '{{!key}} should be at least {{limit}} chars long'
       }
@@ -190,8 +189,3 @@ export function logoutAndRedirect() {
     dispatch(updatePath('/'));
   }
 }
-
-export const authActions = {
-  loginUser,
-  signupUser
-};

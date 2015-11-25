@@ -16,8 +16,9 @@ function handleChange(channel) {
     if (err) return console.log(err);
     cursor.each((err, data) => {
       if (err) console.log(err);
-      console.log('CHANGES', data);
-      this.emit(channel, data)
+      //console.log('CHANGES', data);
+      const docId = data.new_val ? data.new_val.id : data.old_val.id;
+      this.docQueue.has(docId) ? this.docQueue.delete(docId) : this.emit(channel, data);
     });
     this.on('unsubscribe', channelName => {
       console.log('UNSUBBIN', channelName);

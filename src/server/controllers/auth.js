@@ -92,18 +92,3 @@ function validateAuthSchema(credentials) {
     return error;
   }
 }
-//used to see if the email exists in db. since we auto-login from signup screen, this isn't necessary
-//let users;
-//try {
-//  users = await findEmailDB(email);
-//} catch (error) {
-//  return res.status(503).json({isValid: true, exists: null, error: error.message});
-//}
-//const user = users[0];
-//if (user) {
-//  return res.status(200).json({isValid: true, exists: true, error: 'Email already exists in database'});
-//} else {
-//  return res.status(200).json({isValid: true, exists: false, error: 'Email not found in database'});
-//}
-//}
-//

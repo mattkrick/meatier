@@ -12,28 +12,25 @@ const _ERROR = '_ERROR';
 let nextTransactionID = 0;
 export default function (store) {
   return next => action => {
-    //console.log(action);
     if (!action.meta || action.meta.synced !== false) {
-      return next(action); //skip changes coming from DB (supersedes optimism)
+      return next(action); //skip changes received from DB (supersedes optimism)
     }
     const {type, meta, payload} = action;
-    //const {table} = meta;
     //if we don't want to optimistically update (for docs with high % of failure)
     if (!meta.isOptimistic) return next(action);
     let transactionID = nextTransactionID++;
     next(Object.assign({}, action, {optimist: {type: BEGIN, id: transactionID}})); //execute optimistic update
-    console.log('emitting', type, payload);
     socket.emit(type, payload, err => {
-      dispatchAction(err, true); //complete transaction
+      dispatchAction(err); //complete transaction
     });
-    function dispatchAction(error, willRevert) {
-      payload.title += ' (server}';
+    function dispatchAction(error) {
+      //payload.title += ' (server}';
       next({
         type: type + (error ? _ERROR : _SUCCESS),
         error,
         payload,
         meta: {synced: true},
-        optimist: error ? (willRevert && {type: REVERT, id: transactionID}) : {type: COMMIT, id: transactionID}
+        optimist: error ? {type: REVERT, id: transactionID} : {type: COMMIT, id: transactionID}
       });
     }
   }

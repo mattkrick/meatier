@@ -7,20 +7,19 @@ import socketOptions from '../../utils/socketOptions';
 /*
  * Schema
  */
-export const laneTitleSchema = Joi.string().max(200).trim().required();
 const idSchema = Joi.string().min(3).max(36).required();
-const fullLaneSchema = Joi.object().keys({
+export const laneTitleSchema = Joi.string().max(200).trim().required();
+export const laneSchema = Joi.object({
   id: idSchema,
   title: laneTitleSchema,
   userId: idSchema,
   isPrivate: Joi.boolean()
-
 });
 
-export const laneSchema = {
-  full: fullLaneSchema,
-  title: laneTitleSchema
-};
+//export const laneSchema = {
+//  full: fullLaneSchema,
+//  title: laneTitleSchema
+//};
 
 /*
  * Action types

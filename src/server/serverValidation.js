@@ -6,7 +6,7 @@ export function handleAddDoc(payload, table, cb) {
   const schema = tableLookup[table] && tableLookup[table].schema.full;
   if (!schema) return cb('Cannot find schema on server');
 
-  const schemaError = Joi.validate(payload, schema).error;
+  const schemaError = schema.validate(payload).error;
   if (schemaError) return cb(schemaError.message);
   delay(500)
     .then(() => addDocToDB(payload, table))
