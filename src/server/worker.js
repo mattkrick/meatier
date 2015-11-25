@@ -38,6 +38,7 @@ module.exports.run = function (worker) {
   authRouter.route('/login').post(login);
   authRouter.route('/login-token').post(loginToken);
   authRouter.route('/signup').post(signup);
+  //authRoute.route('/check-auth').post(validateAuthSchema);
 
   //server-side rendering
   app.get('*', createSSR);

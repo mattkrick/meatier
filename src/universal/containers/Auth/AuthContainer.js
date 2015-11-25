@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import {authActions, authSchema} from '../../redux/ducks/auth';
+import {loginUser, signupUser, authSchema} from '../../redux/ducks/auth';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updatePath } from 'redux-simple-router';
@@ -10,7 +10,7 @@ import requireNoAuth from '../../decorators/requireNoAuth/requireNoAuth';
 import {postJSON, parseJSON} from '../../utils/utils';
 
 //use the same form to retain form values (there's really no difference between login and signup, it's just for show)
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 @reduxForm({form: 'authForm', fields: ['email', 'password'], validate}) //must come after connect to get the path field
 @requireNoAuth //must come after connect so we get isAuthenticated
 export default class AuthContainer extends Component {
@@ -19,21 +19,21 @@ export default class AuthContainer extends Component {
     location: PropTypes.object,
     isAuthenticating: PropTypes.bool.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    authError: PropTypes.string,
+    tokenError: PropTypes.string,
     path: PropTypes.string.isRequired
   };
 
   render() {
-    const {authActions, path, ...props} = this.props;
+    const {path} = this.props;
     let authType, authFunc;
     if (path.indexOf('/login') !== -1) {
       authType = 'Login';
-      authFunc = authActions.loginUser
+      authFunc = loginUser
     } else {
       authType = 'Sign up';
-      authFunc = authActions.signupUser
+      authFunc = signupUser
     }
-    return <Auth authType={authType} authFunc={authFunc} {...props}/>
+    return <Auth authType={authType} authFunc={authFunc} {...this.props}/>
   }
 }
 
@@ -42,15 +42,8 @@ function mapStateToProps(state) {
   return {
     isAuthenticating,
     isAuthenticated,
-    authError: error, //redux-form will override "error"
+    tokenError: error,
     path
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    authActions: bindActionCreators(authActions, dispatch),
-    dispatch
   }
 }
 
@@ -67,16 +60,3 @@ function validate(values) {
   return errors;
 }
 
-//function asyncValidate(values, dispatch, props) {
-//  return new Promise((resolve, reject) => {
-//    postJSON('/auth/check-email', {email: values.email})
-//      .then(parseJSON)
-//      .then(parsedRes => {
-//        if (parsedRes.isValid) {
-//          resolve()
-//        } else {
-//          reject({email: parsedRes.error})
-//        }
-//      })
-//  });
-//}

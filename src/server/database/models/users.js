@@ -20,7 +20,7 @@ export async function loginDB(email, password) {
   }
   const user = users[0];
   if (!user) {
-    throw new Error('Incorrect email');
+    throw new Error('email');
   }
   let isCorrectPass = await compare(password, user.password);
   if (isCorrectPass) {
@@ -28,7 +28,7 @@ export async function loginDB(email, password) {
     delete user.createdAt;
     return user;
   } else {
-    throw new Error('Incorrect password');
+    throw new Error('password');
   }
 }
 
@@ -50,19 +50,18 @@ export async function signupDB(email, password) {
   try {
     users = await findEmailDB(email);
   } catch (error) {
-    console.log(error);
     throw new Error('Error reaching database, please try again');
   }
   const user = users[0];
   if (user) {
     let isCorrectPass = await compare(password, user.password);
     if (isCorrectPass) {
-      //log the fool in anyways
+      //treat it like a login
       delete user.password;
       delete user.createdAt;
       return user;
     } else {
-      throw new Error('Email already exists in database');
+      throw new Error('email');
     }
   } else {
     const hashedPass = await hash(password, 10); //production should use 12+

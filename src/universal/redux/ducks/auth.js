@@ -40,7 +40,7 @@ export const authSchema = Joi.object().keys({
 });
 
 const initialState = {
-  error: null,
+  error: {},
   isAuthenticated: false,
   isAuthenticating: false,
   token: null,
@@ -52,14 +52,14 @@ export default function reducer(state = initialState, action = {}) {
     case LOGIN_USER_REQUEST:
     case SIGNUP_USER_REQUEST:
       return Object.assign({}, state, {
-        error: null,
+        error: {},
         isAuthenticating: true
       });
     case LOGIN_USER_SUCCESS:
     case SIGNUP_USER_SUCCESS:
       const {token, user} = action.payload;
       return Object.assign({}, state, {
-        error: null,
+        error: {},
         isAuthenticating: false,
         isAuthenticated: true,
         token,
@@ -76,7 +76,7 @@ export default function reducer(state = initialState, action = {}) {
       });
     case LOGOUT_USER:
       return Object.assign({}, state, {
-        error: null,
+        error: {},
         isAuthenticating: false,
         isAuthenticated: false,
         token: null,
@@ -133,22 +133,40 @@ export function logout() {
   }
 }
 
-export function loginUser(email, password, redirect) {
-  return async function (dispatch) {
-    dispatch(loginUserRequest());
-    let res = await postJSON('/auth/login', {email, password});
+export function loginUser(dispatch, data, redirect) {
+  dispatch(loginUserRequest());
+  return new Promise(async function (resolve, reject) {
+    let res = await postJSON('/auth/login', data);
     let parsedRes = await parseJSON(res);
-    const {token, user, error} = parsedRes;
-    if (token) {
-      const payload = {token, user};
-      redirect = redirect || '/';
-      localStorage.setItem('Meatier.token', token);
+    const {error, ...payload} = parsedRes;
+    if (payload.token) {
+      localStorage.setItem('Meatier.token', payload.token);
       dispatch(loginUserSuccess(payload));
       dispatch(updatePath(redirect));
+      resolve()
     } else {
-      dispatch(loginUserError(error || 'Unknown server error. Try again'));
+      dispatch(loginUserError(error));
+      reject(error)
     }
-  }
+  });
+}
+
+export function signupUser(dispatch, data, redirect) {
+    dispatch(signupUserRequest());
+  return new Promise(async function(resolve, reject) {
+    let res = await postJSON('/auth/signup', data);
+    let parsedRes = await parseJSON(res);
+    const {error, ...payload} = parsedRes;
+    if (payload.token) {
+      localStorage.setItem('Meatier.token', payload.token);
+      dispatch(signupUserSuccess(payload));
+      dispatch(updatePath(redirect));
+      resolve();
+    } else {
+      dispatch(signupUserError(error));
+      reject(error);
+    }
+  });
 }
 
 export function loginToken(token) {
@@ -156,6 +174,7 @@ export function loginToken(token) {
     dispatch(loginUserRequest());
     let res = await postJSON('/auth/login-token', {token});
     if (res.status !== 200) {
+      localStorage.removeItem('Meatier.token');
       return dispatch(loginUserError('Error logging in with token'));
     }
     let parsedRes = await parseJSON(res);
@@ -165,28 +184,10 @@ export function loginToken(token) {
 }
 
 export function logoutAndRedirect() {
-  localStorage.clear();
+  localStorage.removeItem('Meatier.token');
   return function (dispatch) {
     dispatch(logout());
     dispatch(updatePath('/'));
-  }
-}
-
-export function signupUser(email, password, redirect) {
-  return async function (dispatch) {
-    dispatch(signupUserRequest());
-    let res = await postJSON('/auth/signup', {email, password});
-    let parsedRes = await parseJSON(res);
-    const {token, user, error} = parsedRes;
-    if (token) {
-      const payload = {token, user};
-      const redirect = redirect || '/';
-      localStorage.setItem('Meatier.token', token);
-      dispatch(signupUserSuccess(payload));
-      dispatch(updatePath(redirect));
-    } else {
-      dispatch(signupUserError(error || 'Unknown server error. Try again'));
-    }
   }
 }
 
