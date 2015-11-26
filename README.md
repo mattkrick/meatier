@@ -70,6 +70,11 @@ The database then emits a changefeed doc to all subscribed viewers.
 Since the DB doesn't know which client made the mutation, it always sends a changefeed to the server.
 The server is smart enough to not send that changefeed to the socket that mutated the state, simply an ack.
 
+##Similar Projects
+ - https://github.com/erikras/react-redux-universal-hot-example (Really nice, but no sockets or DB)
+ - https://github.com/kriasoft/react-starter-kit (nice, but again, no sockets, no DB)
+ - https://github.com/GordyD/3ree (uses RethinkDB, but no optimistic UI)
+
 ##License
 MIT
 
