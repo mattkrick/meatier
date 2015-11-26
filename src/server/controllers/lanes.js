@@ -5,41 +5,44 @@ import Joi from 'joi';
 import {parsedJoiErrors} from '../../universal/utils/schema';
 
 export async function addLane(data, callback) {
-  this.docQueue.add(data.id);
   const schemaError = validateLaneSchema(data);
   if (schemaError) {
     return callback(null, schemaError);
   }
+  this.docQueue.add(data.id);
   try {
     await addLaneDB(data);
   } catch (e) {
+    this.docQueue.delete(data.id);
     return callback(null, {_error: e.message})
   }
   callback();
 }
 
 export async function updateLane(data, callback) {
-  this.docQueue.add(data.id);
+
   const schemaError = validateLaneSchema(data, true);
   if (schemaError) {
     callback(null,schemaError); //bypass the generic 'error' listener
     return;
   }
+  this.docQueue.add(data.id);
   try {
     await updateLaneDB(data);
   } catch (e) {
+    this.docQueue.delete(data.id);
     return callback(null, {_error: e.message})
   }
   callback();
 }
 
 export async function deleteLane(payload, callback) {
-  console.log('deleting lane');
   const {id} = payload;
   this.docQueue.add(id);
   try {
     await deleteLaneDB(id);
   } catch (e) {
+    this.docQueue.delete(id);
     return callback(null, {_error: e.message})
   }
   callback();

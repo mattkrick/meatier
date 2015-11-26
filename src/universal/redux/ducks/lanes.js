@@ -3,6 +3,7 @@ import uuid from 'node-uuid';
 import Joi from 'joi';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
+import {deleteNote} from './notes';
 
 /*
  * Schema
@@ -96,7 +97,6 @@ const baseMeta = {
 export function loadLanes() {
   const sub = 'allLanes';
   const socket = socketCluster.connect(socketOptions); //GOTCHA: must put it in the function otherwise server hangs up
-  console.log(socket.subscriptions());
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
     socket.on(sub, data => {
@@ -134,13 +134,21 @@ export function updateLane(payload, meta) {
 }
 
 export function deleteLane(id, meta) {
-  return {
-    type: DELETE_LANE,
-    payload: {
-      id
-    },
-    meta: Object.assign({}, baseMeta, meta)
-  };
+  return (dispatch, getState) => {
+    const noteState = getState().notes;
+    if (noteState && noteState.data) {
+      noteState.data.forEach(note => {
+        if (note.laneId === id) {
+          dispatch(deleteNote(note.id))
+        }
+      })
+    }
+    dispatch({
+      type: DELETE_LANE,
+      payload: {id},
+      meta: Object.assign({}, baseMeta, meta)
+    });
+  }
 }
 
 export const laneActions = {
@@ -149,3 +157,9 @@ export const laneActions = {
   deleteLane
 };
 
+//There are 2 ways to handle deleting linked docs
+//1. In the thinky model, when a lane is deleted, it deletes all notes
+//PRO: simple CON: disallows squash because if a document is created & deleted within the squash, changefeed doesn't emit
+//It also means an extra changefeed doc is sent to the client (whereas options 2 only send an id to delete)
+//2. redux thunk - when a lane delete is called, search state & remove those notes
+//PRO: client does child-lookup, not DB. CON: can't delete what the client cant see (could be a PRO?)

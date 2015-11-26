@@ -50,11 +50,13 @@ module.exports.run = function (worker) {
   //handle sockets
   scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, subscribeMiddleware);
   scServer.on('connection', function (socket) {
+    //hold the client-submitted docs in a queue while they get validated & handled in the DB
+    //then, when the DB emits a change, we know if the client caused it or not
     socket.docQueue = new Set();
-    console.log('connected');
+    console.log('Client connected:', socket.id);
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', function (socket) {
-      console.log('disconnected');
+      console.log('Client disconnected:', socket.id);
     });
     socket.on(ADD_LANE, addLane)
     socket.on(DELETE_LANE, deleteLane)

@@ -1,5 +1,5 @@
 export function addImmutable(newAction, subState) {
-  return [newAction, ...subState]
+  return [...subState, newAction]
 }
 
 export function updateImmutable(newAction, subState) {

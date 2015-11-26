@@ -1,6 +1,8 @@
 import thinky from './thinky';
+//import {Lane} from './lanes';
 
-const Note = thinky.createModel("notes", {});
+export const Note = thinky.createModel("notes", {});
+//Note.belongsTo(Lane, "lane", "laneId", "id");
 Note.ensureIndex("laneId");
 
 export async function addNoteDB(note) {
@@ -14,7 +16,6 @@ export async function addNoteDB(note) {
 
 export async function updateNoteDB(inNote) {
   const {id, ...updates} = inNote;
-  console.log('NOTE', id, inNote);
   updates.updatedAt = Date.now();
   let note;
   try {

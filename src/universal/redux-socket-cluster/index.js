@@ -16,89 +16,7 @@ const SUBSCRIBE_ERROR = "@@socketCluster/SUBSCRIBE_ERROR";
 const KICKOUT = "@@socketCluster/KICKOUT";
 const UNSUBSCRIBE = "@@socketCluster/UNSUBSCRIBE";
 const DISCONNECT = "@@socketCluster/DISCONNECT";
-const DEAUTHORIZE = "@@socketCluster/DEAUTHORIZE";
-
-// Action creators
-function disconnect() {
-  return {
-    type: DISCONNECT
-  }
-}
-
-function deauthorize() {
-  return {
-    type: DEAUTHORIZE
-  }
-}
-function connectRequest(payload) {
-  return {
-    type: CONNECT_REQUEST,
-    payload
-  }
-}
-
-function connectSuccess(payload) {
-  return {
-    type: CONNECT_SUCCESS,
-    payload
-  }
-}
-
-function connectError(error) {
-  return {
-    type: CONNECT_ERROR,
-    error
-  }
-}
-
-function authRequest() {
-  return {
-    type: AUTH_REQUEST
-  }
-}
-
-function authSuccess(payload) {
-  return {
-    type: AUTH_SUCCESS,
-    payload
-  }
-}
-
-function authError(error) {
-  return {
-    type: AUTH_ERROR,
-    error
-  }
-}
-
-function subscribeRequest(payload) {
-  return {
-    type: SUBSCRIBE_REQUEST,
-    payload
-  }
-}
-
-function subscribeSuccess(payload) {
-  return {
-    type: SUBSCRIBE_SUCCESS,
-    payload
-  }
-}
-
-function subscribeError(payload, error) {
-  return {
-    type: SUBSCRIBE_ERROR,
-    payload,
-    error
-  }
-}
-
-function subscribeKickout(error) {
-  return {
-    type: KICKOUT,
-    error
-  }
-}
+const DEAUTHENTICATE = "@@socketCluster/DEAUTHENTICATE";
 
 // Reducer
 const initialState = {
@@ -108,9 +26,9 @@ const initialState = {
   isAuthenticating: false,
   lastError: null,
   token: null,
-  connectionError: '',
-  permissionError: '',
-  tokenError: '',
+  //connectionError: '',
+  //permissionError: '',
+  //tokenError: '',
   pendingSubs: [],
   subs: []
 
@@ -118,7 +36,7 @@ const initialState = {
 
 export const socketClusterReducer = function (state = initialState, action) {
   switch (action.type) {
-    case DEAUTHORIZE:
+    case DEAUTHENTICATE:
       return Object.assign({}, state, {
         isAuthenticated: false,
         token: null
@@ -138,7 +56,7 @@ export const socketClusterReducer = function (state = initialState, action) {
         state: action.payload.state,
         id: action.payload.id,
         isAuthenticated: action.payload.isAuthenticated,
-        lastError: action.payload.error
+        lastError: action.error
       });
     case AUTH_REQUEST:
       return Object.assign({}, state, {
@@ -200,19 +118,20 @@ export const reduxSocket = (options, reduxSCOptions) => ComposedComponent => {
 
     componentWillMount() {
       this.socket = socketCluster.connect(options);
-      this.socket._callbacks = [];
-      clearTimeout(this.socket.__destructionCountdown);
       this.authTokenName = options.authTokenName;
-      this.handleConnection();
-      this.handleError();
-      this.handleSubs();
-      this.handleAuth();
+      if (!this.socket.__destructionCountdown) {
+        this.handleConnection();
+        this.handleError();
+        this.handleSubs();
+        this.handleAuth();
+        return;
+      }
+      clearTimeout(this.socket.__destructionCountdown);
     }
 
     componentWillUnmount() {
       this.socket.__destructionCountdown = setTimeout(() => {
         this.socket.disconnect();
-        this.socket._callbacks = [];
         this.socket = socketCluster.destroy(options);
       }, this.clusteredOptions.keepAlive)
     }
@@ -227,20 +146,20 @@ export const reduxSocket = (options, reduxSCOptions) => ComposedComponent => {
       const {dispatch} = this.context.store;
       const {socket} = this;
       socket.on('subscribeRequest', channelName => {
-        dispatch(subscribeRequest({channelName}))
+        dispatch({type: SUBSCRIBE_REQUEST, payload: {channelName}})
       })
       socket.on('subscribe', channelName => {
-        dispatch(subscribeSuccess({channelName}))
+        dispatch({type: SUBSCRIBE_SUCCESS, payload: {channelName}})
       })
       socket.on('subscribeFail', (error, channelName) => {
-        dispatch(subscribeError({channelName}, error))
+        dispatch({type: SUBSCRIBE_ERROR, payload: {channelName}, error})
       })
       //only sends a messsage to lastError, unsub does the rest
       socket.on('kickOut', (error, channelName) => {
-        dispatch(subscribeKickout(error))
+        dispatch({type: KICKOUT, error})
       })
       socket.on('unsubscribe', (channelName) => {
-        dispatch(subscribeKickout({channelName}))
+        dispatch({type: UNSUBSCRIBE, payload: {channelName}})
       })
     }
 
@@ -250,27 +169,32 @@ export const reduxSocket = (options, reduxSCOptions) => ComposedComponent => {
 
       //handle case where socket was opened before the HOC
       if (socket.state !== 'open') {
-        dispatch(connectRequest({state: socket.getState()}));
-      } else if (!socket.__destructionCountdown) {
-        dispatch(connectSuccess({
-          id: socket.id,
-          isAuthenticated: socket.isAuthenticated,
-          state: socket.state
-        }));
+        dispatch({type: CONNECT_REQUEST, payload: {state: socket.getState()}});
+        dispatch({
+          type: CONNECT_SUCCESS,
+          payload: {
+            id: socket.id,
+            isAuthenticated: socket.isAuthenticated,
+            state: socket.state
+          }
+        });
       }
       socket.on('connect', status => {
-        dispatch(connectSuccess({
-          id: status.id,
-          isAuthenticated: status.isAuthenticated,
-          state: 'open',
+        dispatch({
+          type: CONNECT_SUCCESS,
+          payload: {
+            id: status.id,
+            isAuthenticated: status.isAuthenticated,
+            state: 'open'
+          },
           error: status.authError
-        }));
-      });
+        })
+      })
       socket.on('disconnect', () => {
-        dispatch(disconnect());
+        dispatch({type: DISCONNECT});
       });
       socket.on('connectAbort', () => { //triggers while in connecting state
-        dispatch(disconnect());
+        dispatch({type: DISCONNECT});
       });
     }
 
@@ -278,9 +202,7 @@ export const reduxSocket = (options, reduxSCOptions) => ComposedComponent => {
       const {dispatch} = this.context.store;
       const {socket} = this;
       socket.on('error', error => {
-        dispatch(connectError({
-          error: error.message
-        }))
+        dispatch({type: CONNECT_ERROR, error: error.message})
       })
     }
 
@@ -288,19 +210,19 @@ export const reduxSocket = (options, reduxSCOptions) => ComposedComponent => {
       const {dispatch} = this.context.store;
       const {socket, authTokenName} = this;
       socket.on('authenticate', token => {
-        dispatch(authSuccess({token}));
+        dispatch({type: AUTH_SUCCESS, payload: {token}});
       });
       socket.on('removeAuthToken', () => {
-        dispatch(deauthorize());
+        dispatch({type: DEAUTHENTICATE});
       });
       if (authTokenName && socket.isAuthenticated !== true) {
-        dispatch(authRequest());
+        dispatch({type: AUTH_REQUEST});
         const loadToken = promisify(socket.auth.loadToken.bind(socket.auth));
         const authenticate = promisify(socket.authenticate.bind(socket));
         const token = await loadToken(authTokenName);
         const authStatus = await authenticate(token);
         if (authStatus.authError) {
-          dispatch(authError(authStatus.authError.message));
+          dispatch({type: AUTH_ERROR, error: authStatus.authError.message});
         }
       }
     }

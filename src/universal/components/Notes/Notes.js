@@ -8,9 +8,16 @@ import styles from './Notes.css';
 const noteTarget = {
   hover(inTargetProps, monitor) {
     const targetLaneId = inTargetProps.laneId;
-    const {id:sourceId, laneId:sourceLaneId, onDrag} = monitor.getItem();
+    const {id:sourceId, index: sourceIndex, laneId:sourceLaneId, onMove} = monitor.getItem();
     if (inTargetProps.notes.length > 0 || targetLaneId === sourceLaneId) return;
-    //onDrag(sourceId, null, targetLaneId);
+    onMove({
+      sourceId,
+      sourceIndex,
+      sourceLaneId,
+      targetIndex: 0,
+      targetLaneId,
+      monitor
+    });
   }
 };
 @DropTarget(NOTE, noteTarget, (connect) => ({
@@ -41,7 +48,7 @@ export default class Notes extends Component {
                            fields={['title']}
                            form="noteNameForm"
           />
-        <div className={styles.delete} onClick={() => deleteNote({id:note.id})}>x</div>
+        <div className={styles.delete} onClick={() => deleteNote(note.id)}>x</div>
       </Note>
     );
   }

@@ -13,7 +13,7 @@ const noteSource = {
     };
   },
   isDragging(props, monitor) {
-    return props.note.index === monitor.getItem().index
+    return props.note.id === monitor.getItem().id
   }
 };
 

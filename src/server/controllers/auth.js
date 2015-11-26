@@ -8,6 +8,7 @@ import {parsedJoiErrors} from '../../universal/utils/schema';
 
 const verifyToken = promisify(jwt.verify);
 
+
 export async function login(req, res) {
   const {email, password} = req.body;
   const schemaError = validateAuthSchema(req.body);

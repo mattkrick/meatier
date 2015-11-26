@@ -180,10 +180,10 @@ export function updateNote(payload, meta) {
   };
 }
 
-export function deleteNote(payload, meta) {
+export function deleteNote(id, meta) {
   return {
     type: DELETE_NOTE,
-    payload,
+    payload: {id},
     meta: Object.assign({}, baseMeta, meta)
   };
 }
