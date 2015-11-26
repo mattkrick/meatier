@@ -1,8 +1,10 @@
 import {parse} from 'url';
 import allLanes from './allLanes';
+import allNotes from './allNotes';
 
 const handler = {
-  allLanes
+  allLanes,
+  allNotes
 }
 
 export default function (subscription) {

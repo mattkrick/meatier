@@ -29,18 +29,18 @@ export default class Notes extends Component {
   }
 
   renderNote(note, index) {
-    const {updateNote, deleteNote, moveNote} = this.props.noteActions;
+    const {updateNote, moveNote, deleteNote} = this.props.noteActions;
     return (
       <Note className={styles.note} note={note} key={`note${note.id}`} onMove={moveNote} index={index}>
         <EditableContainer item={note}
                            updateItem={updateNote}
-                           deleteItem={deleteNote}
                            dispatch={this.props.dispatch}
                            formKey={`note${note.id}`}
                            initialValue={note}
-                           fields={['noteName']}
+                           fields={['title']}
                            form="noteNameForm"
           />
+        <div className={styles.delete} onClick={() => deleteNote({id:note.id})}>x</div>
       </Note>
     );
   }

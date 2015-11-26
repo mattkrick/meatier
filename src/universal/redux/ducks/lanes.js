@@ -117,18 +117,11 @@ export function loadLanes() {
 }
 
 export function addLane(payload, meta) {
-  return (dispatch, getState) => {
-    dispatch({
-      type: ADD_LANE,
-      payload: payload || {
-        id: uuid.v4(),
-        title: 'New lane',
-        userId: getState().auth.user.id,
-        isPrivate: false
-      },
-      meta: Object.assign({}, baseMeta, meta)
-    })
-  };
+  return {
+    type: ADD_LANE,
+    payload,
+    meta: Object.assign({}, baseMeta, meta)
+  }
 }
 
 export function updateLane(payload, meta) {
@@ -152,7 +145,6 @@ export function deleteLane(id, meta) {
 export const laneActions = {
   addLane,
   updateLane,
-  deleteLane,
-  loadLanes
+  deleteLane
 };
 

@@ -12,7 +12,8 @@ export default class LaneContainer extends Component {
     lane: PropTypes.object.isRequired,
     notes: PropTypes.array.isRequired,
     noteActions: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    userId: PropTypes.string.isRequired
   };
 
   render() {

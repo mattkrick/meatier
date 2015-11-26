@@ -1,56 +1,56 @@
-import {addLaneDB, deleteLaneDB, updateLaneDB} from '../database/models/lanes';
+import {addNoteDB, deleteNoteDB, updateNoteDB} from '../database/models/notes';
 import promisify from 'es6-promisify';
-import {laneSchemaInsert, laneSchemaUpdate} from '../../universal/redux/ducks/lanes';
+import {noteSchemaInsert, noteSchemaUpdate} from '../../universal/redux/ducks/notes';
 import Joi from 'joi';
 import {parsedJoiErrors} from '../../universal/utils/schema';
 
-export async function addLane(data, callback) {
+export async function addNote(data, callback) {
   this.docQueue.add(data.id);
-  const schemaError = validateLaneSchema(data);
+  const schemaError = validateNoteSchema(data);
   if (schemaError) {
     return callback(null, schemaError);
   }
   try {
-    await addLaneDB(data);
+    await addNoteDB(data);
   } catch (e) {
     return callback(null, {_error: e.message})
   }
   callback();
 }
 
-export async function updateLane(data, callback) {
+export async function updateNote(data, callback) {
   this.docQueue.add(data.id);
-  const schemaError = validateLaneSchema(data, true);
+  const schemaError = validateNoteSchema(data, true);
   if (schemaError) {
     callback(null,schemaError); //bypass the generic 'error' listener
     return;
   }
   try {
-    await updateLaneDB(data);
+    await updateNoteDB(data);
   } catch (e) {
     return callback(null, {_error: e.message})
   }
   callback();
 }
 
-export async function deleteLane(payload, callback) {
-  console.log('deleting lane');
+export async function deleteNote(payload, callback) {
+  console.log('deleting note');
   const {id} = payload;
   this.docQueue.add(id);
   try {
-    await deleteLaneDB(id);
+    await deleteNoteDB(id);
   } catch (e) {
     return callback(null, {_error: e.message})
   }
   callback();
 }
 
-function validateLaneSchema(lane, isUpdate) {
-  const schema = isUpdate? laneSchemaUpdate : laneSchemaInsert;
-  const results = Joi.validate(lane, schema, {abortEarly: false});
+function validateNoteSchema(note, isUpdate) {
+  const schema = isUpdate? noteSchemaUpdate : noteSchemaInsert;
+  const results = Joi.validate(note, schema, {abortEarly: false});
   const error = parsedJoiErrors(results.error);
   if (Object.keys(error).length) {
-    error._error = 'Invalid lane';
+    error._error = 'Invalid note';
     return error;
   }
 }

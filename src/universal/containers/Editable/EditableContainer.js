@@ -1,15 +1,14 @@
 import React, {PropTypes, Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {laneTitleSchema} from '../../redux/ducks/lanes';
 import Joi from 'joi';
 import Editable from '../../components/Editable/Editable';
 import _ from 'lodash';
 
-const fieldName = 'laneName';
-const validate = values => {
-  const results = Joi.validate(values[fieldName], laneTitleSchema);
-  return results.errors || {};
-};
+//const fieldName = 'laneName';
+//const validate = values => {
+//  const results = Joi.validate(values[fieldName], laneTitleSchema);
+//  return results.errors || {};
+//};
 
 @reduxForm()
 export default class EditableContainer extends Component {

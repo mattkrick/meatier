@@ -69,17 +69,17 @@ export default function reducer(state = initialState, action = {}) {
     case CLEAR_NOTES:
       return Object.assign({}, initialState)
     //case DRAG_NOTE:
-      //const currentIndex = state.findIndex((note) => note.id === action.payload.noteId);
-      //const movedNote = update(state[currentIndex], {laneId: {$set: action.payload.laneId}});
-      //const newIndex = action.payload.laneIdx;
-      //const newIndex = state.findIndex((note) => note.id === action.putAfterId);
-      //return update(state, {
-      //  $splice: [
-      //    [currentIndex, 1],
-      //    [newIndex, 0, movedNote]
-          //[newIndex, 0, movedNote]
-        //]
-      //});
+    //const currentIndex = state.findIndex((note) => note.id === action.payload.noteId);
+    //const movedNote = update(state[currentIndex], {laneId: {$set: action.payload.laneId}});
+    //const newIndex = action.payload.laneIdx;
+    //const newIndex = state.findIndex((note) => note.id === action.putAfterId);
+    //return update(state, {
+    //  $splice: [
+    //    [currentIndex, 1],
+    //    [newIndex, 0, movedNote]
+    //[newIndex, 0, movedNote]
+    //]
+    //});
     case ADD_NOTE_SUCCESS:
     case UPDATE_NOTE_SUCCESS:
     case DELETE_NOTE_SUCCESS:
@@ -116,7 +116,14 @@ export function loadNotes() {
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
     socket.on(sub, data => {
-      dispatch(addNote(data.new_val, {synced: true}));
+      const meta = {synced: true};
+      if (!data.old_val) {
+        dispatch(addNote(data.new_val, meta));
+      } else if (!data.new_val) {
+        dispatch(deleteNote(data.old_val.id, meta));
+      } else {
+        dispatch(updateNote(data.new_val, meta))
+      }
     })
     socket.on('unsubscribe', channelName => {
       if (channelName === sub) {
@@ -127,18 +134,11 @@ export function loadNotes() {
 }
 
 export function addNote(payload, meta) {
-  //payload receives laneId and sort from component
-  return (dispatch, getState) => {
-    dispatch({
-      type: ADD_NOTE,
-      payload: Object.assign({}, payload, {
-        id: uuid.v4(),
-        title: 'New note',
-        userId: getState().auth.user.id
-      }),
-      meta: Object.assign({}, baseMeta, meta)
-    })
-  };
+  return {
+    type: ADD_NOTE,
+    payload,
+    meta: Object.assign({}, baseMeta, meta)
+  }
 }
 
 export function updateNote(payload, meta) {
@@ -160,6 +160,5 @@ export function deleteNote(payload, meta) {
 export const noteActions = {
   addNote,
   updateNote,
-  deleteNote,
-  loadNotes
+  deleteNote
 };

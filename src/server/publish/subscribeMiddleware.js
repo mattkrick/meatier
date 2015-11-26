@@ -1,20 +1,18 @@
 import {parse} from 'url';
 
 const subRequirements = {
-  allLanes: [checkUserId]
+  allLanes: [checkUserId],
+  allNotes: []
 }
 
 function checkUserId(socket,query) {
   const token = socket.getAuthToken();
-  console.log('checking user id');
   if (!token || !token.id) {
-    console.log('invalid userId');
     return 'Invalid userId';
   }
 }
 //handles authorization for everything on the lanes table
 export default function permissionChecker(socket, subscription, next) {
-  console.log('in checker');
   const parsedSub = parse(subscription, true); //turn query into obj
   const {pathname: channel, query} = parsedSub;
   if (!subRequirements[channel]) {
@@ -28,7 +26,5 @@ export default function permissionChecker(socket, subscription, next) {
       return next(error);
     }
   }
-
-  console.log('permissionChecker passed');
   next();
 }

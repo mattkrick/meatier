@@ -5,12 +5,16 @@ import http from 'http';
 import bodyParser from 'body-parser';
 
 import config from '../webpack/webpack.config.js';
-import {login, signup, loginToken} from './controllers/auth';
-import {ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes';
 import createSSR from './createSSR.js';
+import {login, signup, loginToken} from './controllers/auth';
+
+//"live query"
 import subscribeMiddleware from './publish/subscribeMiddleware';
 import subscribeHandler from './publish/subscribeHandler';
+import {ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes';
+import {ADD_NOTE, UPDATE_NOTE, DELETE_NOTE} from '../universal/redux/ducks/notes';
 import {addLane, deleteLane, updateLane} from './controllers/lanes';
+import {addNote, deleteNote, updateNote} from './controllers/notes';
 
 
 const compiler = webpack(config);
@@ -55,8 +59,10 @@ module.exports.run = function (worker) {
     socket.on(ADD_LANE, addLane)
     socket.on(DELETE_LANE, deleteLane)
     socket.on(UPDATE_LANE, updateLane)
-
+    socket.on(ADD_NOTE, addNote)
+    socket.on(DELETE_NOTE, deleteNote)
+    socket.on(UPDATE_NOTE, updateNote)
   });
 
 }
-//TODO: dont let tokens expire while still connected
+//TODO: dont let tokens expire while still connected, depends on PR to SC

@@ -184,112 +184,106 @@ export const socketClusterReducer = function (state = initialState, action) {
 }
 
 // HOC
-export const reduxSocket = function (options) {
-  return function socketClusterer(ComposedComponent) {
-    return class SocketClustered extends Component {
-      static contextTypes = {
-        store: React.PropTypes.object.isRequired
-      };
+export const reduxSocket = options => ComposedComponent => {
+  return class SocketClustered extends Component {
+    static contextTypes = {
+      store: React.PropTypes.object.isRequired
+    };
 
-      constructor(props, context) {
-        super(props, context);
-      }
+    constructor(props, context) {
+      super(props, context);
+    }
 
-      componentWillMount() {
-        options = options || {};
-        this.socket = socketCluster.connect(options);
-        this.authTokenName = options.authTokenName;
-        this.socket = socketCluster.connect(options);
-        window.socket = this.socket;
-        this.handleConnection();
-        this.handleError();
-        this.handleSubs();
-        this.handleAuth();
-      }
+    componentWillMount() {
+      options = options || {};
+      this.socket = socketCluster.connect(options);
+      this.authTokenName = options.authTokenName;
+      this.socket = socketCluster.connect(options);
+      this.handleConnection();
+      this.handleError();
+      this.handleSubs();
+      this.handleAuth();
+    }
 
-      componentWillUnmount() {
-        options = options || {};
-        this.socket.disconnect();
-        this.socket = socketCluster.destroy(options);
-      }
+    componentWillUnmount() {
+      options = options || {};
+      this.socket.disconnect();
+      this.socket = socketCluster.destroy(options);
+    }
 
-      render() {
-        return (
-          <ComposedComponent {...this.props}/>
-        )
-      }
+    render() {
+      return (
+        <ComposedComponent {...this.props}/>
+      )
+    }
 
-      handleSubs() {
-        const {dispatch} = this.context.store;
-        const {socket} = this;
-        socket.on('subscribeRequest', channelName => {
-          dispatch(subscribeRequest({channelName}))
-        })
-        socket.on('subscribe', channelName => {
-          dispatch(subscribeSuccess({channelName}))
-        })
-        socket.on('subscribeFail', (error, channelName) => {
-          dispatch(subscribeError({channelName}, error))
-        })
-        socket.on('kickOut', (error, channelName) => {
-          dispatch(subscribeKickout(error))
-        })
-        socket.on('unsubscribe', (channelName) => {
-          dispatch(subscribeKickout({channelName}))
-        })
-      }
+    handleSubs() {
+      const {dispatch} = this.context.store;
+      const {socket} = this;
+      socket.on('subscribeRequest', channelName => {
+        dispatch(subscribeRequest({channelName}))
+      })
+      socket.on('subscribe', channelName => {
+        dispatch(subscribeSuccess({channelName}))
+      })
+      socket.on('subscribeFail', (error, channelName) => {
+        dispatch(subscribeError({channelName}, error))
+      })
+      socket.on('kickOut', (error, channelName) => {
+        dispatch(subscribeKickout(error))
+      })
+      socket.on('unsubscribe', (channelName) => {
+        dispatch(subscribeKickout({channelName}))
+      })
+    }
 
-      handleConnection() {
-        const {dispatch} = this.context.store;
-        const {socket} = this;
-        dispatch(connectRequest({state: socket.getState()}));
-        socket.on('connect', status => {
-          dispatch(connectSuccess({
-            id: status.id,
-            isAuthenticated: status.isAuthenticated,
-            state: 'open',
-            error: status.authError
-          }));
-        });
-        socket.on('disconnect', () => {
-          console.log('received disconnect');
-          dispatch(disconnect());
-        });
-        socket.on('connectAbort', () => { //triggers while in connecting state
-          console.log('received connectAbort');
-          dispatch(disconnect());
-        });
-      }
+    handleConnection() {
+      const {dispatch} = this.context.store;
+      const {socket} = this;
+      dispatch(connectRequest({state: socket.getState()}));
+      socket.on('connect', status => {
+        dispatch(connectSuccess({
+          id: status.id,
+          isAuthenticated: status.isAuthenticated,
+          state: 'open',
+          error: status.authError
+        }));
+      });
+      socket.on('disconnect', () => {
+        dispatch(disconnect());
+      });
+      socket.on('connectAbort', () => { //triggers while in connecting state
+        dispatch(disconnect());
+      });
+    }
 
-      handleError() {
-        const {dispatch} = this.context.store;
-        const {socket} = this;
-        socket.on('error', error => {
-          console.log('ERR',error);
-          dispatch(connectError({
-            error: error.message
-          }))
-        })
-      }
+    handleError() {
+      const {dispatch} = this.context.store;
+      const {socket} = this;
+      socket.on('error', error => {
+        dispatch(connectError({
+          error: error.message
+        }))
+      })
+    }
 
-      async handleAuth() {
-        const {dispatch} = this.context.store;
-        const {socket, authTokenName} = this;
-        socket.on('authenticate', token => {
-          dispatch(authSuccess({token}));
-        });
-        socket.on('removeAuthToken', () => {
-          dispatch(deauthorize());
-        });
-        if (authTokenName) {
-          dispatch(authRequest());
-          const loadToken = promisify(socket.auth.loadToken.bind(socket.auth));
-          const authenticate = promisify(socket.authenticate.bind(socket));
-          const token = await loadToken(authTokenName);
-          const authStatus = await authenticate(token);
-          if (authStatus.authError) {
-            dispatch(authError(authStatus.authError.message));
-          }
+    async handleAuth() {
+      const {dispatch} = this.context.store;
+      const {socket, authTokenName} = this;
+      socket.on('authenticate', token => {
+        dispatch(authSuccess({token}));
+      });
+      socket.on('removeAuthToken', () => {
+        dispatch(deauthorize());
+      });
+      if (authTokenName) {
+        dispatch(authRequest());
+        const loadToken = promisify(socket.auth.loadToken.bind(socket.auth));
+        const authenticate = promisify(socket.authenticate.bind(socket));
+        const token = await loadToken(authTokenName);
+        const authStatus = await authenticate(token);
+        if (authStatus.authError) {
+          dispatch(authError(authStatus.authError.message));
         }
       }
     }

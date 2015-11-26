@@ -1,4 +1,5 @@
 import React, {PropTypes, Component} from 'react';
+import styles from './Editable.css';
 
 export default class Editable extends Component {
   static PropTypes = {
@@ -58,7 +59,7 @@ export default class Editable extends Component {
     const {item:{title}, formProps} = this.props;
     return (
       <span onClick={formProps.onFocus}>
-        <span className="title">{title}</span>
+        <span className={styles.title}>{title}</span>
       </span>
     );
   }
