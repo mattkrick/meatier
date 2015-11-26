@@ -14,6 +14,24 @@ const noteSource = {
   },
   isDragging(props, monitor) {
     return props.note.id === monitor.getItem().id
+  },
+  endDrag: function (props, monitor) {
+    if (!monitor.didDrop()) {
+      return;
+    }
+    const {note, updateNote} = props;
+    const item = monitor.getItem();
+    const updates = {};
+    if (note.index !== item.index) {
+      updates.index = item.index;
+    }
+    if (note.laneId !== item.laneId) {
+      updates.laneId = item.laneId
+    }
+    if (Object.keys(updates).length) {
+      updates.id = item.id;
+      updateNote(updates)
+    }
   }
 };
 

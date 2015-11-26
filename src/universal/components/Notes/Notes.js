@@ -39,7 +39,7 @@ export default class Notes extends Component {
   renderNote(note, index) {
     const {updateNote, dragNote, deleteNote} = this.props.noteActions;
     return (
-      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} index={index}>
+      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote} index={index}>
         <EditableContainer item={note}
                            updateItem={updateNote}
                            dispatch={this.props.dispatch}
