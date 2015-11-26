@@ -1,0 +1,78 @@
+# meatier
+like meteor, but meatier
+
+Meteor is awesome! But after 3 years, it's starting to show it's age. This project is designed to showcase 
+the exact same functionality as Meteor, *but without the monolithic structure.* 
+It trades a little simplicity for a lot of flexibility.
+
+Some of my chief complaints with Meteor
+ - Built on Node 0.10, and that ain't changing anytime soon
+ - Build system doesn't allow for code splitting (the opposite, in fact)
+ - Locks you in to a walled garden (npm require only gets you so far)
+ - Global scope (namespacing doesn't count)
+ - Goes Oprah-Christmas-special with websockets (not every person/page needs one)
+ - Can't handle css-modules (CSS is all handled behind the scenes)
+ - Dependent on MDG to release Meteor-specific package updates like react
+ - Tied to MongoDB for official support
+ 
+The node community has moved crazy fast to develop some really neat tools. Here's a comparison table of Meteor tools
+and their npm counterparts that are used in this example:
+
+| Atmosphere            | npm                   |
+|-----------------------|-----------------------|
+| SimpleSchema          | Joi                   |
+| Collections2          | thinky                |
+| AutoForm              | redux-form            |
+| Minimongo             | redux                 |
+| DDP                   | SocketCluster         |
+| websocket auth        | REST auth + JWTs      |
+| Blaze                 | React                 |
+| Meteor's build system | webpack               |
+| Mongo                 | Rethinkdb             |
+| global CSS            | postcss-module-values |
+| latency compensation  | redux-optimist        |
+
+That's a lot of work, so what do you get for it that Meteor doesn't provide?
+###...Scaling! 
+ - SocketCluster scales vertically *very* easily, and horizontal scaling isn't too hard, either
+ - REST authentication means you don't have to give everyone a websocket, fewer sockets = fewer CPUs
+ - JWTs allow you to store authentication as well as authorization, which can save you a hit to your DB to find permissions
+ - RethinkDB changefeeds replace the mongo oplog
+ - webpack to it's true potential. When used with Meteor, you still have a Meteor-sized common chunk
+ - redux has undo built in, it is a debugger's dream (see the demo)
+ - Modularized CSS that you don't have to namespace. Now with variables!
+ 
+##Installation
+- `brew install rethinkdb`
+- `git clone` this repo
+- `cd meatier`
+- `rethinkdb`
+- `npm start` (in a second terminal window)
+- check out `localhost:3000`
+
+##How it works
+When the page is opened, a basic HTML layout is sent to the client (SSR coming soon). The redux devtools is also
+loaded so you track your every state-changing action.
+
+When the page loads, it checks your localStorage for `Meatier.token` & will automatically log you in if the token is legit. 
+If not, just head to the 'Sign up' page. The 'Sign up' page uses redux-form, which handles all errors, schema validation,
+and submissions. Your credentials are sent to a REST API and a user document (similar to Meteor's) is returned to your state.
+
+The 'Kanban' app requires a login & websocket, so when you enter, your token will be used to authenticate a websocket.
+That token is stored on the server so it is only sent during the handshake (very similar to DDP). Socket state is managed
+by `redux-socket-cluster`, just clicking `socket` in the devtools let's you explore its current state. 
+To make this happen,  the package uses a fork of socketcluster-client (v4.0 is still in the works). 
+
+When the component loads, it subscribes to `lanes` & `notes`, which starts your personalized changefeed.
+When you do something that changes the persisted state (eg add a kanban lane) that action is executed
+optimistically on the client & emitted to the server where it is validated & sent to the database. 
+The database then emits a changefeed doc to all subscribed viewers.
+Since the DB doesn't know which client made the mutation, it always sends a changefeed to the server.
+The server is smart enough to not send that changefeed to the socket that mutated the state, simply an ack.
+
+##License
+MIT
+
+
+
+
