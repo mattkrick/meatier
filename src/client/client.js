@@ -8,13 +8,9 @@ import createLogger from 'redux-logger';
 import { Provider } from 'react-redux';
 import { syncReduxAndRouter} from 'redux-simple-router';
 import createHistory from 'history/lib/createBrowserHistory';
-import liveQuery from './liveQuery.js';
 import rootReducer from '../universal/redux/reducer.js';
-import { getOrSetUserId } from './userId';
-//import {setUserId} from '../universal/redux/ducks/user.js';
 import Root from '../universal/components/Root/Root.js';
 import polyfill from 'babel-polyfill';
-import {laneSchema} from '../universal/redux/ducks/lanes';
 import Joi from 'joi';
 
 const initialState = window.__INITIAL_STATE__ || {};
@@ -23,8 +19,6 @@ const loggerMiddleware = createLogger({
   collapsed: true
 });
 const history = createHistory();
-window.laneSchema = laneSchema;
-window.Joi = Joi;
 
 const finalCreateStore = compose(
   applyMiddleware(optimisticMiddleware,thunkMiddleware, loggerMiddleware),

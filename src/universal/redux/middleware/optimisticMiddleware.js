@@ -20,7 +20,8 @@ export default function (store) {
     if (!meta.isOptimistic) return next(action);
     let transactionID = nextTransactionID++;
     next(Object.assign({}, action, {optimist: {type: BEGIN, id: transactionID}})); //execute optimistic update
-    socket.emit(type, payload, err => {
+
+    socket.emit(type, payload, (_e,err) => {
       dispatchAction(err); //complete transaction
     });
     function dispatchAction(error) {

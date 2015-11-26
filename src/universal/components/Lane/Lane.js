@@ -12,6 +12,11 @@ export default class Lane extends Component {
     dispatch: PropTypes.func.isRequired
   };
 
+  //constructor(props) {
+  //  super(props);
+  //  this.noteHandler = this.noteHandler.bind(this);
+  //}
+
   render() {
     const {laneActions:{updateLane, deleteLane}, noteActions: {addNote, ...modNoteActions},
       lane, notes, formKey, initialValues, dispatch} = this.props;
@@ -20,15 +25,15 @@ export default class Lane extends Component {
     return (
       <div className={styles.lane}>
         <div className={styles.header}>
+          <div className={styles.delete} onClick={() => deleteLane(lane.id)}>x</div>
           <EditableContainer {...laneProps}
             item={lane}
             updateItem={updateLane}
-            deleteItem={deleteLane}
-            fields={["laneTitle"]}
+            fields={["title"]}
             form="laneTitleForm"
           />
           <div className={styles.addNote}>
-            <button onClick={() => addNote(lane.id, notes.length)}>Add a note</button>
+            <button onClick={() => addNote({laneId: lane.id, sort: notes.length})}>Add a note</button>
           </div>
         </div>
         <Notes {...noteProps} dispatch={dispatch}/>

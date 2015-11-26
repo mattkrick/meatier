@@ -7,34 +7,26 @@ import socketOptions from '../../utils/socketOptions';
 /*
  * Schema
  */
-const idSchema = Joi.string().min(3).max(36).required();
-export const laneTitleSchema = Joi.string().max(200).trim().required();
-export const laneSchema = Joi.object({
-  id: idSchema,
-  title: laneTitleSchema,
+const idSchema = Joi.string().min(3).max(36);
+export const laneSchemaUpdate = Joi.object({
+  id: idSchema.required(),
+  title: Joi.string().max(30).trim(),
   userId: idSchema,
   isPrivate: Joi.boolean()
 });
-
-//export const laneSchema = {
-//  full: fullLaneSchema,
-//  title: laneTitleSchema
-//};
+export const laneSchemaInsert = laneSchemaUpdate.requiredKeys('title', 'userId');
 
 /*
  * Action types
  */
 export const LANES = 'lanes'; //db table
-//export const LANES_CHANGE = 'LANES_CHANGE'; // socket message
-//export const LOAD_LANES = 'LOAD_LANES';
-export const CLEAR_LANES = 'CLEAR_LANES';
 export const ADD_LANE = 'ADD_LANE';
 export const UPDATE_LANE = 'UPDATE_LANE';
 export const DELETE_LANE = 'DELETE_LANE';
+const CLEAR_LANES = 'CLEAR_LANES'; //local state flush
 const ADD_LANE_SUCCESS = 'ADD_LANE_SUCCESS';
 const UPDATE_LANE_SUCCESS = 'UPDATE_LANE_SUCCESS';
 const DELETE_LANE_SUCCESS = 'DELETE_LANE_SUCCESS';
-//const LOAD_LANES_SUCCESS = 'LOAD_LANES_SUCCESS';
 const ADD_LANE_ERROR = 'ADD_LANE_ERROR';
 const UPDATE_LANE_ERROR = 'UPDATE_LANE_ERROR';
 const DELETE_LANE_ERROR = 'DELETE_LANE_ERROR';
@@ -107,7 +99,14 @@ export function loadLanes() {
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
     socket.on(sub, data => {
-      dispatch(addLane(data.new_val, {synced: true}));
+      const meta = {synced: true};
+      if (!data.old_val) {
+        dispatch(addLane(data.new_val, meta));
+      } else if (!data.new_val) {
+        dispatch(deleteLane(data.old_val.id, meta));
+      } else {
+        dispatch(updateLane(data.new_val, meta))
+      }
     })
     socket.on('unsubscribe', channelName => {
       if (channelName === sub) {
@@ -156,11 +155,4 @@ export const laneActions = {
   deleteLane,
   loadLanes
 };
-//export const laneActions = {
-//  addDoc: addLane,
-//  updateDoc: updateLane,
-//  deleteDoc: deleteLane,
-//  loadDoc: loadLanes
-//};
-
 

@@ -265,6 +265,7 @@ export const reduxSocket = function (options) {
         const {dispatch} = this.context.store;
         const {socket} = this;
         socket.on('error', error => {
+          console.log('ERR',error);
           dispatch(connectError({
             error: error.message
           }))

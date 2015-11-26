@@ -12,14 +12,12 @@ export default class Editable extends Component {
 
   constructor(props) {
     super(props);
-    this.checkEnter = this.checkEnter.bind(this);
     this.renderEdit = this.renderEdit.bind(this);
     this.renderItem = this.renderItem.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
   render() {
-
     return (
       <div>
         {this.props.isEditing ? this.renderEdit() : this.renderItem()}
@@ -28,45 +26,40 @@ export default class Editable extends Component {
   }
 
   renderEdit() {
-
-    const {item:{title}, formProps} = this.props;
+    const {item:{title}, formProps, handleSubmit} = this.props;
     return (
-      <form onSubmit={this.onSubmit}>
+      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
         <input {...formProps}
           ref={formProps.name}
           type="text"
           autoFocus={true}
           defaultValue={title}
-          onSubmit={this.onSubmit}
+          onSubmit={handleSubmit(this.onSubmit.bind(this))}
           onFocus={()=>{}}
-          onBlur={this.onSubmit}
+          onBlur={handleSubmit(this.onSubmit.bind(this))}
         />
       </form>
     )
   }
 
-  onSubmit(e) {
-    e.preventDefault();
-    const {item:{id, title}, formProps, handleSubmit} = this.props;
+  onSubmit(data, dispatch) {
+    const {item:{id, title}, formProps, updateItem} = this.props;
     const val = this.refs[formProps.name].value;
     formProps.onBlur();
     if (title === val) return;
-    handleSubmit(this.props.updateItem(id, val));
+    const payload = {
+      title: data.title,
+      id
+    }
+    updateItem(payload);
   }
 
   renderItem() {
-    const {item:{id, title}, formProps} = this.props;
+    const {item:{title}, formProps} = this.props;
     return (
       <span onClick={formProps.onFocus}>
         <span className="title">{title}</span>
-        <button className="delete" onClick={() => this.props.deleteItem(id)}>x</button>
       </span>
     );
-  }
-
-  checkEnter(e) {
-    if (e.key === 'Enter') {
-      this.props.handleSubmit(this.save(e));
-    }
   }
 }

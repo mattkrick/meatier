@@ -5,7 +5,6 @@ const handler = {
   allLanes
 }
 
-//export default function (scServer) {
 export default function (subscription) {
   //"this" is the socket
   const parsedSub = parse(subscription, true);
@@ -13,4 +12,3 @@ export default function (subscription) {
   const channelHandler = handler[channel];
   return channelHandler && channelHandler.call(this, channel, query);
 }
-//}

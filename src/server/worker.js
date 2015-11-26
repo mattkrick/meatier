@@ -6,18 +6,15 @@ import bodyParser from 'body-parser';
 
 import config from '../webpack/webpack.config.js';
 import {login, signup, loginToken} from './controllers/auth';
-//import {LOAD_LANES, ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes';
+import {ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes';
 import createSSR from './createSSR.js';
-//import {liveUpdates} from './database/databaseQueries.js';
-//import {handleAddDoc, handleUpdateDoc, handleDeleteDoc, handleLoadLanes} from './serverValidation';
 import subscribeMiddleware from './publish/subscribeMiddleware';
-import thinky from './database/models/thinky';
 import subscribeHandler from './publish/subscribeHandler';
-import {addLane, deleteLane} from './controllers/lanes';
+import {addLane, deleteLane, updateLane} from './controllers/lanes';
+
 
 const compiler = webpack(config);
 const authRouter = express.Router();
-const {r} = thinky;
 
 module.exports.run = function (worker) {
   console.log('   >> Worker PID:', process.pid);
@@ -39,7 +36,6 @@ module.exports.run = function (worker) {
   authRouter.route('/login').post(login);
   authRouter.route('/login-token').post(loginToken);
   authRouter.route('/signup').post(signup);
-  //authRoute.route('/check-auth').post(validateAuthSchema);
 
   //server-side rendering
   app.get('*', createSSR);
@@ -48,9 +44,7 @@ module.exports.run = function (worker) {
   httpServer.on('request', app);
 
   //handle sockets
-
   scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, subscribeMiddleware);
-
   scServer.on('connection', function (socket) {
     socket.docQueue = new Set();
     console.log('connected');
@@ -58,8 +52,9 @@ module.exports.run = function (worker) {
     socket.on('disconnect', function (socket) {
       console.log('disconnected');
     });
-    socket.on('ADD_LANE', addLane)
-    socket.on('DELETE_LANE', deleteLane)
+    socket.on(ADD_LANE, addLane)
+    socket.on(DELETE_LANE, deleteLane)
+    socket.on(UPDATE_LANE, updateLane)
 
   });
 
