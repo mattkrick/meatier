@@ -46,9 +46,10 @@ That's a lot of work, so what do you get for it that Meteor doesn't provide?
 - `brew install rethinkdb`
 - `git clone` this repo
 - `cd meatier`
+- `npm install`
 - `rethinkdb`
 - `npm start` (in a second terminal window)
-- check out `localhost:3000`
+- http://localhost:3000
 
 ##How it works
 When the page is opened, a basic HTML layout is sent to the client (SSR coming soon). The redux devtools is also
@@ -69,6 +70,10 @@ optimistically on the client & emitted to the server where it is validated & sen
 The database then emits a changefeed doc to all subscribed viewers.
 Since the DB doesn't know which client made the mutation, it always sends a changefeed to the server.
 The server is smart enough to not send that changefeed to the socket that mutated the state, simply an ack.
+
+The kanban lane titles & notes are really basic, you click them & they turn into input fields. 
+The notes can be dragged from lane to lane. This is to showcase a local state change that doesn't affect the persisted state.
+When the note is dropped to its new location, the change is persisted. 
 
 ##Similar Projects
  - https://github.com/erikras/react-redux-universal-hot-example (Really nice, but no sockets or DB)
