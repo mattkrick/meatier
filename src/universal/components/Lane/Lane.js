@@ -31,7 +31,7 @@ export default class Lane extends Component {
           />
           <div className={styles.addNote}>
             <button
-              onClick={() => addNote({userId, title: 'New note', id: uuid.v4(), laneId: lane.id, sort: notes.length})}>
+              onClick={() => addNote({userId, title: `New note ${notes.length}`, id: uuid.v4(), laneId: lane.id, index: notes.length})}>
               Add a note
             </button>
           </div>

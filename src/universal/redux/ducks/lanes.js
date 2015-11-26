@@ -96,6 +96,7 @@ const baseMeta = {
 export function loadLanes() {
   const sub = 'allLanes';
   const socket = socketCluster.connect(socketOptions); //GOTCHA: must put it in the function otherwise server hangs up
+  console.log(socket.subscriptions());
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
     socket.on(sub, data => {

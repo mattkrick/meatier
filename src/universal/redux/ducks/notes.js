@@ -1,8 +1,8 @@
-import {addImmutable, updateImmutable, deleteImmutable} from '../helpers.js';
-import uuid from 'node-uuid';
+import {addImmutable, updateImmutable, deleteImmutable, findInState} from '../helpers.js';
 import Joi from 'joi';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
+import update from 'react/lib/update';
 
 /*
  * Schema
@@ -13,9 +13,9 @@ export const noteSchemaUpdate = Joi.object({
   title: Joi.string().max(30).trim(),
   laneId: idSchema,
   userId: idSchema,
-  sort: Joi.number()
+  index: Joi.number()
 });
-export const noteSchemaInsert = noteSchemaUpdate.requiredKeys('title', 'laneId', 'userId', 'sort');
+export const noteSchemaInsert = noteSchemaUpdate.requiredKeys('title', 'laneId', 'userId', 'index');
 
 /*
  * Action types
@@ -68,7 +68,20 @@ export default function reducer(state = initialState, action = {}) {
       });
     case CLEAR_NOTES:
       return Object.assign({}, initialState)
-    //case DRAG_NOTE:
+    case DRAG_NOTE:
+      const {sourceId, targetLaneId, monitor} = action.payload;
+      const newIndex = getNewIndex(state.data, action.payload);
+      const updates = {
+        index: newIndex,
+        laneId: targetLaneId
+      }
+      //mutate the source props so we can drag on draggin on
+      Object.assign(monitor.getItem(), updates)
+      return Object.assign({}, state, {
+        data: state.data.map(note =>
+          note.id === sourceId ? Object.assign({}, note, updates) : note
+        )
+      });
     //const currentIndex = state.findIndex((note) => note.id === action.payload.noteId);
     //const movedNote = update(state[currentIndex], {laneId: {$set: action.payload.laneId}});
     //const newIndex = action.payload.laneIdx;
@@ -99,6 +112,24 @@ export default function reducer(state = initialState, action = {}) {
     default:
       return state;
   }
+}
+
+function getNewIndex(notes, payload) {
+  //if the source is above the target, put it below, otherwise, put it above
+  const {sourceId, sourceIndex, sourceLaneId, targetLaneId, targetIndex} = payload;
+  let xfactor = 1;
+  if ((targetLaneId === sourceLaneId && sourceIndex > targetIndex) || targetLaneId !== sourceLaneId) {
+    xfactor = -1;
+  }
+  let minIndex = Infinity * xfactor;
+  for (let i = 0; i < notes.length; i++) {
+    let curNote = notes[i];
+    if (curNote.id === sourceId) continue;
+    if (xfactor * curNote.index > xfactor * targetIndex && xfactor * curNote.index < xfactor * minIndex) {
+      minIndex = curNote.index
+    }
+  }
+  return (minIndex === Infinity * xfactor) ? targetIndex + xfactor : (targetIndex + minIndex) / 2;
 }
 
 /*
@@ -157,8 +188,16 @@ export function deleteNote(payload, meta) {
   };
 }
 
+export function dragNote(payload) {
+  return {
+    type: DRAG_NOTE,
+    payload
+  }
+}
+
 export const noteActions = {
   addNote,
   updateNote,
-  deleteNote
+  deleteNote,
+  dragNote
 };

@@ -7,10 +7,13 @@ const noteSource = {
   beginDrag(props) {
     return {
       id: props.note.id,
-      index: props.index,
+      index: props.note.index,
       laneId: props.note.laneId,
       onMove: props.onMove
     };
+  },
+  isDragging(props, monitor) {
+    return props.note.index === monitor.getItem().index
   }
 };
 
@@ -18,7 +21,7 @@ const noteTarget = {
   hover(inTargetProps, monitor, component) {
     const targetProps = {
       id: inTargetProps.note.id,
-      index: inTargetProps.index,
+      index: inTargetProps.note.index,
       laneId: inTargetProps.note.laneId
     };
     const sourceProps = monitor.getItem();
@@ -35,15 +38,20 @@ const noteTarget = {
         return;
       }
     }
-    sourceProps.onMove(sourceProps.id, targetProps.id, targetProps.laneId);
-    //monitor.getItem().index = targetProps.index; //mutates state
+    sourceProps.onMove({
+      sourceId: sourceProps.id,
+      sourceIndex: sourceProps.index,
+      sourceLaneId: sourceProps.laneId,
+      targetIndex: targetProps.index,
+      targetLaneId: targetProps.laneId,
+      monitor
+    });
   }
 };
 
 @DragSource(NOTE, noteSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
-
 }))
 @DropTarget(NOTE, noteTarget, (connect) => ({
   connectDropTarget: connect.dropTarget()

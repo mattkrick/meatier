@@ -8,9 +8,9 @@ import styles from './Notes.css';
 const noteTarget = {
   hover(inTargetProps, monitor) {
     const targetLaneId = inTargetProps.laneId;
-    const {id:sourceId, laneId:sourceLaneId, onMove} = monitor.getItem();
+    const {id:sourceId, laneId:sourceLaneId, onDrag} = monitor.getItem();
     if (inTargetProps.notes.length > 0 || targetLaneId === sourceLaneId) return;
-    onMove(sourceId, null, targetLaneId);
+    //onDrag(sourceId, null, targetLaneId);
   }
 };
 @DropTarget(NOTE, noteTarget, (connect) => ({
@@ -25,13 +25,14 @@ export default class Notes extends Component {
 
   render() {
     const {notes,connectDropTarget} = this.props;
-    return connectDropTarget(<ul className={styles.notes}>{notes.map(this.renderNote)}</ul>);
+    const sortedNotes = notes.sort((a,b) => a.index - b.index);
+    return connectDropTarget(<ul className={styles.notes}>{sortedNotes.map(this.renderNote)}</ul>);
   }
 
   renderNote(note, index) {
-    const {updateNote, moveNote, deleteNote} = this.props.noteActions;
+    const {updateNote, dragNote, deleteNote} = this.props.noteActions;
     return (
-      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={moveNote} index={index}>
+      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} index={index}>
         <EditableContainer item={note}
                            updateItem={updateNote}
                            dispatch={this.props.dispatch}

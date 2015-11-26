@@ -22,9 +22,13 @@ export default class KanbanContainer extends Component {
   };
 
   componentWillMount() {
-    const {dispatch} = this.props;
-    dispatch(loadLanes());
-    dispatch(loadNotes());
+    const {dispatch, socketState} = this.props;
+    if (socketState === 'closed') {
+      //handle here & not in middleware to make it atomic, otherwise state could change after lanes are loaded
+      dispatch(loadLanes());
+      dispatch(loadNotes());
+    }
+
   }
 
   render() {
@@ -35,7 +39,8 @@ export default class KanbanContainer extends Component {
 function mapStateToProps(state) {
   return {
     lanes: state.lanes,
-    userId: state.auth.user.id
+    userId: state.auth.user.id,
+    socketState: state.socket.state
   };
 }
 
