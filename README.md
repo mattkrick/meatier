@@ -76,9 +76,10 @@ The notes can be dragged from lane to lane. This is to showcase a local state ch
 When the note is dropped to its new location, the change is persisted. 
 
 ##Similar Projects
- - https://github.com/erikras/react-redux-universal-hot-example (Really nice, but no sockets or DB)
- - https://github.com/kriasoft/react-starter-kit (nice, but again, no sockets, no DB)
+ - https://github.com/erikras/react-redux-universal-hot-example (Really nice, but no auth or DB)
+ - https://github.com/kriasoft/react-starter-kit (nice, but no sockets, no DB)
  - https://github.com/GordyD/3ree (uses RethinkDB, but no optimistic UI)
+ - http://survivejs.com/ (A nice alt-flux & react tutorial for a kanban)
 
 ##License
 MIT
