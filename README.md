@@ -75,11 +75,16 @@ The kanban lane titles & notes are really basic, you click them & they turn into
 The notes can be dragged from lane to lane. This is to showcase a local state change that doesn't affect the persisted state.
 When the note is dropped to its new location, the change is persisted. 
 
+
 ##Similar Projects
  - https://github.com/erikras/react-redux-universal-hot-example (Really nice, but no auth or DB)
- - https://github.com/kriasoft/react-starter-kit (nice, but no sockets, no DB)
+ - https://github.com/kriasoft/react-starter-kit (nice, I borrowed their layout, but no sockets, no DB)
  - https://github.com/GordyD/3ree (uses RethinkDB, but no optimistic UI)
  - http://survivejs.com/ (A nice alt-flux & react tutorial for a kanban)
+
+##In Action
+I don't know of any place that hosts RethinkDB for free...so here's a gif. 
+![Meatier](http://imgur.com/B3IErZr.gif)
 
 ##License
 MIT
