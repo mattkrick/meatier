@@ -1,7 +1,14 @@
 {
   "name": "meatier",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Like meteor, but meatier",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattkrick/meatier.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mattkrick/meatier/issues"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node ./src/server/server.babel.js",
