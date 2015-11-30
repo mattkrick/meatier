@@ -35,6 +35,9 @@ const DELETE_LANE_ERROR = 'DELETE_LANE_ERROR';
 
 /*
  * Reducer
+ * For tables, I always keep these 3 fields.
+ * If synced is false, it means what you see is optimistic, not from the db
+ * If there is an error, then you can use that in the UI somewhere
  */
 const initialState = {
   synced: false,
@@ -96,9 +99,10 @@ const baseMeta = {
 
 export function loadLanes() {
   const sub = 'allLanes';
-  const socket = socketCluster.connect(socketOptions); //GOTCHA: must put it in the function otherwise server hangs up
+  const socket = socketCluster.connect(socketOptions); //GOTCHA: must call this from a function and not the top otherwise server hangs up
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
+    //client-side changefeed handler
     socket.on(sub, data => {
       const meta = {synced: true};
       if (!data.old_val) {
@@ -156,10 +160,3 @@ export const laneActions = {
   updateLane,
   deleteLane
 };
-
-//There are 2 ways to handle deleting linked docs
-//1. In the thinky model, when a lane is deleted, it deletes all notes
-//PRO: simple CON: disallows squash because if a document is created & deleted within the squash, changefeed doesn't emit
-//It also means an extra changefeed doc is sent to the client (whereas options 2 only send an id to delete)
-//2. redux thunk - when a lane delete is called, search state & remove those notes
-//PRO: client does child-lookup, not DB. CON: can't delete what the client cant see (could be a PRO?)

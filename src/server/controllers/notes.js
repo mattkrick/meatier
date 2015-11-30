@@ -23,7 +23,7 @@ export async function addNote(data, callback) {
 export async function updateNote(data, callback) {
   const schemaError = validateNoteSchema(data, true);
   if (schemaError) {
-    callback(null,schemaError); //bypass the generic 'error' listener
+    callback(null,schemaError); //bypass the generic 'error' listener from socketcluster
     return;
   }
   this.docQueue.add(data.id);

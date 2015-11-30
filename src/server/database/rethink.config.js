@@ -4,13 +4,3 @@ export default {
   db: 'meatier'
 }
 
-export const tables = [{
-  name: 'notes'
-},{
-  name: 'lanes'
-},{
-  name: 'users'
-  //index: 'email'
-}];
-
-

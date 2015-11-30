@@ -14,7 +14,6 @@ import {loadNotes} from '../../redux/ducks/notes';
 @connect(mapStateToProps, mapDispatchToProps)
 @reduxSocket(socketOptions)
 export default class KanbanContainer extends Component {
-
   static propTypes = {
     laneActions: PropTypes.object.isRequired,
     lanes: PropTypes.object.isRequired,
@@ -24,11 +23,10 @@ export default class KanbanContainer extends Component {
   componentWillMount() {
     const {dispatch, socketState} = this.props;
     if (socketState === 'closed') {
-      //handle here & not in middleware to make it atomic, otherwise state could change after lanes are loaded
+      //handle here & not in middleware to make it atomic, otherwise state could change between loadLanes & loadNotes
       dispatch(loadLanes());
       dispatch(loadNotes());
     }
-
   }
 
   render() {

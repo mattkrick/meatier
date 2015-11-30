@@ -20,12 +20,12 @@ export async function login(req, res) {
     user = await loginDB(email, password);
   } catch (e) {
     let error;
-    if (e.message === 'email') {
+    if (e.name === 'DocumentNotFoundError') {
       error = {
         _error: 'Login failed',
         email: 'Email not found'
       }
-    } else if (e.message === 'password') {
+    } else if (e.name === 'AuthorizationError') {
       error = {
         _error: 'Login failed',
         password: 'Incorrect password' //todo 3 attempts left!
@@ -47,12 +47,12 @@ export async function loginToken(req, res) {
   try {
     decoded = await verifyToken(token, jwtSecret);
   } catch (e) {
-    res.sendStatus(401).json({error: 'Invalid token'})
+    res.status(401).json({error: 'Invalid token'})
   }
   try {
     user = await loginWithIdDB(decoded.id);
   } catch (e) {
-    res.sendStatus(401).json({error: e.message})
+    res.status(401).json({error: e.message})
   }
   res.status(200).json({user})
 }
@@ -68,7 +68,7 @@ export async function signup(req, res) {
     user = await signupDB(email, password);
   } catch (e) {
     let error;
-    if (e.message === 'email') {
+    if (e.name === 'AuthorizationError') {
       error = {
         _error: 'Cannot create account',
         email: 'Email already exists'
@@ -86,6 +86,7 @@ export async function signup(req, res) {
 
 
 function validateAuthSchema(credentials) {
+  //Failing here means they passed the client validation, so they're probably up to no good
   const results = Joi.validate(credentials, authSchema, {abortEarly: false});
   const error = parsedJoiErrors(results.error);
   if (Object.keys(error).length) {

@@ -15,7 +15,3 @@ export function deleteImmutable(id, subState) {
 export function findInState(subState, id) {
   return subState.findIndex(event => event.id === id);
 }
-
-//export function editImmutable(id, subState) {
-//  return subState.
-//}

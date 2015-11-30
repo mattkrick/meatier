@@ -26,7 +26,6 @@ export const ADD_NOTE = 'ADD_NOTE';
 export const UPDATE_NOTE = 'UPDATE_NOTE';
 export const DELETE_NOTE = 'DELETE_NOTE';
 const DRAG_NOTE = 'DRAG_NOTE';
-//const DROP_NOTE = 'DROP_NOTE';
 const CLEAR_NOTES = 'CLEAR_NOTES'; //local state flush
 const ADD_NOTE_SUCCESS = 'ADD_NOTE_SUCCESS';
 const UPDATE_NOTE_SUCCESS = 'UPDATE_NOTE_SUCCESS';
@@ -82,17 +81,6 @@ export default function reducer(state = initialState, action = {}) {
           note.id === sourceId ? Object.assign({}, note, updates) : note
         )
       });
-    //const currentIndex = state.findIndex((note) => note.id === action.payload.noteId);
-    //const movedNote = update(state[currentIndex], {laneId: {$set: action.payload.laneId}});
-    //const newIndex = action.payload.laneIdx;
-    //const newIndex = state.findIndex((note) => note.id === action.putAfterId);
-    //return update(state, {
-    //  $splice: [
-    //    [currentIndex, 1],
-    //    [newIndex, 0, movedNote]
-    //[newIndex, 0, movedNote]
-    //]
-    //});
     case ADD_NOTE_SUCCESS:
     case UPDATE_NOTE_SUCCESS:
     case DELETE_NOTE_SUCCESS:
@@ -143,7 +131,7 @@ const baseMeta = {
 
 export function loadNotes() {
   const sub = 'allNotes';
-  const socket = socketCluster.connect(socketOptions); //GOTCHA: must put it in the function otherwise server hangs up
+  const socket = socketCluster.connect(socketOptions);
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
     socket.on(sub, data => {

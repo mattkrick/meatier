@@ -1,26 +1,26 @@
 import thinky from './thinky';
 import promisify from 'es6-promisify';
 import bcrypt from 'bcrypt';
+import {DocumentNotFoundError, AuthorizationError} from '../errors';
+
 
 const compare = promisify(bcrypt.compare);
 const hash = promisify(bcrypt.hash);
 
-const {type, r} = thinky;
-
 const User = thinky.createModel("users", {});
 User.ensureIndex("email");
 
-
 export async function loginDB(email, password) {
   let users;
+
   try {
     users = await findEmailDB(email);
-  } catch(error) {
-    throw new Error('Error reaching database, please try again');
+  } catch(e) {
+    throw e;
   }
   const user = users[0];
   if (!user) {
-    throw new Error('email');
+    throw new DocumentNotFoundError();
   }
   let isCorrectPass = await compare(password, user.password);
   if (isCorrectPass) {
@@ -28,7 +28,7 @@ export async function loginDB(email, password) {
     delete user.createdAt;
     return user;
   } else {
-    throw new Error('password');
+    throw new AuthorizationError();
   }
 }
 
@@ -37,8 +37,8 @@ export async function loginWithIdDB(id) {
   let user;
   try {
     user = await User.get(id).run();
-  } catch (error) {
-    throw new Error('Error reaching database, please try again');
+  } catch (e) {
+    throw e;
   }
   delete user.password;
   delete user.createdAt;
@@ -49,8 +49,8 @@ export async function signupDB(email, password) {
   let users;
   try {
     users = await findEmailDB(email);
-  } catch (error) {
-    throw new Error('Error reaching database, please try again');
+  } catch (e) {
+    throw e;
   }
   const user = users[0];
   if (user) {
@@ -61,15 +61,15 @@ export async function signupDB(email, password) {
       delete user.createdAt;
       return user;
     } else {
-      throw new Error('email');
+      throw new AuthorizationError();
     }
   } else {
-    const hashedPass = await hash(password, 10); //production should use 12+
+    const hashedPass = await hash(password, 10); //production should use 12+, but it's slower
     let newUser;
     try {
       newUser = await User.save({email, password: hashedPass, createdAt: Date.now(), isVerified: false});
-    } catch (error) {
-      throw new Error(error);
+    } catch (e) {
+      throw e
     }
     return newUser;
   }

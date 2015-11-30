@@ -1,15 +1,16 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var root = process.cwd();
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
   entry: {
-    Kanban: ['./src/client/client.js', 'webpack-hot-middleware/client']
+    app: ['./src/client/client.js', 'webpack-hot-middleware/client']
   },
   output: {
     filename: '[name].js',
-    path: path.join(__dirname, 'build'),
+    path: path.join(root, 'build'),
     publicPath: '/static/'
   },
   plugins: [
@@ -19,7 +20,9 @@ module.exports = {
     new webpack.NoErrorsPlugin()
   ],
   resolve: {
-    extensions: ['', '.js', '.json', '.jsx']
+    extensions: ['', '.js', '.json', '.jsx'],
+    alias: {
+    }
   },
   node: { //used for joi validation on client
     dns: 'mock',
@@ -43,11 +46,15 @@ module.exports = {
         test: /\.(eot|ttf|wav|mp3)$/,
         loader: 'file-loader'
       },
-      { test: /\.css$/, loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'},
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
+      },
       //{ test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') },
-      {test: /\.js$/,
+      {
+        test: /\.js$/,
         loader: 'babel-loader',
-        include: path.join(__dirname, ".."),
+        include: [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')],
         //exclude: /node_modules/,
         query: {
           "stage": 0,

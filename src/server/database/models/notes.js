@@ -1,8 +1,6 @@
 import thinky from './thinky';
-//import {Lane} from './lanes';
 
 export const Note = thinky.createModel("notes", {});
-//Note.belongsTo(Lane, "lane", "laneId", "id");
 Note.ensureIndex("laneId");
 
 export async function addNoteDB(note) {
@@ -10,7 +8,7 @@ export async function addNoteDB(note) {
   try {
     await Note.save(note);
   } catch (e) {
-    throw new Error(e);
+    throw e;
   }
 }
 
@@ -21,12 +19,12 @@ export async function updateNoteDB(inNote) {
   try {
     note = await Note.get(id);
   } catch (e) {
-    throw new Error('Document not found');
+    throw e;
   }
   try {
     await note.merge(updates).save()
   } catch (e) {
-    throw new Error(e);
+    throw e;
   }
 }
 
@@ -35,11 +33,11 @@ export async function deleteNoteDB(id) {
   try {
     noteToDelete = await Note.get(id);
   } catch (e) {
-    throw new Error('Document not found');
+    throw e;
   }
   try {
     await noteToDelete.delete()
   } catch (e) {
-    throw new Error(e);
+    throw e;
   }
 }

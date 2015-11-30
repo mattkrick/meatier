@@ -3,6 +3,9 @@ import jwtDecode from 'jwt-decode';
 import { updatePath } from 'redux-simple-router';
 import Joi from 'joi';
 import {postJSON, parseJSON, hostUrl} from '../../utils/utils';
+import socketOptions from '../../utils/socketOptions';
+
+const {authTokenName} = socketOptions;
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_ERROR = 'LOGIN_USER_ERROR';
@@ -139,7 +142,7 @@ export function loginUser(dispatch, data, redirect) {
     let parsedRes = await parseJSON(res);
     const {error, ...payload} = parsedRes;
     if (payload.token) {
-      localStorage.setItem('Meatier.token', payload.token);
+      localStorage.setItem(authTokenName, payload.token);
       dispatch(loginUserSuccess(payload));
       dispatch(updatePath(redirect));
       resolve()
@@ -151,13 +154,13 @@ export function loginUser(dispatch, data, redirect) {
 }
 
 export function signupUser(dispatch, data, redirect) {
-    dispatch(signupUserRequest());
-  return new Promise(async function(resolve, reject) {
+  dispatch(signupUserRequest());
+  return new Promise(async function (resolve, reject) {
     let res = await postJSON('/auth/signup', data);
     let parsedRes = await parseJSON(res);
     const {error, ...payload} = parsedRes;
     if (payload.token) {
-      localStorage.setItem('Meatier.token', payload.token);
+      localStorage.setItem(authTokenName, payload.token);
       dispatch(signupUserSuccess(payload));
       dispatch(updatePath(redirect));
       resolve();
@@ -173,7 +176,7 @@ export function loginToken(token) {
     dispatch(loginUserRequest());
     let res = await postJSON('/auth/login-token', {token});
     if (res.status !== 200) {
-      localStorage.removeItem('Meatier.token');
+      localStorage.removeItem(authTokenName);
       return dispatch(loginUserError('Error logging in with token'));
     }
     let parsedRes = await parseJSON(res);
@@ -183,7 +186,7 @@ export function loginToken(token) {
 }
 
 export function logoutAndRedirect() {
-  localStorage.removeItem('Meatier.token');
+  localStorage.removeItem(authTokenName);
   return function (dispatch) {
     dispatch(logout());
     dispatch(updatePath('/'));

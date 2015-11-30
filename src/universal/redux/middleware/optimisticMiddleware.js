@@ -8,7 +8,7 @@ let nextTransactionID = 0;
 export default function (store) {
   return next => action => {
     if (!action.meta || action.meta.synced !== false) {
-      //skip changes received from DB (supersedes optimism)
+      //skip non-document actions or changes received from DB (supersedes optimism)
       return next(action);
     }
     const {type, meta, payload} = action;
@@ -19,6 +19,7 @@ export default function (store) {
     next(Object.assign({}, action, {optimist: {type: BEGIN, id: transactionID}})); //execute optimistic update
     const socket = socketCluster.connect(socketOptions);
     socket.emit(type, payload, (_e,error) => {
+      //we dont' want SCv3 to throw an error, so we put the error in the result
       next({
         type: type + (error ? _ERROR : _SUCCESS),
         error,

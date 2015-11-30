@@ -9,10 +9,6 @@ export default class Kanban extends Component {
     lanes: PropTypes.object.isRequired
   };
 
-  constructor(p, c) {
-    super(p, c);
-  }
-
   render() {
     const {userId, laneActions: {addLane}} = this.props;
     return (

@@ -8,6 +8,7 @@ import {reduxForm} from 'redux-form';
 import Joi from 'joi';
 import requireNoAuth from '../../decorators/requireNoAuth/requireNoAuth';
 import {postJSON, parseJSON} from '../../utils/utils';
+import {parsedJoiErrors} from '../../utils/schema';
 
 //use the same form to retain form values (there's really no difference between login and signup, it's just for show)
 @connect(mapStateToProps)
@@ -48,14 +49,6 @@ function mapStateToProps(state) {
 
 function validate(values) {
   const results = Joi.validate(values, authSchema, {abortEarly: false});
-  if (!results.error) return {};
-  const errors = {};
-  const allErrors = results.error.details;
-  for (let i = 0; i < allErrors.length; i++) {
-    let curError = allErrors[i];
-    if (errors[curError.path]) continue;
-    errors[curError.path] = curError.message;
-  }
-  return errors;
+  return parsedJoiErrors(results.error);
 }
 

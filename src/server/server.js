@@ -8,7 +8,7 @@ const SocketCluster = SC.SocketCluster;
 const socketCluster = new SocketCluster({
   authKey: jwtSecret,
   logLevel: 1,
-  workers: 1 || numCpus,
+  workers: 1 || numCpus, //change this to scale vertically
   brokers: 1,
   port: 3000,
   appName: 'Meatier',

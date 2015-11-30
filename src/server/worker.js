@@ -4,7 +4,7 @@ import webpack from 'webpack';
 import http from 'http';
 import bodyParser from 'body-parser';
 
-import config from '../webpack/webpack.config.js';
+import config from '../../webpack/webpack.config.js';
 import createSSR from './createSSR.js';
 import {login, signup, loginToken} from './controllers/auth';
 

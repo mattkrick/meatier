@@ -4,7 +4,6 @@ import {LANES} from './ducks/lanes';
 import {NOTES} from './ducks/notes';
 import optimist from 'redux-optimist';
 import { routeReducer } from 'redux-simple-router';
-//import user from './ducks/user.js';
 import auth, {LOGIN_USER_ERROR} from './ducks/auth';
 import lanes from './ducks/lanes';
 import notes from './ducks/notes';

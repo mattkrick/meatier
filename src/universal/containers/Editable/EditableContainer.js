@@ -4,11 +4,7 @@ import Joi from 'joi';
 import Editable from '../../components/Editable/Editable';
 import _ from 'lodash';
 
-//const fieldName = 'laneName';
-//const validate = values => {
-//  const results = Joi.validate(values[fieldName], laneTitleSchema);
-//  return results.errors || {};
-//};
+//TODO validate the title
 
 @reduxForm()
 export default class EditableContainer extends Component {

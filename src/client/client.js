@@ -21,13 +21,9 @@ const loggerMiddleware = createLogger({
 const history = createHistory();
 
 const finalCreateStore = compose(
-  applyMiddleware(optimisticMiddleware,thunkMiddleware, loggerMiddleware),
+  applyMiddleware(optimisticMiddleware, thunkMiddleware, loggerMiddleware),
   DevTools.instrument())(createStore);
-  //finalCreateStore = syncReduxAndRouter(history, finalCreateStore);
-  const store = finalCreateStore(rootReducer, initialState);
-  syncReduxAndRouter(history, store);
+const store = finalCreateStore(rootReducer, initialState);
+syncReduxAndRouter(history, store);
 window.store = store; //debug
 render(<Root store={store} history={history}/>, document.getElementById('root'));
-
-// Now that we have rendered...
-//liveQuery(store);

@@ -20,18 +20,9 @@ export default class Html extends Component {
       <div id="root">
       </div>
       <script dangerouslySetInnerHTML={{__html: initialState}}/>
-      <script src='/static/Kanban.js'/>
+      <script src='/static/app.js'/>
       </body>
       </html>
     );
   }
 };
-//<Provider store={store}>
-//  <ReduxRouter />
-//</Provider>
-//<script src='/static/common.js'/>
-//<div id='root' dangerouslySetInnerHTML={{__html: this.props.html}}/>
-//{this.props.children}
-
-///
-//<link rel="stylesheet" href="/stylesheets/style.css" />
