@@ -3,23 +3,18 @@ import App from '../../components/App/App';
 import injectTapeEventPlugin from 'react-tap-event-plugin';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {loginToken} from '../../redux/ducks/auth';
+import socketOptions from '../../utils/socketOptions';
+import loginWithToken from '../../decorators/loginWithToken/loginWithToken';
 
 injectTapeEventPlugin();
 @connect(mapStateToProps)
+@loginWithToken(socketOptions.authTokenName)
 export default class AppContainer extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
     dispatch: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired
   };
-
-  componentWillMount() {
-    let token = localStorage.getItem('Meatier.token');
-    if (token) {
-      this.props.dispatch(loginToken(token));
-    }
-  }
 
   render() {
     return <App {...this.props}/>
