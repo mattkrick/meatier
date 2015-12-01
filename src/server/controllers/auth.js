@@ -1,8 +1,9 @@
-import {loginDB, getUserByIdDB, signupDB, setResetTokenDB, resetPasswordFromTokenDB} from '../database/models/users';
+import {loginDB, getUserByIdDB, signupDB, setResetTokenDB, resetPasswordFromTokenDB, resetVerifiedTokenDB, verifyEmailDB} from '../database/models/users';
 import jwt from 'jsonwebtoken';
 import promisify from 'es6-promisify';
 import {jwtSecret} from '../secrets';
-import {authSchemaInsert, authSchemaEmail, authSchemaPassword, validateResetToken} from '../../universal/redux/ducks/auth';
+import {authSchemaInsert, authSchemaEmail, authSchemaPassword} from '../../universal/redux/ducks/auth';
+import validateSecretToken from '../../universal/utils/validateSecretToken';
 import Joi from 'joi';
 import {parsedJoiErrors} from '../../universal/utils/schema';
 
@@ -55,9 +56,9 @@ export async function signup(req, res) {
   if (schemaError) {
     return res.status(401).json({error: schemaError});
   }
-  let user;
+  let user, verifiedToken;
   try {
-    user = await signupDB(email, password);
+    [user, verifiedToken] = await signupDB(email, password);
   } catch (e) {
     let error = {_error: 'Cannot create account'};
     if (e.name === 'AuthorizationError') {
@@ -67,6 +68,8 @@ export async function signup(req, res) {
     }
     return res.status(401).json({error})
   }
+  //TODO send email with verifiedEmailToken via mailgun or whatever
+  console.log('Verify url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
   const token = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});
   res.status(200).json({token, user})
 }
@@ -100,7 +103,7 @@ export async function resetPassword(req, res) {
   if (schemaError) {
     return res.status(401).json({error: schemaError});
   }
-  const resetTokenObject = validateResetToken(resetToken);
+  const resetTokenObject = validateSecretToken(resetToken);
   if (resetTokenObject.error) {
     return res.status(401).json({error: resetTokenObject.error});
   }
@@ -120,6 +123,46 @@ export async function resetPassword(req, res) {
   }
   const token = signJwt(user);
   res.status(200).json({token, user})
+}
+
+export async function resendVerifiedEmail(req, res) {
+  const {token} = req.body;
+  let decoded;
+  try {
+    decoded = await verifyToken(token, jwtSecret);
+  } catch (e) {
+    return res.status(401).json({error: 'Invalid token'})
+  }
+  let verifiedToken;
+  try {
+    verifiedToken = await resetVerifiedTokenDB(decoded.id);
+  } catch (e) {
+    return res.status(401).json({error: e.message})
+  }
+  //TODO send email with new verifiedToken via mailgun or whatever
+  console.log('Verified url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
+  res.sendStatus(200);
+}
+
+export async function verifyEmail(req, res) {
+  const {verifiedToken} = req.body;
+  const verifiedTokenObject = validateSecretToken(verifiedToken);
+  if (verifiedTokenObject.error) {
+    return res.status(401).json({error: verifiedTokenObject.error});
+  }
+  let user;
+  try {
+    await verifyEmailDB(verifiedTokenObject.id, verifiedToken);
+  } catch (e) {
+    let error;
+    if (e.name === 'DocumentNotFoundError') {
+      error = {_error: 'User not found'};
+    } else {
+      error = {_error: e.message};
+    }
+    return res.status(401).json({error});
+  }
+  res.sendStatus(200);
 }
 
 function validateAuthSchema(credentials, schema) {

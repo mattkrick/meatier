@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 
 import config from '../../webpack/webpack.config.js';
 import createSSR from './createSSR.js';
-import {login, signup, loginToken, sendResetEmail, resetPassword} from './controllers/auth';
+import {login, signup, loginToken, sendResetEmail, resetPassword, verifyEmail} from './controllers/auth';
 
 //"live query"
 import subscribeMiddleware from './publish/subscribeMiddleware';
@@ -42,6 +42,7 @@ module.exports.run = function (worker) {
   authRouter.route('/signup').post(signup);
   authRouter.route('/send-reset-email').post(sendResetEmail);
   authRouter.route('/reset-password').post(resetPassword);
+  authRouter.route('/verify-email').post(verifyEmail);
 
   //server-side rendering
   app.get('*', createSSR);

@@ -11,6 +11,7 @@ import LostPassword from './components/LostPassword/LostPassword';
 import ResetEmailSent from './components/ResetEmailSent/ResetEmailSent';
 import ResetPassword from './components/ResetPassword/ResetPassword';
 import ResetPasswordSuccess from './components/ResetPasswordSuccess/ResetPasswordSuccess';
+import VerifyEmailContainer from './containers/VerifyEmail/VerifyEmailContainer';
 
 export default (
   <Route path="/" component={AppContainer}>
@@ -25,6 +26,7 @@ export default (
       <Route path="reset-email-sent" component={ResetEmailSent}/>
       <Route path="reset-password/:resetToken" component={ResetPassword}/>
       <Route path="reset-password-success" component={ResetPasswordSuccess}/>
+      <Route path="verify-email/:verifiedToken" component={VerifyEmailContainer}/>
     </Route>
     <Route path="signup" component={AuthContainer}/>
 

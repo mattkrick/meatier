@@ -4,6 +4,7 @@ import { updatePath } from 'redux-simple-router';
 import Joi from 'joi';
 import {postJSON, parseJSON, hostUrl} from '../../utils/utils';
 import socketOptions from '../../utils/socketOptions';
+import validateSecretToken from '../../utils/validateSecretToken';
 
 const {authTokenName} = socketOptions;
 
@@ -14,6 +15,8 @@ export const SIGNUP_USER_REQUEST = 'SIGNUP_USER_REQUEST';
 export const SIGNUP_USER_ERROR = 'SIGNUP_USER_ERROR';
 export const SIGNUP_USER_SUCCESS = 'SIGNUP_USER_SUCCESS';
 export const LOGOUT_USER = 'LOGOUT_USER';
+export const VERIFY_EMAIL_ERROR = 'VERIFY_EMAIL_ERROR';
+export const VERIFY_EMAIL_SUCCESS = 'VERIFY_EMAIL_SUCCESS';
 
 const anyErrors = {
   required: '!!Required',
@@ -40,40 +43,6 @@ export const authSchemaInsert = Joi.object().keys({
 });
 export const authSchemaEmail = authSchemaInsert.optionalKeys('password');
 export const authSchemaPassword = authSchemaInsert.optionalKeys('email');
-export function validateResetToken(token) {
-  const invalidToken = {
-    error: {
-      _error: 'Invalid Token'
-    }
-  }
-  if (!token || typeof token !== 'string') {
-    return invalidToken;
-  }
-  let tokenStr;
-  if (typeof Buffer === 'function') {
-    tokenStr = new Buffer(token, 'base64').toString('ascii');
-  } else if (typeof atob === 'function') {
-    tokenStr = atob(token);
-  } else {
-    return invalidToken;
-  }
-  let tokenObject;
-  try {
-    tokenObject = JSON.parse(tokenStr);
-  } catch (e) {
-    return invalidToken;
-  }
-
-  if (!tokenObject.exp || !tokenObject.id || !tokenObject.sec || Object.keys(tokenObject).length !== 3) {
-    return invalidToken;
-  }
-
-  if (tokenObject.exp < Date.now()) {
-    invalidToken.error._error = 'Token has expired, please try resetting your password again';
-    return invalidToken;
-  }
-  return tokenObject;
-}
 
 const initialState = {
   error: {},
@@ -118,6 +87,16 @@ export default function reducer(state = initialState, action = {}) {
         token: null,
         user: {}
       });
+    case VERIFY_EMAIL_ERROR:
+      return Object.assign({}, state, {
+        error: action.error
+      });
+    case VERIFY_EMAIL_SUCCESS:
+      return Object.assign({}, state, {
+        user: Object.assign({}, state.user, {
+          isVerified: true
+        })
+      });
     default:
       return state;
   }
@@ -134,12 +113,6 @@ export function loginUserError(error) {
   return {
     type: LOGIN_USER_ERROR,
     error
-  }
-}
-
-export function loginUserRequest() {
-  return {
-    type: LOGIN_USER_REQUEST
   }
 }
 
@@ -163,14 +136,9 @@ export function signupUserRequest() {
   }
 }
 
-export function logout() {
-  return {
-    type: LOGOUT_USER
-  }
-}
 
 export function loginUser(dispatch, data, redirect) {
-  dispatch(loginUserRequest());
+  dispatch({type: LOGIN_USER_REQUEST});
   return new Promise(async function (resolve, reject) {
     let res = await postJSON('/auth/login', data);
     let parsedRes = await parseJSON(res);
@@ -205,7 +173,7 @@ export function sendResetEmail(data, dispatch) {
 
 export function resetPassword(data, dispatch) {
   return new Promise(async function (resolve, reject) {
-    const tokenObject = validateResetToken(data.resetToken);
+    const tokenObject = validateSecretToken(data.resetToken);
     if (tokenObject.error) {
       return reject(tokenObject.error);
     }
@@ -243,7 +211,7 @@ export function signupUser(dispatch, data, redirect) {
 
 export function loginToken(token) {
   return async function (dispatch) {
-    dispatch(loginUserRequest());
+    dispatch({type: LOGIN_USER_REQUEST});
     let res = await postJSON('/auth/login-token', {token});
     if (res.status !== 200) {
       localStorage.removeItem(authTokenName);
@@ -255,11 +223,25 @@ export function loginToken(token) {
   }
 }
 
+export function verifyEmail(verifiedToken) {
+  return async function (dispatch) {
+    let res = await postJSON('/auth/verify-email', {verifiedToken});
+    if (res.status === 200) {
+      return dispatch({type: VERIFY_EMAIL_SUCCESS});
+    }
+    let parsedRes = await parseJSON(res);
+    return dispatch({
+      type: VERIFY_EMAIL_ERROR,
+      error: parsedRes.error
+    });
+  }
+}
+
 
 export function logoutAndRedirect() {
   localStorage.removeItem(authTokenName);
   return function (dispatch) {
-    dispatch(logout());
+    dispatch({type: LOGOUT_USER});
     dispatch(updatePath('/'));
   }
 }
