@@ -1,3 +1,6 @@
+@value colors: '../../styles/colors.css';
+@value primary, secondary from colors;
+
 .loginForm {
   display: flex;
   flex-direction: column;
@@ -6,4 +9,13 @@
 
 .loginButton {
   padding-top: 24px;
+}
+
+.lostPassword {
+  margin-top: 16px;
+  font-size: .8em;
+  align-self: flex-end;
+  text-decoration: none;
+  font-weight: 500;
+  color: primary;
 }

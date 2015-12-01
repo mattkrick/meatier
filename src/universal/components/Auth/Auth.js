@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './Auth.css';
+import {Link} from 'react-router';
+import {loginUser, signupUser} from '../../redux/ducks/auth';
 
 export default class Auth extends Component {
   static PropTypes = {
@@ -15,10 +17,10 @@ export default class Auth extends Component {
   };
 
   render() {
-    const {fields: {email, password}, handleSubmit, authType, error, isAuthenticating} = this.props;
+    const {fields: {email, password}, handleSubmit, isLogin, error, isAuthenticating} = this.props;
     return (
       <div className={styles.loginForm}>
-        <h3>{authType}</h3>
+        <h3>{isLogin ? 'Login' : 'Sign up'}</h3>
         {error && <span>{error}</span>}
         <form className={styles.loginForm} onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
@@ -38,9 +40,11 @@ export default class Auth extends Component {
             errorText={ password.touched && password.error || ''}
           />
 
+          {isLogin ? <Link to="/login/lost-password" query={{e:email.value}} className={styles.lostPassword}>Forgot your password?</Link> : null}
+
           <div className={styles.loginButton}>
             <RaisedButton
-              label={authType}
+              label={isLogin ? 'Login' : 'Sign up'}
               secondary={true}
               type='submit'
               disabled={isAuthenticating}
@@ -55,6 +59,7 @@ export default class Auth extends Component {
   onSubmit(data,dispatch) {
     //gotta get that redirect from props
     const redirectRoute = this.props.location.query.next || '/';
-    return this.props.authFunc(dispatch,data, redirectRoute);
+    const authFunc = this.props.isLogin ? loginUser : signupUser;
+    return authFunc(dispatch,data, redirectRoute);
   }
 }

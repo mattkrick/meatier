@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import {loginUser, signupUser, authSchema} from '../../redux/ducks/auth';
+import {authSchemaInsert} from '../../redux/ducks/auth';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updatePath } from 'redux-simple-router';
@@ -24,16 +24,8 @@ export default class AuthContainer extends Component {
   };
 
   render() {
-    const {path} = this.props;
-    let authType, authFunc;
-    if (path.indexOf('/login') !== -1) {
-      authType = 'Login';
-      authFunc = loginUser
-    } else {
-      authType = 'Sign up';
-      authFunc = signupUser
-    }
-    return <Auth authType={authType} authFunc={authFunc} {...this.props}/>
+    const isLogin = this.props.path.indexOf('/login') !== -1;
+    return <Auth isLogin={isLogin} {...this.props}/>
   }
 }
 
@@ -48,7 +40,7 @@ function mapStateToProps(state) {
 }
 
 function validate(values) {
-  const results = Joi.validate(values, authSchema, {abortEarly: false});
+  const results = Joi.validate(values, authSchemaInsert, {abortEarly: false});
   return parsedJoiErrors(results.error);
 }
 

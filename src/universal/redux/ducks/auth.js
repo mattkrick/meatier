@@ -20,17 +20,15 @@ const anyErrors = {
   empty: '!!Required'
 };
 
-export const authSchemaEmail = Joi.string().email().label('Email').required().options({
-  language: {
-    any: anyErrors,
-    string: {
-      email: '!!That\'s not an email!'
+export const authSchemaInsert = Joi.object().keys({
+  email: Joi.string().email().label('Email').required().options({
+    language: {
+      any: anyErrors,
+      string: {
+        email: '!!That\'s not an email!'
+      }
     }
-  }
-});
-
-export const authSchema = Joi.object().keys({
-  email: authSchemaEmail,
+  }),
   password: Joi.string().min(6).label('Password').required().options({
     language: {
       any: anyErrors,
@@ -40,6 +38,42 @@ export const authSchema = Joi.object().keys({
     }
   })
 });
+export const authSchemaEmail = authSchemaInsert.optionalKeys('password');
+export const authSchemaPassword = authSchemaInsert.optionalKeys('email');
+export function validateResetToken(token) {
+  const invalidToken = {
+    error: {
+      _error: 'Invalid Token'
+    }
+  }
+  if (!token || typeof token !== 'string') {
+    return invalidToken;
+  }
+  let tokenStr;
+  if (typeof Buffer === 'function') {
+    tokenStr = new Buffer(token, 'base64').toString('ascii');
+  } else if (typeof atob === 'function') {
+    tokenStr = atob(token);
+  } else {
+    return invalidToken;
+  }
+  let tokenObject;
+  try {
+    tokenObject = JSON.parse(tokenStr);
+  } catch (e) {
+    return invalidToken;
+  }
+
+  if (!tokenObject.exp || !tokenObject.id || !tokenObject.sec || Object.keys(tokenObject).length !== 3) {
+    return invalidToken;
+  }
+
+  if (tokenObject.exp < Date.now()) {
+    invalidToken.error._error = 'Token has expired, please try resetting your password again';
+    return invalidToken;
+  }
+  return tokenObject;
+}
 
 const initialState = {
   error: {},
@@ -153,6 +187,42 @@ export function loginUser(dispatch, data, redirect) {
   });
 }
 
+export function sendResetEmail(data, dispatch) {
+  return new Promise(async function (resolve, reject) {
+    let res = await postJSON('/auth/send-reset-email', data);
+    if (res.status == 200) {
+      dispatch(updatePath('/login/reset-email-sent'));
+      resolve();
+    }
+    let parsedRes = await parseJSON(res);
+    const {error} = parsedRes;
+    if (error) {
+      reject(error)
+    }
+
+  });
+}
+
+export function resetPassword(data, dispatch) {
+  return new Promise(async function (resolve, reject) {
+    const tokenObject = validateResetToken(data.resetToken);
+    if (tokenObject.error) {
+      return reject(tokenObject.error);
+    }
+    let res = await postJSON('/auth/reset-password', data);
+    let parsedRes = await parseJSON(res);
+    const {error, ...payload} = parsedRes;
+    if (payload.token) {
+      localStorage.setItem(authTokenName, payload.token);
+      dispatch(signupUserSuccess(payload));
+      dispatch(updatePath('/login/reset-password-success'));
+      resolve();
+    } else {
+      reject(error);
+    }
+  });
+}
+
 export function signupUser(dispatch, data, redirect) {
   dispatch(signupUserRequest());
   return new Promise(async function (resolve, reject) {
@@ -184,6 +254,7 @@ export function loginToken(token) {
     dispatch(loginUserSuccess(payload));
   }
 }
+
 
 export function logoutAndRedirect() {
   localStorage.removeItem(authTokenName);
