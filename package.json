@@ -19,11 +19,12 @@
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^5.8.29",
-    "babel-eslint": "^3.1.9",
+    "babel-eslint": "^4.1.6",
     "babel-loader": "^5.3.3",
     "babel-plugin-react-transform": "^1.1.1",
     "classnames": "^2.2.0",
     "css-loader": "^0.22.0",
+    "eslint-plugin-react": "3.11.1",
     "extract-text-webpack-plugin": "^0.9.1",
     "file-loader": "^0.8.4",
     "jest-cli": "^0.8.0",
