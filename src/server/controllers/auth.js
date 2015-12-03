@@ -1,3 +1,8 @@
+/*
+ * Controllers are the link between the server and the database.
+ * They never touch the database, they just handle DB errors so swapping out DBs is easy
+ * Just make sure your DB handlers throw the same errors
+ */
 import {loginDB, getUserByIdDB, signupDB, setResetTokenDB, resetPasswordFromTokenDB, resetVerifiedTokenDB, verifyEmailDB} from '../database/models/users';
 import jwt from 'jsonwebtoken';
 import promisify from 'es6-promisify';
@@ -8,7 +13,6 @@ import Joi from 'joi';
 import {parsedJoiErrors} from '../../universal/utils/schema';
 
 const verifyToken = promisify(jwt.verify);
-
 
 export async function login(req, res) {
   const {email, password} = req.body;
@@ -23,7 +27,7 @@ export async function login(req, res) {
     let error = {_error: 'Login failed'};
     if (e.name === 'DocumentNotFoundError') {
       error.email = 'Email not found';
-    } else if (e.name === 'AuthorizationError') {
+    } else if (e.name === 'AuthenticationError') {
       error.password = 'Incorrect password' //todo 3 attempts left!
     } else {
       error._error = e.message;
@@ -61,15 +65,19 @@ export async function signup(req, res) {
     [user, verifiedToken] = await signupDB(email, password);
   } catch (e) {
     let error = {_error: 'Cannot create account'};
-    if (e.name === 'AuthorizationError') {
+    if (e.name === 'AuthenticationError') {
         error.email = 'Email already exists';
     } else {
       error._error = e.message;
     }
     return res.status(401).json({error})
   }
-  //TODO send email with verifiedEmailToken via mailgun or whatever
-  console.log('Verify url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
+  //verifiedToken is null if we found out it's actually a login)
+  if (verifiedToken) {
+    //TODO send email with verifiedEmailToken via mailgun or whatever
+    console.log('Verify url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
+  }
+
   const token = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});
   res.status(200).json({token, user})
 }
@@ -114,7 +122,7 @@ export async function resetPassword(req, res) {
     let error;
     if (e.name === 'DocumentNotFoundError') {
       error = {_error: 'User not found'};
-    } else if (e.name === 'AuthorizationError') {
+    } else if (e.name === 'AuthenticationError') {
       error = {_error: 'Invalid token'};
     } else {
       error = {_error: e.message};
@@ -150,7 +158,6 @@ export async function verifyEmail(req, res) {
   if (verifiedTokenObject.error) {
     return res.status(401).json({error: verifiedTokenObject.error});
   }
-  let user;
   try {
     await verifyEmailDB(verifiedTokenObject.id, verifiedToken);
   } catch (e) {

@@ -1,17 +1,30 @@
+/*
+ * The database folder is the only things in the whole app that is DB specific
+ * Keeping this modularity is key.
+ * By convention, all functions end in DB so you know when a function is touching the DB
+ */
+
 import thinky from './thinky';
 import promisify from 'es6-promisify';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import {DocumentNotFoundError, AuthorizationError} from '../errors';
+import {DocumentNotFoundError, AuthenticationError} from '../errors';
 import uuid from 'node-uuid';
 
 const compare = promisify(bcrypt.compare);
 const hash = promisify(bcrypt.hash);
 
-const User = thinky.createModel("users", {});
+/*I use Joi for client & server validation, so there's no need for thinky validation
+ * Plus, thinky validation has a few quirks that make writing queries awkward
+ * I also don't perform joins at the DB level.
+ * First, I don't know how efficient joins are in rethinkDB
+ * Second, Keeping distinct collections in redux means I don't have to worry
+ * about normalizing at the local cache
+ * */
+export const User = thinky.createModel("users", {});
 User.ensureIndex("email");
 
-export async function loginDB(email, password) {
+export async function loginDB(email, submittedPassword) {
   let user
   try {
     user = await getUserByEmail(email);
@@ -21,12 +34,15 @@ export async function loginDB(email, password) {
   if (!user) {
     throw new DocumentNotFoundError();
   }
-
-  let isCorrectPass = await compare(password, user.password);
+  const userPassword = user.strategies.local && user.strategies.local.password;
+  if (!userPassword) {
+    throw AuthenticationError()
+  }
+  let isCorrectPass = await compare(submittedPassword, userPassword);
   if (isCorrectPass) {
     return safeUser(user);
   } else {
-    throw new AuthorizationError();
+    throw new AuthenticationError();
   }
 }
 
@@ -34,14 +50,14 @@ export async function getUserByIdDB(id) {
   //be careful, this issues a login without verifying the password (since token already did that)
   let user;
   try {
-    user = await User.get(id).pluck(['id', 'email', 'isVerified']).run();
+    user = await User.get(id).pluck(['id', 'email', 'strategies']).run();
   } catch (e) {
     throw e;
   }
   return safeUser(user);
 }
 
-export async function signupDB(email, password) {
+export async function signupDB(email, submittedPassword) {
   let user;
   try {
     user = await getUserByEmail(email);
@@ -49,23 +65,32 @@ export async function signupDB(email, password) {
     throw e;
   }
   if (user) {
-    let isCorrectPass = await compare(password, user.password);
+    const userPassword = user.strategies.local && user.strategies.local.password;
+    if (!userPassword) {
+      throw AuthenticationError()
+    }
+    let isCorrectPass = await compare(submittedPassword, userPassword);
     if (isCorrectPass) {
       //treat it like a login
-      return safeUser(user);
+      return [safeUser(user), null]; //null verification token
     } else {
-      throw new AuthorizationError();
+      throw new AuthenticationError();
     }
   } else {
-    const hashedPass = await hash(password, 10); //production should use 12+, but it's slower
+    const hashedPass = await hash(submittedPassword, 10); //production should use 12+, but it's slower
     const id = uuid.v4();
+    const verifiedToken = makeSecretToken(id, 60 * 24);
     const userDoc = {
       id,
       email,
-      password: hashedPass,
       createdAt: Date.now(),
-      isVerified: false,
-      verifiedToken: makeSecretToken(id, 60 * 24)
+      strategies: {
+        local: {
+          isVerified: false,
+          password: hashedPass,
+          verifiedToken
+        }
+      }
     }
     let newUser;
     try {
@@ -73,7 +98,7 @@ export async function signupDB(email, password) {
     } catch (e) {
       throw e
     }
-    return [safeUser(newUser), userDoc.verifiedToken];
+    return [safeUser(newUser), verifiedToken];
   }
 }
 
@@ -89,7 +114,7 @@ export async function setResetTokenDB(email) {
   }
   const resetToken = makeSecretToken(user.id, 60 * 24)
   try {
-    await user.merge({resetToken}).save()
+    await User.get(user.id).update({strategies: {local: {resetToken}}}).execute();
   } catch (e) {
     throw e;
   }
@@ -99,20 +124,24 @@ export async function setResetTokenDB(email) {
 export async function resetPasswordFromTokenDB(id, resetToken, newPassword) {
   let user;
   try {
-    user = await User.get(id).pluck(['id','resetToken']).run();
+    user = await User.get(id).pluck('id', 'strategies').run();
   } catch (e) {
     throw e
   }
-  if (user.resetToken !== resetToken) {
-    throw new AuthorizationError();
+  if (user.strategies.local.resetToken !== resetToken) {
+    throw new AuthenticationError();
   }
   const hashedPass = await hash(newPassword, 10);
   const updates = {
-    password: hashedPass,
-    resetToken: null
+    strategies: {
+      local: {
+        password: hashedPass,
+        resetToken: null
+      }
+    }
   }
   try {
-    user = await user.merge(updates).save()
+    await User.get(user.id).update(updates).execute()
   } catch (e) {
     throw e
   }
@@ -122,38 +151,42 @@ export async function resetPasswordFromTokenDB(id, resetToken, newPassword) {
 export async function resetVerifiedTokenDB(id) {
   let user;
   try {
-    user = await User.get(id).pluck(['id','verifiedToken', 'isVerified']).run();
+    user = await User.get(id).pluck('id', {strategies: {local: 'isVerified'}}).run();
   } catch (e) {
     throw e
   }
-  if (user.isVerified) {
-    throw new AuthorizationError('User already verified');
+  if (user.strategies.local.isVerified) {
+    throw new AuthenticationError('Email already verified');
   }
-  const updates = {verifiedToken: makeSecretToken(id, 60 * 24)};
+  const verifiedToken = makeSecretToken(id, 60 * 24);
   try {
-    await user.merge(updates).save()
+    await User.get(user.id).update({strategies: {local: {verifiedToken}}}).save()
   } catch (e) {
     throw e
   }
-  return updates.verifiedToken;
+  return verifiedToken;
 }
 
 export async function verifyEmailDB(id, verifiedToken) {
   let user;
   try {
-    user = await User.get(id).pluck(['id','verifiedToken', 'isVerified']).run();
+    user = await User.get(id).run();
   } catch (e) {
     throw e
   }
-  if (user.isVerified) {
-    throw new AuthorizationError('Email already verified');
+  if (user.strategies.local.isVerified) {
+    throw new AuthenticationError('Email already verified');
   }
-  if (user.verifiedToken !== verifiedToken) {
-    throw new AuthorizationError('Invalid token');
+  if (user.strategies.local.verifiedToken !== verifiedToken) {
+    throw new AuthenticationError('Invalid token');
   }
   const updates = {
-    isVerified: true,
-    verifiedToken: null
+    strategies: {
+      local: {
+        isVerified: true,
+        verifiedToken: null
+      }
+    }
   }
   try {
     user = await user.merge(updates).save()
@@ -173,16 +206,30 @@ async function getUserByEmail(email) {
   return users[0];
 }
 
-function safeUser({id, email, isVerified}) {
-  return {id, email, isVerified}
+function safeUser(userDoc) {
+  return {
+    id: userDoc.id,
+    email: userDoc.email,
+    strategies: {
+      local: safeLocalStrategy(userDoc.strategies.local)
+      //google: safeGoogleStrategy()
+    }
+  }
 }
 
+function safeLocalStrategy(localStrategy) {
+  if (!localStrategy) return {};
+  return {
+    isVerified: localStrategy.isVerified
+  }
+}
+
+/*a secret token has the user id, an expiration, and a secret
+ the expiration allows for invalidating on the client or server. No need to hit the DB with an expired token
+ the user id allows for a quick db lookup in case you don't want to index on email (also eliminates pii)
+ the secret keeps out attackers (proxy for rate limiting, IP blocking, still encouraged)
+ storing it in the DB means there exists only 1, one-time use key, unlike a JWT, which has many, multi-use keys*/
 function makeSecretToken(userId, minutesToExpire) {
-  //a secret token has the user id, an expiration, and a secret
-  //the expiration allows for invalidating on the client or server. No need to hit the DB with an expired token
-  //the user id allows for a quick db lookup
-  //the secret keeps out attackers (proxy for rate limiting, IP blocking, still encouraged)
-  //storing it in the DB means there exists only 1, one-time use key, unlike a JWT, which has many, multi-use keys
   return new Buffer(JSON.stringify({
     id: userId,
     sec: crypto.randomBytes(8).toString('base64'),

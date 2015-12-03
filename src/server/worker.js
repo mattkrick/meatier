@@ -15,7 +15,7 @@ import {ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes
 import {ADD_NOTE, UPDATE_NOTE, DELETE_NOTE} from '../universal/redux/ducks/notes';
 import {addLane, deleteLane, updateLane} from './controllers/lanes';
 import {addNote, deleteNote, updateNote} from './controllers/notes';
-
+import {googleAuthUrl, googleAuthCallback} from './controllers/oauthGoogle';
 
 const compiler = webpack(config);
 const authRouter = express.Router();
@@ -36,6 +36,8 @@ module.exports.run = function (worker) {
   app.use(require('serve-static')(path.join(__dirname, 'build')));
 
   //Auth handler via HTTP (make sure to use HTTPS)
+  var google = require('googleapis');
+  var oauth = google.oauth2('v2');
   app.use('/auth', authRouter);
   authRouter.route('/login').post(login);
   authRouter.route('/login-token').post(loginToken);
@@ -43,10 +45,12 @@ module.exports.run = function (worker) {
   authRouter.route('/send-reset-email').post(sendResetEmail);
   authRouter.route('/reset-password').post(resetPassword);
   authRouter.route('/verify-email').post(verifyEmail);
+  authRouter.route('/google').get((req, res) => res.redirect(googleAuthUrl));
+  authRouter.route('/google/callback').get(googleAuthCallback);
+
 
   //server-side rendering
   app.get('*', createSSR);
-
   //startup
   httpServer.on('request', app);
 

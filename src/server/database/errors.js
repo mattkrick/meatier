@@ -16,6 +16,14 @@ export class DocumentNotFoundError extends Error {
   }
 }
 
+export class AuthenticationError extends Error {
+  constructor(message) {
+    super();
+    this.name = 'AuthenticationError';
+    this.message = message || 'User could not be authenticated';
+  }
+}
+
 export class AuthorizationError extends Error {
   constructor(message) {
     super();

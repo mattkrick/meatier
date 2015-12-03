@@ -49,7 +49,11 @@ const initialState = {
   isAuthenticated: false,
   isAuthenticating: false,
   token: null,
-  user: {}
+  user: {
+    id: null,
+    email: null,
+    strategies: {}
+  }
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -80,21 +84,20 @@ export default function reducer(state = initialState, action = {}) {
         user: {}
       });
     case LOGOUT_USER:
-      return Object.assign({}, state, {
-        error: {},
-        isAuthenticating: false,
-        isAuthenticated: false,
-        token: null,
-        user: {}
-      });
+      return Object.assign({}, initialState);
     case VERIFY_EMAIL_ERROR:
       return Object.assign({}, state, {
         error: action.error
       });
     case VERIFY_EMAIL_SUCCESS:
+      //yikes, this gets ugly. maybe time to use immutablejs
       return Object.assign({}, state, {
         user: Object.assign({}, state.user, {
-          isVerified: true
+          strategies: Object.assign({}, state.user.strategies, {
+            local: Object.assign({}, state.user.strategies.local, {
+              isVerified: true
+            })
+          })
         })
       });
     default:
@@ -160,14 +163,13 @@ export function sendResetEmail(data, dispatch) {
     let res = await postJSON('/auth/send-reset-email', data);
     if (res.status == 200) {
       dispatch(updatePath('/login/reset-email-sent'));
-      resolve();
+      return resolve();
     }
     let parsedRes = await parseJSON(res);
     const {error} = parsedRes;
     if (error) {
       reject(error)
     }
-
   });
 }
 
