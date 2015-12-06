@@ -23,45 +23,6 @@ const hash = promisify(bcrypt.hash);
 export const User = thinky.createModel("users", {});
 User.ensureIndex("email");
 
-export async function loginDB(email, submittedPassword) {
-  email = email.toLowerCase();
-  let user
-  //console.log(e);
-  try {
-    user = await getUserByEmail(email);
-  } catch (e) {
-    console.log(e);
-    throw e
-  }
-  if (!user) {
-    console.log('e');
-    throw new DocumentNotFoundError();
-  }
-  const {strategies} = user;
-  const userPassword = strategies.local && strategies.local.password;
-  if (!userPassword) {
-    const errMessage = getAltLoginMessage(strategies);
-    throw new DuplicateFoundError(errMessage);
-  }
-  let isCorrectPass = await compare(submittedPassword, userPassword);
-  if (isCorrectPass) {
-    return getSafeUser(user);
-  } else {
-    throw new AuthenticationError();
-  }
-}
-
-export async function getUserByIdDB(id) {
-  //be careful, this issues a login without verifying the password (since token already did that)
-  let user;
-  try {
-    user = await User.get(id).pluck(['id', 'email', 'strategies']).run();
-  } catch (e) {
-    throw e;
-  }
-  return getSafeUser(user);
-}
-
 export async function signupDB(email, submittedPassword) {
   email = email.toLowerCase();
   let user;
@@ -109,6 +70,42 @@ export async function signupDB(email, submittedPassword) {
   }
 }
 
+export async function loginDB(email, submittedPassword) {
+  email = email.toLowerCase();
+  let user
+  try {
+    user = await getUserByEmail(email);
+  } catch (e) {
+    throw e
+  }
+  if (!user) {
+    throw new DocumentNotFoundError();
+  }
+  const {strategies} = user;
+  const userPassword = strategies.local && strategies.local.password;
+  if (!userPassword) {
+    const errMessage = getAltLoginMessage(strategies);
+    throw new DuplicateFoundError(errMessage);
+  }
+  let isCorrectPass = await compare(submittedPassword, userPassword);
+  if (isCorrectPass) {
+    return getSafeUser(user);
+  } else {
+    throw new AuthenticationError();
+  }
+}
+
+export async function getUserByIdDB(id) {
+  //be careful, this issues a login without verifying the password (since token already did that)
+  let user;
+  try {
+    user = await User.get(id).pluck(['id', 'email', 'strategies']).run();
+  } catch (e) {
+    throw e;
+  }
+  return getSafeUser(user);
+}
+
 export async function setResetTokenDB(email) {
   email = email.toLowerCase();
   let user
@@ -136,7 +133,8 @@ export async function resetPasswordFromTokenDB(id, resetToken, newPassword) {
   } catch (e) {
     throw e
   }
-  if (user.strategies.local.resetToken !== resetToken) {
+  const userResetToken = user.strategies.local && user.strategies.local.resetToken;
+  if (!userResetToken || userResetToken !== resetToken) {
     throw new AuthenticationError();
   }
   const hashedPass = await hash(newPassword, 10);
@@ -168,7 +166,7 @@ export async function resetVerifiedTokenDB(id) {
   }
   const verifiedToken = makeSecretToken(id, 60 * 24);
   try {
-    await User.get(user.id).update({strategies: {local: {verifiedToken}}}).save()
+    await User.get(user.id).update({strategies: {local: {verifiedToken}}}).execute()
   } catch (e) {
     throw e
   }

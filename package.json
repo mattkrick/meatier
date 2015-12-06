@@ -9,28 +9,56 @@
   "bugs": {
     "url": "https://github.com/mattkrick/meatier/issues"
   },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/jest/preprocessor.js",
+    "testRunner": "<rootDir>/node_modules/jest-cli/src/testRunners/jasmine/jasmine2.js",
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/react-dom",
+      "<rootDir>/node_modules/react-addons-test-utils",
+      "<rootDir>/node_modules/fbjs",
+      "thinky",
+      "bluebird"
+    ],
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/node_modules/"
+    ]
+  },
+  "jest-webpack-alias": {
+    "configFile": "webpack/webpack.config.js"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node ./src/server/server.babel.js",
     "resetdb": "node ./src/server/database/resetdb.babel.js",
-    "test": "jest"
+    "test": "__RETHINKDB__=ava ava ./src/**/__tests__/**/*.js"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "ava": "^0.7.0",
     "babel-core": "^5.8.29",
     "babel-eslint": "^4.1.6",
+    "babel-jest": "^6.0.1",
     "babel-loader": "^5.3.3",
     "babel-plugin-react-transform": "^1.1.1",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
     "classnames": "^2.2.0",
     "css-loader": "^0.22.0",
     "eslint-plugin-react": "3.11.1",
     "extract-text-webpack-plugin": "^0.9.1",
     "file-loader": "^0.8.4",
+    "jasmine-pit": "^2.0.2",
     "jest-cli": "^0.8.0",
+    "jest-webpack-alias": "^2.0.0",
     "postcss-loader": "^0.7.0",
     "postcss-modules-values": "^1.1.1",
     "raw-loader": "^0.5.1",
+    "react-addons-test-utils": "^0.14.3",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.1.1",

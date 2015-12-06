@@ -3,9 +3,6 @@ import express from 'express';
 import webpack from 'webpack';
 import http from 'http';
 import bodyParser from 'body-parser';
-var cors = require('express-cors')
-import fetch from 'isomorphic-fetch';
-var cookieParser = require('cookie-parser');
 import config from '../../webpack/webpack.config.js';
 import createSSR from './createSSR.js';
 import {login, signup, loginToken, sendResetEmail, resetPassword, verifyEmail} from './controllers/auth';
@@ -50,19 +47,10 @@ module.exports.run = function (worker) {
     res.setHeader('Location', googleAuthUrl);
     res.setHeader('Content-Length', '0');
     res.end();
-    console.log('Yup');
-    //res.redirect(googleAuthUrl)
-    //res.end();
-    //const resp = await fetch(googleAuthUrl);
-    //resp.end();
-    //console.log('res end', resp);
   });
-  //authRouter.route('/google/callback').get(function(req, res) {
-  //  console.log('CB REQ',req);
-  //});
   authRouter.route('/google/callback').get(googleAuthCallback);
 
-
+  console.log('DB', process.env.__RETHINKDB__);
   //server-side rendering
   app.get('*', createSSR);
   //startup
@@ -73,12 +61,10 @@ module.exports.run = function (worker) {
   scServer.on('connection', function (socket) {
     //hold the client-submitted docs in a queue while they get validated & handled in the DB
     //then, when the DB emits a change, we know if the client caused it or not
-    socket.docQueue = new Set();
     console.log('Client connected:', socket.id);
+    socket.docQueue = new Set();
     socket.on('subscribe', subscribeHandler);
-    socket.on('disconnect', function (socket) {
-      console.log('Client disconnected:', socket.id);
-    });
+    socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
     socket.on(ADD_LANE, addLane)
     socket.on(DELETE_LANE, deleteLane)
     socket.on(UPDATE_LANE, updateLane)
@@ -86,6 +72,5 @@ module.exports.run = function (worker) {
     socket.on(DELETE_NOTE, deleteNote)
     socket.on(UPDATE_NOTE, updateNote)
   });
-
 }
 //TODO: dont let tokens expire while still connected, depends on PR to SC

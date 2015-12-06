@@ -4,7 +4,6 @@ import {User} from './users';
 /*if login fails with 1 strategy, suggest another*/
 export function getAltLoginMessage(userStrategies) {
   const authTypes = Object.keys(userStrategies);
-  console.log(authTypes)
   if (!authTypes.length) {
     //they don't have any strategies. Shouldn't happen
     return
@@ -13,7 +12,6 @@ export function getAltLoginMessage(userStrategies) {
   authTypes.forEach(type => authStr += `${type}, or`)
   authStr = authStr.slice(0, -4); //remove last ', or'
   authStr = authStr.replace('local', 'your password');
-  console.log(authStr);
   return `Try logging in with ${authStr}`
 }
 

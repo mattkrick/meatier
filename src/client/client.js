@@ -10,7 +10,6 @@ import { syncReduxAndRouter} from 'redux-simple-router';
 import createHistory from 'history/lib/createBrowserHistory';
 import rootReducer from '../universal/redux/reducer.js';
 import Root from '../universal/components/Root/Root.js';
-import polyfill from 'babel-polyfill';
 import Joi from 'joi';
 
 const initialState = window.__INITIAL_STATE__ || {};

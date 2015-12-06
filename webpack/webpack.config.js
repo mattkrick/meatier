@@ -6,7 +6,7 @@ var root = process.cwd();
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
   entry: {
-    app: ['./src/client/client.js', 'webpack-hot-middleware/client']
+    app: ['babel-polyfill', './src/client/client.js', 'webpack-hot-middleware/client']
   },
   output: {
     filename: '[name].js',
@@ -21,8 +21,8 @@ module.exports = {
   ],
   resolve: {
     extensions: ['', '.js', '.json', '.jsx'],
-    alias: {
-    }
+    alias: {},
+    root: path.join(root, 'src') //required for jest-webpack-alias
   },
   node: { //used for joi validation on client
     dns: 'mock',

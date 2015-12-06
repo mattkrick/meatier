@@ -1,3 +1,5 @@
 "use strict";
 require('babel-core/register');
-require('./resetdb.js');
+var resetdb = require('./resetdb.js');
+resetdb();
+
