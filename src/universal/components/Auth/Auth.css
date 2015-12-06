@@ -19,3 +19,17 @@
   font-weight: 500;
   color: primary;
 }
+
+.hrWithText {
+  margin: 16px;
+  border-bottom: darkgrey 1px solid;
+  height: 1.25em;
+  line-height: 2.5em;
+  align-self: stretch;
+  text-align: center;
+}
+
+.hrText {
+  background: white;
+  padding: 8px;
+}

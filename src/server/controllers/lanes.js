@@ -23,7 +23,7 @@ export async function updateLane(data, callback) {
 
   const schemaError = validateLaneSchema(data, true);
   if (schemaError) {
-    callback(null,schemaError); //bypass the generic 'error' listener
+    callback(null, schemaError); //bypass the generic 'error' listener
     return;
   }
   this.docQueue.add(data.id);
@@ -49,7 +49,7 @@ export async function deleteLane(payload, callback) {
 }
 
 function validateLaneSchema(lane, isUpdate) {
-  const schema = isUpdate? laneSchemaUpdate : laneSchemaInsert;
+  const schema = isUpdate ? laneSchemaUpdate : laneSchemaInsert;
   const results = Joi.validate(lane, schema, {abortEarly: false});
   const error = parsedJoiErrors(results.error);
   if (Object.keys(error).length) {

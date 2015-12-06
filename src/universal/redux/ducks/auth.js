@@ -1,8 +1,8 @@
-import fetch from 'isomorphic-fetch';
 import jwtDecode from 'jwt-decode';
+import fetch from 'isomorphic-fetch';
 import { updatePath } from 'redux-simple-router';
 import Joi from 'joi';
-import {postJSON, parseJSON, hostUrl} from '../../utils/utils';
+import {postJSON, parseJSON, getJSON, hostUrl} from '../../utils/utils';
 import socketOptions from '../../utils/socketOptions';
 import validateSecretToken from '../../utils/validateSecretToken';
 
@@ -48,7 +48,7 @@ const initialState = {
   error: {},
   isAuthenticated: false,
   isAuthenticating: false,
-  token: null,
+  authToken: null,
   user: {
     id: null,
     email: null,
@@ -66,12 +66,12 @@ export default function reducer(state = initialState, action = {}) {
       });
     case LOGIN_USER_SUCCESS:
     case SIGNUP_USER_SUCCESS:
-      const {token, user} = action.payload;
+      const {authToken, user} = action.payload;
       return Object.assign({}, state, {
         error: {},
         isAuthenticating: false,
         isAuthenticated: true,
-        token,
+        authToken,
         user
       });
     case LOGIN_USER_ERROR:
@@ -80,7 +80,7 @@ export default function reducer(state = initialState, action = {}) {
         error: action.error,
         isAuthenticating: false,
         isAuthenticated: false,
-        token: null,
+        authToken: null,
         user: {}
       });
     case LOGOUT_USER:
@@ -133,12 +133,6 @@ export function signupUserError(error) {
   }
 }
 
-export function signupUserRequest() {
-  return {
-    type: SIGNUP_USER_REQUEST
-  }
-}
-
 
 export function loginUser(dispatch, data, redirect) {
   dispatch({type: LOGIN_USER_REQUEST});
@@ -146,8 +140,9 @@ export function loginUser(dispatch, data, redirect) {
     let res = await postJSON('/auth/login', data);
     let parsedRes = await parseJSON(res);
     const {error, ...payload} = parsedRes;
-    if (payload.token) {
-      localStorage.setItem(authTokenName, payload.token);
+    console.log('err', error);
+    if (payload.authToken) {
+      localStorage.setItem(authTokenName, payload.authToken);
       dispatch(loginUserSuccess(payload));
       dispatch(updatePath(redirect));
       resolve()
@@ -175,15 +170,15 @@ export function sendResetEmail(data, dispatch) {
 
 export function resetPassword(data, dispatch) {
   return new Promise(async function (resolve, reject) {
-    const tokenObject = validateSecretToken(data.resetToken);
-    if (tokenObject.error) {
-      return reject(tokenObject.error);
+    const resetTokenObj = validateSecretToken(data.resetToken);
+    if (resetTokenObj.error) {
+      return reject(resetTokenObj.error);
     }
     let res = await postJSON('/auth/reset-password', data);
     let parsedRes = await parseJSON(res);
     const {error, ...payload} = parsedRes;
-    if (payload.token) {
-      localStorage.setItem(authTokenName, payload.token);
+    if (payload.authToken) {
+      localStorage.setItem(authTokenName, payload.authToken);
       dispatch(signupUserSuccess(payload));
       dispatch(updatePath('/login/reset-password-success'));
       resolve();
@@ -194,13 +189,13 @@ export function resetPassword(data, dispatch) {
 }
 
 export function signupUser(dispatch, data, redirect) {
-  dispatch(signupUserRequest());
+  dispatch({type: SIGNUP_USER_REQUEST});
   return new Promise(async function (resolve, reject) {
     let res = await postJSON('/auth/signup', data);
     let parsedRes = await parseJSON(res);
     const {error, ...payload} = parsedRes;
-    if (payload.token) {
-      localStorage.setItem(authTokenName, payload.token);
+    if (payload.authToken) {
+      localStorage.setItem(authTokenName, payload.authToken);
       dispatch(signupUserSuccess(payload));
       dispatch(updatePath(redirect));
       resolve();
@@ -211,16 +206,16 @@ export function signupUser(dispatch, data, redirect) {
   });
 }
 
-export function loginToken(token) {
+export function loginToken(authToken) {
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
-    let res = await postJSON('/auth/login-token', {token});
+    let res = await postJSON('/auth/login-token', {authToken});
     if (res.status !== 200) {
       localStorage.removeItem(authTokenName);
-      return dispatch(loginUserError('Error logging in with token'));
+      return dispatch(loginUserError('Error logging in with authentication token'));
     }
     let parsedRes = await parseJSON(res);
-    const payload = {token, user: parsedRes.user};
+    const payload = {authToken, user: parsedRes.user};
     dispatch(loginUserSuccess(payload));
   }
 }
@@ -236,6 +231,30 @@ export function verifyEmail(verifiedToken) {
       type: VERIFY_EMAIL_ERROR,
       error: parsedRes.error
     });
+  }
+}
+
+export function oauthLogin(providerEndpoint, redirect) {
+  return async function (dispatch) {
+    dispatch({type: LOGIN_USER_REQUEST});
+    let res = await fetch(hostUrl() + providerEndpoint, {
+      //fetch is currently a shitshow, this is just guess & check
+      method: 'get',
+      mode: 'no-cors',
+      credentials: 'include',
+      headers: {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+      }
+    })
+    let parsedRes = await parseJSON(res);
+    const {error, ...payload} = parsedRes;
+    if (payload.authToken) {
+      localStorage.setItem(authTokenName, payload.authToken);
+      dispatch({type: LOGIN_USER_SUCCESS, payload});
+      dispatch(updatePath(redirect));
+    } else {
+      dispatch({type: LOGIN_USER_ERROR, error});
+    }
   }
 }
 

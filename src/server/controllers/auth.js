@@ -24,7 +24,7 @@ export async function login(req, res) {
   try {
     user = await loginDB(email, password);
   } catch (e) {
-    let error = {_error: 'Login failed'};
+    const error = {};
     if (e.name === 'DocumentNotFoundError') {
       error.email = 'Email not found';
     } else if (e.name === 'AuthenticationError') {
@@ -32,24 +32,25 @@ export async function login(req, res) {
     } else {
       error._error = e.message;
     }
+    error._error = error._error || 'Login failed';
     return res.status(401).json({error});
   }
-  const token = signJwt(user);
-  res.status(200).json({token, user})
+  const authToken = signJwt(user);
+  res.status(200).json({authToken, user})
 }
 
 export async function loginToken(req, res) {
-  const {token} = req.body;
+  const {authToken} = req.body;
   let decoded, user;
   try {
-    decoded = await verifyToken(token, jwtSecret);
+    decoded = await verifyToken(authToken, jwtSecret);
   } catch (e) {
-    return res.status(401).json({error: 'Invalid token'})
+    return res.status(401).json({error: {_error: 'Invalid authentication Token'}})
   }
   try {
     user = await getUserByIdDB(decoded.id);
   } catch (e) {
-    return res.status(401).json({error: e.message})
+    return res.status(401).json({error: {_error: e.message}})
   }
   res.status(200).json({user})
 }
@@ -78,8 +79,8 @@ export async function signup(req, res) {
     console.log('Verify url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
   }
 
-  const token = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});
-  res.status(200).json({token, user})
+  const authToken = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});
+  res.status(200).json({authToken, user})
 }
 
 export async function sendResetEmail(req, res) {
@@ -113,7 +114,7 @@ export async function resetPassword(req, res) {
   }
   const resetTokenObject = validateSecretToken(resetToken);
   if (resetTokenObject.error) {
-    return res.status(401).json({error: resetTokenObject.error});
+    return res.status(401).json({error: {_error: resetTokenObject.error}});
   }
   let user;
   try {
@@ -129,37 +130,37 @@ export async function resetPassword(req, res) {
     }
     return res.status(401).json({error});
   }
-  const token = signJwt(user);
-  res.status(200).json({token, user})
+  const authToken = signJwt(user);
+  res.status(200).json({authToken, user})
 }
 
 export async function resendVerifiedEmail(req, res) {
-  const {token} = req.body;
+  const {authToken} = req.body;
   let decoded;
   try {
-    decoded = await verifyToken(token, jwtSecret);
+    decoded = await verifyToken(authToken, jwtSecret);
   } catch (e) {
-    return res.status(401).json({error: 'Invalid token'})
+    return res.status(401).json({error: 'Invalid authentication token'})
   }
-  let verifiedToken;
+  let verifiedEmailToken;
   try {
-    verifiedToken = await resetVerifiedTokenDB(decoded.id);
+    verifiedEmailToken = await resetVerifiedTokenDB(decoded.id);
   } catch (e) {
-    return res.status(401).json({error: e.message})
+    return res.status(401).json({error: {_error: e.message}})
   }
-  //TODO send email with new verifiedToken via mailgun or whatever
-  console.log('Verified url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
+  //TODO send email with new verifiedEmailToken via mailgun or whatever
+  console.log('Verified url:', `http://localhost:3000/login/verify-email/${verifiedEmailToken}`);
   res.sendStatus(200);
 }
 
 export async function verifyEmail(req, res) {
-  const {verifiedToken} = req.body;
-  const verifiedTokenObject = validateSecretToken(verifiedToken);
-  if (verifiedTokenObject.error) {
-    return res.status(401).json({error: verifiedTokenObject.error});
+  const {verifiedEmailToken} = req.body;
+  const verifiedEmailTokenObj= validateSecretToken(verifiedEmailToken);
+  if (verifiedEmailTokenObj.error) {
+    return res.status(401).json({error: verifiedEmailTokenObj.error});
   }
   try {
-    await verifyEmailDB(verifiedTokenObject.id, verifiedToken);
+    await verifyEmailDB(verifiedEmailTokenObj.id, verifiedEmailToken);
   } catch (e) {
     let error;
     if (e.name === 'DocumentNotFoundError') {
@@ -182,6 +183,6 @@ function validateAuthSchema(credentials, schema) {
   }
 }
 
-function signJwt(user) {
-  return jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'}); //sync
+export function signJwt(user) {
+  return jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'}); //sync https://github.com/auth0/node-jsonwebtoken/issues/111
 }

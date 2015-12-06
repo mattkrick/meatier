@@ -1,34 +1,35 @@
-export default function validateSecretToken(token) {
+/*A secret token is a reset or email verification token, not a JWT*/
+export default function validateSecretToken(secretToken) {
   const invalidToken = {
     error: {
       _error: 'Invalid Token'
     }
   }
-  if (!token || typeof token !== 'string') {
+  if (!secretToken || typeof secretToken !== 'string') {
     return invalidToken;
   }
-  let tokenStr;
+  let secretTokenStr;
   if (typeof Buffer === 'function') {
-    tokenStr = new Buffer(token, 'base64').toString('ascii');
+    secretTokenStr = new Buffer(secretToken, 'base64').toString('ascii');
   } else if (typeof atob === 'function') {
-    tokenStr = atob(token);
+    secretTokenStr = atob(secretToken);
   } else {
     return invalidToken;
   }
-  let tokenObject;
+  let secretTokenObj;
   try {
-    tokenObject = JSON.parse(tokenStr);
+    secretTokenObj = JSON.parse(secretTokenStr);
   } catch (e) {
     return invalidToken;
   }
 
-  if (!tokenObject.exp || !tokenObject.id || !tokenObject.sec || Object.keys(tokenObject).length !== 3) {
+  if (!secretTokenObj.exp || !secretTokenObj.id || !secretTokenObj.sec || Object.keys(secretTokenObj).length !== 3) {
     return invalidToken;
   }
 
-  if (tokenObject.exp < Date.now()) {
-    invalidToken.error._error = 'Email token has expired, please try resending a new email';
+  if (secretTokenObj.exp < Date.now()) {
+    invalidToken.error._error = 'Your token has expired, please try resending a new email';
     return invalidToken;
   }
-  return tokenObject;
+  return secretTokenObj;
 }

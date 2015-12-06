@@ -25,7 +25,7 @@ const initialState = {
   isAuthenticated: false,
   isAuthenticating: false,
   lastError: null,
-  token: null,
+  authToken: null,
   //connectionError: '',
   //permissionError: '',
   //tokenError: '',
@@ -39,7 +39,7 @@ export const socketClusterReducer = function (state = initialState, action) {
     case DEAUTHENTICATE:
       return Object.assign({}, state, {
         isAuthenticated: false,
-        token: null
+        authToken: null
       });
     case DISCONNECT:
       return Object.assign({}, initialState)
@@ -66,7 +66,7 @@ export const socketClusterReducer = function (state = initialState, action) {
       return Object.assign({}, state, {
         isAuthenticating: false,
         isAuthenticated: true,
-        token: action.payload.token
+        authToken: action.payload.authToken
       });
     case AUTH_ERROR:
       return Object.assign({}, state, {
@@ -209,18 +209,18 @@ export const reduxSocket = (options, reduxSCOptions) => ComposedComponent => {
     async handleAuth() {
       const {dispatch} = this.context.store;
       const {socket, authTokenName} = this;
-      socket.on('authenticate', token => {
-        dispatch({type: AUTH_SUCCESS, payload: {token}});
+      socket.on('authenticate', authToken => {
+        dispatch({type: AUTH_SUCCESS, payload: {authToken}});
       });
       socket.on('removeAuthToken', () => {
         dispatch({type: DEAUTHENTICATE});
       });
       if (authTokenName && socket.isAuthenticated !== true) {
         dispatch({type: AUTH_REQUEST});
-        const loadToken = promisify(socket.auth.loadToken.bind(socket.auth));
+        const loadAuthToken = promisify(socket.auth.loadToken.bind(socket.auth));
         const authenticate = promisify(socket.authenticate.bind(socket));
-        const token = await loadToken(authTokenName);
-        const authStatus = await authenticate(token);
+        const authToken = await loadAuthToken(authTokenName);
+        const authStatus = await authenticate(authToken);
         if (authStatus.authError) {
           dispatch({type: AUTH_ERROR, error: authStatus.authError.message});
         }

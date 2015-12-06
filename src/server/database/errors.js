@@ -16,6 +16,14 @@ export class DocumentNotFoundError extends Error {
   }
 }
 
+export class DuplicateFoundError extends Error {
+  constructor(message) {
+    super();
+    this.name = 'DuplicateFoundError';
+    this.message = message || 'Duplicate record found';
+  }
+}
+
 export class AuthenticationError extends Error {
   constructor(message) {
     super();

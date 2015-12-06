@@ -1,15 +1,14 @@
 /*
  * The database folder is the only things in the whole app that is DB specific
  * Keeping this modularity is key.
- * By convention, all functions end in DB so you know when a function is touching the DB
+ * By convention, all functions end in 'DB' so you know when a function is touching the DB
  */
-
 import thinky from './thinky';
 import promisify from 'es6-promisify';
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
-import {DocumentNotFoundError, AuthenticationError} from '../errors';
+import {DocumentNotFoundError, AuthenticationError, DuplicateFoundError} from '../errors';
 import uuid from 'node-uuid';
+import {makeSecretToken, getUserByEmail, getSafeUser, getAltLoginMessage} from './utils';
 
 const compare = promisify(bcrypt.compare);
 const hash = promisify(bcrypt.hash);
@@ -25,22 +24,28 @@ export const User = thinky.createModel("users", {});
 User.ensureIndex("email");
 
 export async function loginDB(email, submittedPassword) {
+  email = email.toLowerCase();
   let user
+  //console.log(e);
   try {
     user = await getUserByEmail(email);
   } catch (e) {
+    console.log(e);
     throw e
   }
   if (!user) {
+    console.log('e');
     throw new DocumentNotFoundError();
   }
-  const userPassword = user.strategies.local && user.strategies.local.password;
+  const {strategies} = user;
+  const userPassword = strategies.local && strategies.local.password;
   if (!userPassword) {
-    throw AuthenticationError()
+    const errMessage = getAltLoginMessage(strategies);
+    throw new DuplicateFoundError(errMessage);
   }
   let isCorrectPass = await compare(submittedPassword, userPassword);
   if (isCorrectPass) {
-    return safeUser(user);
+    return getSafeUser(user);
   } else {
     throw new AuthenticationError();
   }
@@ -54,10 +59,11 @@ export async function getUserByIdDB(id) {
   } catch (e) {
     throw e;
   }
-  return safeUser(user);
+  return getSafeUser(user);
 }
 
 export async function signupDB(email, submittedPassword) {
+  email = email.toLowerCase();
   let user;
   try {
     user = await getUserByEmail(email);
@@ -65,14 +71,15 @@ export async function signupDB(email, submittedPassword) {
     throw e;
   }
   if (user) {
-    const userPassword = user.strategies.local && user.strategies.local.password;
+    const {strategies} = user;
+    const userPassword = strategies.local && strategies.local.password;
     if (!userPassword) {
-      throw AuthenticationError()
+      throw new DuplicateFoundError(getAltLoginMessage(strategies));
     }
     let isCorrectPass = await compare(submittedPassword, userPassword);
     if (isCorrectPass) {
       //treat it like a login
-      return [safeUser(user), null]; //null verification token
+      return [getSafeUser(user), null]; //null verification token
     } else {
       throw new AuthenticationError();
     }
@@ -98,11 +105,12 @@ export async function signupDB(email, submittedPassword) {
     } catch (e) {
       throw e
     }
-    return [safeUser(newUser), verifiedToken];
+    return [getSafeUser(newUser), verifiedToken];
   }
 }
 
 export async function setResetTokenDB(email) {
+  email = email.toLowerCase();
   let user
   try {
     user = await getUserByEmail(email);
@@ -145,7 +153,7 @@ export async function resetPasswordFromTokenDB(id, resetToken, newPassword) {
   } catch (e) {
     throw e
   }
-  return safeUser(user);
+  return getSafeUser(user);
 }
 
 export async function resetVerifiedTokenDB(id) {
@@ -178,7 +186,7 @@ export async function verifyEmailDB(id, verifiedToken) {
     throw new AuthenticationError('Email already verified');
   }
   if (user.strategies.local.verifiedToken !== verifiedToken) {
-    throw new AuthenticationError('Invalid token');
+    throw new AuthenticationError('Invalid verification token');
   }
   const updates = {
     strategies: {
@@ -193,46 +201,5 @@ export async function verifyEmailDB(id, verifiedToken) {
   } catch (e) {
     throw e
   }
-  return safeUser(user);
-}
-
-async function getUserByEmail(email) {
-  let users;
-  try {
-    users = await User.getAll(email, {index: 'email'}).limit(1).run();
-  } catch (e) {
-    throw e;
-  }
-  return users[0];
-}
-
-function safeUser(userDoc) {
-  return {
-    id: userDoc.id,
-    email: userDoc.email,
-    strategies: {
-      local: safeLocalStrategy(userDoc.strategies.local)
-      //google: safeGoogleStrategy()
-    }
-  }
-}
-
-function safeLocalStrategy(localStrategy) {
-  if (!localStrategy) return {};
-  return {
-    isVerified: localStrategy.isVerified
-  }
-}
-
-/*a secret token has the user id, an expiration, and a secret
- the expiration allows for invalidating on the client or server. No need to hit the DB with an expired token
- the user id allows for a quick db lookup in case you don't want to index on email (also eliminates pii)
- the secret keeps out attackers (proxy for rate limiting, IP blocking, still encouraged)
- storing it in the DB means there exists only 1, one-time use key, unlike a JWT, which has many, multi-use keys*/
-function makeSecretToken(userId, minutesToExpire) {
-  return new Buffer(JSON.stringify({
-    id: userId,
-    sec: crypto.randomBytes(8).toString('base64'),
-    exp: Date.now() + 1000 * 60 * minutesToExpire
-  })).toString("base64");
+  return getSafeUser(user);
 }

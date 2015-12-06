@@ -19,7 +19,11 @@ export default class AuthContainer extends Component {
     location: PropTypes.object,
     isAuthenticating: PropTypes.bool.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    tokenError: PropTypes.string,
+    authError: PropTypes.shape({
+      _error: PropTypes.string.isRequired,
+      email: PropTypes.string,
+      password: PropTypes.string
+    }),
     path: PropTypes.string.isRequired
   };
 
@@ -34,7 +38,7 @@ function mapStateToProps(state) {
   return {
     isAuthenticating,
     isAuthenticated,
-    tokenError: error,
+    authError: error,
     path
   }
 }

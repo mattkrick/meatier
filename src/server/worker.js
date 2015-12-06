@@ -3,7 +3,9 @@ import express from 'express';
 import webpack from 'webpack';
 import http from 'http';
 import bodyParser from 'body-parser';
-
+var cors = require('express-cors')
+import fetch from 'isomorphic-fetch';
+var cookieParser = require('cookie-parser');
 import config from '../../webpack/webpack.config.js';
 import createSSR from './createSSR.js';
 import {login, signup, loginToken, sendResetEmail, resetPassword, verifyEmail} from './controllers/auth';
@@ -36,8 +38,6 @@ module.exports.run = function (worker) {
   app.use(require('serve-static')(path.join(__dirname, 'build')));
 
   //Auth handler via HTTP (make sure to use HTTPS)
-  var google = require('googleapis');
-  var oauth = google.oauth2('v2');
   app.use('/auth', authRouter);
   authRouter.route('/login').post(login);
   authRouter.route('/login-token').post(loginToken);
@@ -45,7 +45,21 @@ module.exports.run = function (worker) {
   authRouter.route('/send-reset-email').post(sendResetEmail);
   authRouter.route('/reset-password').post(resetPassword);
   authRouter.route('/verify-email').post(verifyEmail);
-  authRouter.route('/google').get((req, res) => res.redirect(googleAuthUrl));
+  authRouter.route('/google').get(async (req, res) => {
+    res.statusCode = 302;
+    res.setHeader('Location', googleAuthUrl);
+    res.setHeader('Content-Length', '0');
+    res.end();
+    console.log('Yup');
+    //res.redirect(googleAuthUrl)
+    //res.end();
+    //const resp = await fetch(googleAuthUrl);
+    //resp.end();
+    //console.log('res end', resp);
+  });
+  //authRouter.route('/google/callback').get(function(req, res) {
+  //  console.log('CB REQ',req);
+  //});
   authRouter.route('/google/callback').get(googleAuthCallback);
 
 

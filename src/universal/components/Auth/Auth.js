@@ -3,25 +3,30 @@ import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './Auth.css';
 import {Link} from 'react-router';
-import {loginUser, signupUser} from '../../redux/ducks/auth';
+import {loginUser, signupUser, oauthLogin} from '../../redux/ducks/auth';
+import {getJSON} from '../../utils/utils';
 
 export default class Auth extends Component {
   static PropTypes = {
     location: PropTypes.object,
     isAuthenticating: PropTypes.bool.isRequired,
-    authError: PropTypes.object.isRequired,
+    authError: PropTypes.shape({
+      _error: PropTypes.string.isRequired,
+      email: PropTypes.string,
+      password: PropTypes.string
+    }),
     fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    authType: PropTypes.string.isRequired,
-    authFunc: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired
   };
 
   render() {
-    const {fields: {email, password}, handleSubmit, isLogin, error, isAuthenticating} = this.props;
+    const {fields: {email, password}, handleSubmit, isLogin, error, isAuthenticating, authError} = this.props;
+    const localError = error || authError._error;
     return (
       <div className={styles.loginForm}>
         <h3>{isLogin ? 'Login' : 'Sign up'}</h3>
-        {error && <span>{error}</span>}
+        {localError && <span>{localError}</span>}
         <form className={styles.loginForm} onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
 
@@ -52,10 +57,17 @@ export default class Auth extends Component {
             />
           </div>
         </form>
+        <div className={styles.hrWithText}>
+          <span className={styles.hrText}>or</span>
+        </div>
+        <span onClick={this.loginWithGoogle.bind(this)} >Login with Google</span>
       </div>
     );
   }
-
+  async loginWithGoogle() {
+    const redirectRoute = this.props.location.query.next || '/';
+    this.props.dispatch(oauthLogin('/auth/google'));
+  }
   onSubmit(data,dispatch) {
     //gotta get that redirect from props
     const redirectRoute = this.props.location.query.next || '/';

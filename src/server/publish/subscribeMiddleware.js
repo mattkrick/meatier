@@ -6,8 +6,8 @@ const subRequirements = {
 }
 //checking token expiry automatically will be part of SCv4
 function checkUserId(socket,query) {
-  const token = socket.getAuthToken();
-  if (!token || !token.id) {
+  const authToken = socket.getAuthToken();
+  if (!authToken || !authToken.id) {
     return 'Invalid userId';
   }
 }
