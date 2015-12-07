@@ -1,7 +1,7 @@
 import {googleClientID, googleClientSecret, googleCallbackURL} from '../secrets';
 import promisify from 'es6-promisify';
 import google from 'googleapis';
-import {loginWithGoogleDB} from '../database/models/oauthGoogle';
+import {loginWithGoogleDB} from '../database/models/googleStrategy';
 import {signJwt} from './auth';
 
 const OAuth2 = google.auth.OAuth2;

@@ -7,7 +7,7 @@ import { routeReducer } from 'redux-simple-router';
 import auth, {LOGIN_USER_ERROR} from './ducks/auth';
 import lanes from './ducks/lanes';
 import notes from './ducks/notes';
-import {socketClusterReducer} from '../redux-socket-cluster/index';
+import {socketClusterReducer} from 'redux-socket-cluster';
 
 function reducer(state, action) {
   return {

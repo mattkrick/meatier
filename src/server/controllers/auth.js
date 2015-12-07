@@ -3,7 +3,7 @@
  * They never touch the database, they just handle DB errors so swapping out DBs is easy
  * Just make sure your DB handlers throw the same errors
  */
-import {loginDB, getUserByIdDB, signupDB, setResetTokenDB, resetPasswordFromTokenDB, resetVerifiedTokenDB, verifyEmailDB} from '../database/models/users';
+import {loginDB, getUserByIdDB, signupDB, setResetTokenDB, resetPasswordFromTokenDB, resetVerifiedTokenDB, verifyEmailDB} from '../database/models/localStrategy';
 import jwt from 'jsonwebtoken';
 import promisify from 'es6-promisify';
 import {jwtSecret} from '../secrets';

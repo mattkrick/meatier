@@ -50,7 +50,6 @@ module.exports.run = function (worker) {
   });
   authRouter.route('/google/callback').get(googleAuthCallback);
 
-  console.log('DB', process.env.__RETHINKDB__);
   //server-side rendering
   app.get('*', createSSR);
   //startup

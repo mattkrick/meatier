@@ -1,4 +1,4 @@
-import {User} from './users';
+import {User} from './localStrategy';
 import {DocumentNotFoundError, AuthenticationError} from '../errors';
 import {getUserByEmail, getSafeUser, getAltLoginMessage} from './utils';
 

@@ -5,7 +5,7 @@ import validateSecretToken from '../../../../universal/utils/validateSecretToken
 import thinky from '../thinky';
 import bcrypt from 'bcrypt';
 import {User, loginDB, signupDB, getUserByIdDB, setResetTokenDB,
-  resetPasswordFromTokenDB, resetVerifiedTokenDB, verifyEmailDB} from '../users';
+  resetPasswordFromTokenDB, resetVerifiedTokenDB, verifyEmailDB} from '../localStrategy';
 
 const {r} = thinky;
 const compare = promisify(bcrypt.compare);

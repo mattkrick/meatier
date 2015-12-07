@@ -140,7 +140,6 @@ export function loginUser(dispatch, data, redirect) {
     let res = await postJSON('/auth/login', data);
     let parsedRes = await parseJSON(res);
     const {error, ...payload} = parsedRes;
-    console.log('err', error);
     if (payload.authToken) {
       localStorage.setItem(authTokenName, payload.authToken);
       dispatch(loginUserSuccess(payload));

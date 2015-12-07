@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import {User} from './users';
+import {User} from './localStrategy';
 
 /*if login fails with 1 strategy, suggest another*/
 export function getAltLoginMessage(userStrategies) {
@@ -9,8 +9,8 @@ export function getAltLoginMessage(userStrategies) {
     return
   }
   let authStr = '';
-  authTypes.forEach(type => authStr += `${type}, or`)
-  authStr = authStr.slice(0, -4); //remove last ', or'
+  authTypes.forEach(type => authStr += `${type}, or `)
+  authStr = authStr.slice(0, -5); //remove last ', or'
   authStr = authStr.replace('local', 'your password');
   return `Try logging in with ${authStr}`
 }
@@ -65,7 +65,7 @@ function safeLocalStrategy(localStrategy) {
 function safeGoogleStrategy(googleStrategy) {
   /*  As is, we can share everything with the client
    We don't store a refresh_token because those don't expire so storing them opens us up to attacks
-   we don't store an access_token because they expire in 1 hour (don't ask me why Meteor does...)
+   we don't store an access_token because they expire in 1 hour
    we don't store an id_token because they expire in 1 hour (and we issue our own, 7 day token)
    if we needed authorization (eg facebook friends list) we could grab it immediately & store it in the DB
    if we needed authorization that updates before token expiration,

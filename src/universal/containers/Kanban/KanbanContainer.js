@@ -5,7 +5,7 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 import Kanban from '../../components/Kanban/Kanban';
-import {reduxSocket} from '../../redux-socket-cluster';
+import {reduxSocket} from 'redux-socket-cluster';
 import socketOptions from '../../utils/socketOptions';
 import {loadLanes, laneActions} from '../../redux/ducks/lanes';
 import {loadNotes} from '../../redux/ducks/notes';
