@@ -28,9 +28,10 @@ and their npm counterparts that are used in this example:
 | websocket auth        | REST auth + JWTs      |
 | Blaze                 | React                 |
 | Meteor's build system | webpack               |
-| Mongo                 | Rethinkdb             |
+| Mongo                 | RethinkDB             |
 | global CSS            | postcss-module-values |
 | latency compensation  | redux-optimist        |
+| velocity              | ava                   |
 
 That's a lot of work, so what do you get for it that Meteor doesn't provide?
 ###...Scaling! 
