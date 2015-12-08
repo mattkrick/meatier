@@ -2,20 +2,11 @@ import test from 'ava';
 import 'babel-core/register';
 import promisify from 'es6-promisify';
 import validateSecretToken from '../../../../universal/utils/validateSecretToken'
-import thinky from '../thinky';
 import bcrypt from 'bcrypt';
 import {User, loginDB, signupDB, getUserByIdDB, setResetTokenDB,
   resetPasswordFromTokenDB, resetVerifiedTokenDB, verifyEmailDB} from '../localStrategy';
 
-const {r} = thinky;
 const compare = promisify(bcrypt.compare);
-
-test.before(async t => {
-  await r.table('users').delete()
-});
-test.after(async t => {
-  await r.table('users').delete()
-});
 
 test('LocalStrategy:signupDB:Success', async t => {
   t.plan(3);

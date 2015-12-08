@@ -13,6 +13,8 @@
   "scripts": {
     "start": "node ./src/server/server.babel.js",
     "resetdb": "node ./src/server/database/resetdb.babel.js",
+    "pretest": "NODE_ENV=testing node ./tests/pretest.babel.js",
+    "posttest": "NODE_ENV=testing node ./tests/pretest.babel.js",
     "test": "NODE_ENV=testing ava ./src/**/__tests__/**/*.js"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
@@ -25,6 +27,7 @@
     "babel-plugin-react-transform": "^1.1.1",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
+    "chakram": "^1.2.1",
     "classnames": "^2.2.0",
     "css-loader": "^0.22.0",
     "eslint-plugin-react": "3.11.1",

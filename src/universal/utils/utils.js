@@ -11,7 +11,14 @@ export function parseJSON(response) {
 }
 
 export function hostUrl() {
-  const {host, protocol} = window.location;
+  let host, protocol;
+  if (process.env.__CLIENT__) {
+    host = window.location.host;
+    protocol = window.location.protocol;
+  } else {
+    host = 'localhost:3000';
+    protocol= 'http:';
+  }
   return `${protocol}//${host}`;
 }
 

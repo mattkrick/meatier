@@ -14,6 +14,34 @@ import {parsedJoiErrors} from '../../universal/utils/schema';
 
 const verifyToken = promisify(jwt.verify);
 
+export async function signup(req, res) {
+  const {email, password} = req.body;
+  const schemaError = validateAuthSchema(req.body, authSchemaInsert);
+  if (schemaError) {
+    return res.status(401).json({error: schemaError});
+  }
+  let user, verifiedToken;
+  try {
+    [user, verifiedToken] = await signupDB(email, password);
+  } catch (e) {
+    let error = {_error: 'Cannot create account'};
+    if (e.name === 'AuthenticationError') {
+      error.email = 'Email already exists';
+    } else {
+      error._error = e.message;
+    }
+    return res.status(401).json({error})
+  }
+  //verifiedToken is null if we found out it's actually a login)
+  if (verifiedToken) {
+    //TODO send email with verifiedEmailToken via mailgun or whatever
+    console.log('Verify url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
+  }
+
+  const authToken = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});
+  res.status(200).json({authToken, user})
+}
+
 export async function login(req, res) {
   const {email, password} = req.body;
   const schemaError = validateAuthSchema(req.body, authSchemaInsert);
@@ -53,34 +81,6 @@ export async function loginToken(req, res) {
     return res.status(401).json({error: {_error: e.message}})
   }
   res.status(200).json({user})
-}
-
-export async function signup(req, res) {
-  const {email, password} = req.body;
-  const schemaError = validateAuthSchema(req.body, authSchemaInsert);
-  if (schemaError) {
-    return res.status(401).json({error: schemaError});
-  }
-  let user, verifiedToken;
-  try {
-    [user, verifiedToken] = await signupDB(email, password);
-  } catch (e) {
-    let error = {_error: 'Cannot create account'};
-    if (e.name === 'AuthenticationError') {
-        error.email = 'Email already exists';
-    } else {
-      error._error = e.message;
-    }
-    return res.status(401).json({error})
-  }
-  //verifiedToken is null if we found out it's actually a login)
-  if (verifiedToken) {
-    //TODO send email with verifiedEmailToken via mailgun or whatever
-    console.log('Verify url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
-  }
-
-  const authToken = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});
-  res.status(200).json({authToken, user})
 }
 
 export async function sendResetEmail(req, res) {
