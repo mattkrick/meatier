@@ -7,12 +7,13 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import Kanban from '../../components/Kanban/Kanban';
 import {reduxSocket} from 'redux-socket-cluster';
 import socketOptions from '../../utils/socketOptions';
+//import socket from '../../utils/socket';
 import {loadLanes, laneActions} from '../../redux/ducks/lanes';
 import {loadNotes} from '../../redux/ducks/notes';
 
 @DragDropContext(HTML5Backend)
 @connect(mapStateToProps, mapDispatchToProps)
-@reduxSocket(socketOptions)
+//@reduxSocket(socket)
 export default class KanbanContainer extends Component {
   static propTypes = {
     laneActions: PropTypes.object.isRequired,

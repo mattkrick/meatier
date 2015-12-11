@@ -1,6 +1,6 @@
 {
   "name": "meatier",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Like meteor, but meatier",
   "repository": {
     "type": "git",
@@ -86,14 +86,14 @@
     "redux-logger": "^2.0.4",
     "redux-optimist": "0.0.2",
     "redux-simple-router": "0.0.8",
-    "redux-socket-cluster": "^0.1.3",
+    "redux-socket-cluster": "^0.2.0",
     "redux-thunk": "^1.0.0",
     "reselect": "^2.0.0",
     "rethinkdb": "^2.1.1",
     "rethinkdbdash": "^2.2.3",
     "serve-static": "^1.10.0",
     "socketcluster": "^3.0.0",
-    "socketcluster-client": "git://github.com/mattkrick/socketcluster-client.git#994b175db8f8f255d7b0dd72337be86348b7eb18",
+    "socketcluster-client": "git://github.com/mattkrick/socketcluster-client.git#master",
     "thinky": "^2.2.0",
     "url": "^0.11.0"
   }

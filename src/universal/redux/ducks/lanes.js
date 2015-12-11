@@ -1,7 +1,7 @@
 import {addImmutable, updateImmutable, deleteImmutable} from '../helpers.js';
 import uuid from 'node-uuid';
 import Joi from 'joi';
-import socketCluster from 'socketcluster-client';
+import socket from '../../utils/socket';
 import socketOptions from '../../utils/socketOptions';
 import {deleteNote} from './notes';
 
@@ -99,7 +99,6 @@ const baseMeta = {
 
 export function loadLanes() {
   const sub = 'allLanes';
-  const socket = socketCluster.connect(socketOptions); //GOTCHA: must call this from a function and not the top otherwise server hangs up
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
     //client-side changefeed handler

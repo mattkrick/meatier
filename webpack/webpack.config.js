@@ -19,7 +19,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
-      __CLIENT__: true
+      "process.env.__CLIENT__": true
     })
   ],
   resolve: {

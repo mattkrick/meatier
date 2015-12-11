@@ -1,6 +1,6 @@
 import {addImmutable, updateImmutable, deleteImmutable, findInState} from '../helpers.js';
 import Joi from 'joi';
-import socketCluster from 'socketcluster-client';
+import socket from '../../utils/socket';
 import socketOptions from '../../utils/socketOptions';
 import update from 'react/lib/update';
 
@@ -131,7 +131,6 @@ const baseMeta = {
 
 export function loadNotes() {
   const sub = 'allNotes';
-  const socket = socketCluster.connect(socketOptions);
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
     socket.on(sub, data => {
