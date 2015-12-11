@@ -24,5 +24,5 @@ const finalCreateStore = compose(
   DevTools.instrument())(createStore);
 const store = finalCreateStore(rootReducer, initialState);
 syncReduxAndRouter(history, store);
-window.store = store; //debug
+window.store = store; // ?debug
 render(<Root store={store} history={history}/>, document.getElementById('root'));

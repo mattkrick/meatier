@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import { Provider } from 'react-redux';
 
-//Injects the server rendered state and app into a basic html template
+// Injects the server rendered state and app into a basic html template
 export default class Html extends Component {
   static propTypes: {
     store: PropTypes.object.isRequired,
@@ -25,4 +25,4 @@ export default class Html extends Component {
       </html>
     );
   }
-};
+}

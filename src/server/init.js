@@ -1,4 +1,4 @@
-module.exports.run = function(thisProcess) {
+module.exports.run = function (thisProcess) {
   require('babel-core/register');
-}
+};
 

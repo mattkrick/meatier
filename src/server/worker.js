@@ -1,7 +1,6 @@
 import path from 'path';
 import express from 'express';
 import webpack from 'webpack';
-import http from 'http';
 import bodyParser from 'body-parser';
 import config from '../../webpack/webpack.config.js';
 import createSSR from './createSSR.js';
@@ -64,12 +63,12 @@ module.exports.run = function (worker) {
     socket.docQueue = new Set();
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
-    socket.on(ADD_LANE, addLane)
-    socket.on(DELETE_LANE, deleteLane)
-    socket.on(UPDATE_LANE, updateLane)
-    socket.on(ADD_NOTE, addNote)
-    socket.on(DELETE_NOTE, deleteNote)
-    socket.on(UPDATE_NOTE, updateNote)
+    socket.on(ADD_LANE, addLane);
+    socket.on(DELETE_LANE, deleteLane);
+    socket.on(UPDATE_LANE, updateLane);
+    socket.on(ADD_NOTE, addNote);
+    socket.on(DELETE_NOTE, deleteNote);
+    socket.on(UPDATE_NOTE, updateNote);
   });
-}
+};
 //TODO: dont let tokens expire while still connected, depends on PR to SC

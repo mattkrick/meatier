@@ -42,8 +42,8 @@ test('AuthController:signupDB:AlreadyExists', async t => {
   t.ok(parsedRes.error.email);
 });
 
-//test('AuthController:login:Success', async t => {
-//  t.plan(1);
+// ?test('AuthController:login:Success', async t => {
+// ?  t.plan(1);
 //  const res = await postJSON('/auth/login', {email: 'AuthControllerlogin@Success', password: '123123'});
 //  const parsedRes = await res.json();
 //  t.is(res.status, 200);

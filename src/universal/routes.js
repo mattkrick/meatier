@@ -1,10 +1,10 @@
 import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import {Route, IndexRoute} from 'react-router';
 import AppContainer from './containers/App/AppContainer';
 import Home from './components/Home/Home';
-import KanbanContainer from './containers/Kanban/KanbanContainer'
+import KanbanContainer from './containers/Kanban/KanbanContainer';
 import AuthContainer from './containers/Auth/AuthContainer';
-import NotFound from './components/NotFound/NotFound'
+import NotFound from './components/NotFound/NotFound';
 import RequireAuth from './containers/RequireAuth/RequireAuth';
 import Logout from './components/Logout/Logout';
 import LostPassword from './components/LostPassword/LostPassword';
