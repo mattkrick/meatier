@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 
 // Injects the server rendered state and app into a basic html template
 export default class Html extends Component {
@@ -20,7 +20,7 @@ export default class Html extends Component {
       <div id="root">
       </div>
       <script dangerouslySetInnerHTML={{__html: initialState}}/>
-      <script src='/static/app.js'/>
+      <script src="/static/app.js"/>
       </body>
       </html>
     );

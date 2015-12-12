@@ -1,7 +1,7 @@
 import {addImmutable, updateImmutable, deleteImmutable} from '../helpers.js';
 import uuid from 'node-uuid';
 import Joi from 'joi';
-import socket from '../../utils/socket';
+import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
 import {deleteNote} from './notes';
 
@@ -99,6 +99,7 @@ const baseMeta = {
 
 export function loadLanes() {
   const sub = 'allLanes';
+  const socket = socketCluster.connect(socketOptions);
   socket.subscribe(sub, {waitForAuth: true});
   return dispatch => {
     //client-side changefeed handler

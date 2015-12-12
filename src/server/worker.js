@@ -24,8 +24,8 @@ module.exports.run = function (worker) {
 
   const httpServer = worker.httpServer;
   const scServer = worker.scServer;
-  //setup middleware
-  app.use(bodyParser.json()); //no need for url enconding since no auth stuff will be posted in the url
+  // setup middleware
+  app.use(bodyParser.json());
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: config.output.publicPath
@@ -33,7 +33,7 @@ module.exports.run = function (worker) {
   app.use(require('webpack-hot-middleware')(compiler));
   app.use(require('serve-static')(path.join(__dirname, 'build')));
 
-  //Auth handler via HTTP (make sure to use HTTPS)
+  // Auth handler via HTTP (make sure to use HTTPS)
   app.use('/auth', authRouter);
   authRouter.route('/login').post(login);
   authRouter.route('/login-token').post(loginToken);
@@ -49,16 +49,16 @@ module.exports.run = function (worker) {
   });
   authRouter.route('/google/callback').get(googleAuthCallback);
 
-  //server-side rendering
+  // server-side rendering
   app.get('*', createSSR);
-  //startup
+  // startup
   httpServer.on('request', app);
 
-  //handle sockets
+  // handle sockets
   scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, subscribeMiddleware);
-  scServer.on('connection', function (socket) {
-    //hold the client-submitted docs in a queue while they get validated & handled in the DB
-    //then, when the DB emits a change, we know if the client caused it or not
+  scServer.on('connection', socket => {
+    // hold the client-submitted docs in a queue while they get validated & handled in the DB
+    // then, when the DB emits a change, we know if the client caused it or not
     console.log('Client connected:', socket.id);
     socket.docQueue = new Set();
     socket.on('subscribe', subscribeHandler);
@@ -71,4 +71,4 @@ module.exports.run = function (worker) {
     socket.on(UPDATE_NOTE, updateNote);
   });
 };
-//TODO: dont let tokens expire while still connected, depends on PR to SC
+// TODO: dont let tokens expire while still connected, depends on PR to SC
