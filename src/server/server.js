@@ -1,6 +1,7 @@
 import SC from 'socketcluster';
 import os from 'os';
 import {jwtSecret} from './secrets';
+import path from 'path';
 
 const numCpus = os.cpus().length;
 const SocketCluster = SC.SocketCluster;
