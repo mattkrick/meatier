@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-
 import Kanban from '../../components/Kanban/Kanban';
 import {reduxSocket} from 'redux-socket-cluster';
 import socketOptions from '../../utils/socketOptions';
@@ -38,7 +37,9 @@ function mapStateToProps(state) {
   return {
     lanes: state.lanes,
     userId: state.auth.user.id,
-    socketState: state.socket.state
+    socketState: state.socket.state,
+    isAuthenticated: state.auth.isAuthenticated,
+    isAuthenticating: state.auth.isAuthenticating
   };
 }
 

@@ -4,7 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var root = process.cwd();
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval',
   entry: {
     app: ['babel-polyfill', './src/client/client.js', 'webpack-hot-middleware/client']
   },
@@ -25,7 +25,7 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.json', '.jsx'],
     alias: {},
-    root: path.join(root, 'src') //required for jest-webpack-alias
+    root: path.join(root, 'src')
   },
   node: { //used for joi validation on client
     dns: 'mock',

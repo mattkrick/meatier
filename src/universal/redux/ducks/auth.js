@@ -143,6 +143,7 @@ export function loginUser(dispatch, data, redirect) {
     if (payload.authToken) {
       localStorage.setItem(authTokenName, payload.authToken);
       dispatch(loginUserSuccess(payload));
+      console.log('REDIR',redirect)
       dispatch(updatePath(redirect));
       resolve()
     } else {
@@ -206,7 +207,8 @@ export function signupUser(dispatch, data, redirect) {
 }
 
 export function loginToken(authToken) {
-  return async function (dispatch) {
+  return async function (dispatch, getState) {
+    if (getState().auth.isAuthenticating) return;
     dispatch({type: LOGIN_USER_REQUEST});
     let res = await postJSON('/auth/login-token', {authToken});
     if (res.status !== 200) {

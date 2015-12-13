@@ -5,16 +5,15 @@ import { createStore,compose, combineReducers } from 'redux';
 import { Provider, connect } from 'react-redux';
 import DevTools from '../../containers/DevTools';
 import App from '../App/App';
-import routes from '../../routes';
+import routes from '../../routes/index';
 
 export default class Root extends Component {
   render() {
+    const {history, store} = this.props;
     return (
-      <Provider store={this.props.store}>
+      <Provider store={store}>
         <div>
-          <Router history={this.props.history}>
-            {routes}
-          </Router>
+          <Router history={history} routes={routes(store)}/>
           <DevTools/>
         </div>
       </Provider>

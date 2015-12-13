@@ -16,7 +16,8 @@
     "pretest": "NODE_ENV=testing node ./tests/pretest.babel.js",
     "posttest": "NODE_ENV=testing node ./tests/pretest.babel.js",
     "test": "NODE_ENV=testing ava ./src/**/__tests__/**/*.js",
-    "lint": "xo src/**/*.js --plugin=react --esnext --space --fix"
+    "lint": "xo src/**/*.js --plugin=react --esnext --space --fix",
+    "profile": "webpack --config ./webpack/webpack.config.js --profile --json > stats.json"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
   "license": "MIT",
