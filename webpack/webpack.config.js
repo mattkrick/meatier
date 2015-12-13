@@ -3,6 +3,40 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var root = process.cwd();
 
+var vendor = [
+  'react',
+  'react-dom',
+  'react-router',
+  'react-redux',
+  'redux',
+  'redux-logger',
+  'redux-thunk',
+  'redux-optimist',
+  'redux-form',
+  'regenerate',
+  'material-ui'
+];
+
+var devPrefetches = [
+  'react-dnd/lib/index.js',
+  'react-json-tree/lib/index.js',
+  'react-dock/lib/index.js',
+  'lodash/object/mapValues.js',
+  'joi/lib/index.js',
+  './src/universal/containers/Kanban/KanbanContainer.js',
+  'redux-devtools-log-monitor/lib/index.js'
+]
+
+var devPlugins = devPrefetches.map(function(prefetch) {
+  return new webpack.PrefetchPlugin(prefetch);
+})
+
+var prodPlugins = [
+  new ExtractTextPlugin('style.css', {allChunks: true}),
+  new webpack.optimize.OccurenceOrderPlugin(),
+  new webpack.optimize.CommonsChunkPlugin('vendor','vendor.js')
+]
+
 module.exports = {
   devtool: 'eval',
   entry: {
@@ -14,14 +48,13 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
-    new ExtractTextPlugin('style.css', {allChunks: true}),
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
-      "process.env.__CLIENT__": true
+      "__CLIENT__": true,
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || 'development')
     })
-  ],
+  ].concat(devPlugins),
   resolve: {
     extensions: ['', '.js', '.json', '.jsx'],
     alias: {},

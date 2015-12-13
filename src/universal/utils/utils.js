@@ -12,7 +12,7 @@ export function parseJSON(response) {
 
 export function hostUrl() {
   let host, protocol;
-  if (process.env.__CLIENT__) {
+  if (__CLIENT__) {
     host = window.location.host;
     protocol = window.location.protocol;
   } else {

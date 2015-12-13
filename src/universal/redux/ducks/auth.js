@@ -208,7 +208,9 @@ export function signupUser(dispatch, data, redirect) {
 
 export function loginToken(authToken) {
   return async function (dispatch, getState) {
-    if (getState().auth.isAuthenticating) return;
+    const {auth: {isAuthenticating, isAuthenticated}} = getState();
+    //stop duplicate since it could come from onEnter or from AppContainer
+    if (isAuthenticated || isAuthenticating) return;
     dispatch({type: LOGIN_USER_REQUEST});
     let res = await postJSON('/auth/login-token', {authToken});
     if (res.status !== 200) {

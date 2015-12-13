@@ -20,6 +20,7 @@ export default class Html extends Component {
       <div id="root">
       </div>
       <script dangerouslySetInnerHTML={{__html: initialState}}/>
+      {process.env.NODE_ENV === 'production' ? <script src="/static/vendor.js"/> : null}
       <script src="/static/app.js"/>
       </body>
       </html>
