@@ -7,7 +7,6 @@ import {connect} from 'react-redux';
 export default class Logout extends Component {
   componentDidMount() {
     const {dispatch} = this.props;
-    console.log('logout mounted');
     dispatch(logoutAndRedirect());
   }
 

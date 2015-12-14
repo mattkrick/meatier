@@ -10,7 +10,7 @@ export default function(store) {
     getIndexRoute: (location, cb) => {
       require.ensure([], (require) => {
         cb(null, {
-          component: require('../containers/Auth/AuthContainer')
+          component: require('../containers/Auth/AuthContainer').default
         })
       })
     },
@@ -20,7 +20,7 @@ export default function(store) {
           path: 'lost-password',
           getComponent: (location, cb) => {
             require.ensure([], require => {
-              cb(null, require('../components/LostPassword/LostPassword'))
+              cb(null, require('../components/LostPassword/LostPassword').default)
             })
           }
         },
@@ -28,7 +28,7 @@ export default function(store) {
           path: 'reset-email-sent',
           getComponent: (location, cb) => {
             require.ensure([], require => {
-              cb(null, require('../components/ResetEmailSent/ResetEmailSent'))
+              cb(null, require('../components/ResetEmailSent/ResetEmailSent').default)
             })
           }
         },
@@ -36,7 +36,7 @@ export default function(store) {
           path: 'reset-password',
           getComponent: (location, cb) => {
             require.ensure([], require => {
-              cb(null, require('../components/ResetPassword/ResetPassword'))
+              cb(null, require('../components/ResetPassword/ResetPassword').default)
             })
           }
         },
@@ -44,7 +44,7 @@ export default function(store) {
           path: 'reset-password-success',
           getComponent: (location, cb) => {
             require.ensure([], require => {
-              cb(null, require('../components/ResetPasswordSuccess/ResetPasswordSuccess'))
+              cb(null, require('../components/ResetPasswordSuccess/ResetPasswordSuccess').default)
             })
           }
         },
@@ -52,7 +52,7 @@ export default function(store) {
           path: 'verify-email/:verifiedToken',
           getComponent: (location, cb) => {
             require.ensure([], require => {
-              cb(null, require('../containers/VerifyEmail/VerifyEmailContainer'))
+              cb(null, require('../containers/VerifyEmail/VerifyEmailContainer').default)
             })
           }
         }

@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import fetch from 'isomorphic-fetch';
-import { updatePath } from 'redux-simple-router';
+import {pushPath, replacePath} from 'redux-simple-router';
 import Joi from 'joi';
 import {postJSON, parseJSON, getJSON, hostUrl} from '../../utils/utils';
 import socketOptions from '../../utils/socketOptions';
@@ -143,8 +143,7 @@ export function loginUser(dispatch, data, redirect) {
     if (payload.authToken) {
       localStorage.setItem(authTokenName, payload.authToken);
       dispatch(loginUserSuccess(payload));
-      console.log('REDIR',redirect)
-      dispatch(updatePath(redirect));
+      dispatch(replacePath(redirect));
       resolve()
     } else {
       dispatch(loginUserError(error));
@@ -157,7 +156,7 @@ export function sendResetEmail(data, dispatch) {
   return new Promise(async function (resolve, reject) {
     let res = await postJSON('/auth/send-reset-email', data);
     if (res.status == 200) {
-      dispatch(updatePath('/login/reset-email-sent'));
+      dispatch(pushPath('/login/reset-email-sent'));
       return resolve();
     }
     let parsedRes = await parseJSON(res);
@@ -180,7 +179,7 @@ export function resetPassword(data, dispatch) {
     if (payload.authToken) {
       localStorage.setItem(authTokenName, payload.authToken);
       dispatch(signupUserSuccess(payload));
-      dispatch(updatePath('/login/reset-password-success'));
+      dispatch(replacePath('/login/reset-password-success'));
       resolve();
     } else {
       reject(error);
@@ -197,7 +196,7 @@ export function signupUser(dispatch, data, redirect) {
     if (payload.authToken) {
       localStorage.setItem(authTokenName, payload.authToken);
       dispatch(signupUserSuccess(payload));
-      dispatch(updatePath(redirect));
+      dispatch(replacePath(redirect));
       resolve();
     } else {
       dispatch(signupUserError(error));
@@ -254,7 +253,7 @@ export function oauthLogin(providerEndpoint, redirect) {
     if (payload.authToken) {
       localStorage.setItem(authTokenName, payload.authToken);
       dispatch({type: LOGIN_USER_SUCCESS, payload});
-      dispatch(updatePath(redirect));
+      dispatch(replacePath(redirect));
     } else {
       dispatch({type: LOGIN_USER_ERROR, error});
     }
@@ -266,6 +265,6 @@ export function logoutAndRedirect() {
   localStorage.removeItem(authTokenName);
   return function (dispatch) {
     dispatch({type: LOGOUT_USER});
-    dispatch(updatePath('/'));
+    dispatch(replacePath('/'));
   }
 }

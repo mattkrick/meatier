@@ -5,16 +5,16 @@ export default store => {
     component: 'div',
     childRoutes: [{
       path: '/',
-      component: require('./../containers/App/AppContainer'),
+      component: require('./../containers/App/AppContainer').default,
       indexRoute: {
-        component: require('./../components/Home/Home')
+        component: require('./../components/Home/Home').default
       },
       childRoutes: [
-        require('./kanban')(store),
-        require('./login')(store),
-        require('./signup')(store),
-        require('./logout'),
-        require('./notFound'),
+        require('./kanban').default(store),
+        require('./login').default(store),
+        require('./signup').default(store),
+        require('./logout').default,
+        require('./notFound').default,
       ]
     }]
   }

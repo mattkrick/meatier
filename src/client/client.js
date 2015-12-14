@@ -10,6 +10,7 @@ import createHistory from 'history/lib/createBrowserHistory';
 import rootReducer from '../universal/redux/reducer.js';
 import Root from '../universal/components/Root/Root.js';
 
+
 const initialState = window.__INITIAL_STATE__ || {};
 const loggerMiddleware = createLogger({
   level: 'info',

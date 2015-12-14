@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import {authSchemaInsert} from '../../redux/ducks/auth';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { updatePath } from 'redux-simple-router';
 import Auth from '../../components/Auth/Auth';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';

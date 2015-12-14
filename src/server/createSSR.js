@@ -1,9 +1,9 @@
-import createHistory from '../../node_modules/history/lib/createMemoryHistory';
+import createHistory from 'history/lib/createMemoryHistory';
 import React from 'react';
-import {renderToString} from '../../node_modules/react-dom/server';
+import {renderToString} from 'react-dom/server';
 import {createStore} from 'redux';
 import rootReducer from '../universal/redux/reducer.js';
-import Html from './Html.js';
+//import Html from './Html.js';
 
 export default function createSSR(req, res) {
   const initialState = {};
@@ -12,7 +12,18 @@ export default function createSSR(req, res) {
   hydrateOnClient(store);
 
   function hydrateOnClient(store) {
-    res.send('<!doctype html>\n' + renderToString(<Html title="Quack Quack" store={store}/>));
+    res.send(`<!doctype html>
+              <html>
+                <head>
+                  <title>Meatier</title>
+                </head>
+                <body>
+                  <div id="root"></div>
+                  <script src="/static/app.js"></script>
+                </body>
+              </html>`)
+
+    //res.send('<!doctype html>\n' + renderToString(<Html title="Quack Quack" store={store}/>));
   }
 }
 

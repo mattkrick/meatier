@@ -1,9 +1,10 @@
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var root = process.cwd();
+import path from 'path';
+import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-var vendor = [
+const root = process.cwd();
+
+const vendor = [
   'react',
   'react-dom',
   'react-router',
@@ -17,7 +18,7 @@ var vendor = [
   'material-ui'
 ];
 
-var devPrefetches = [
+const devPrefetches = [
   'react-dnd/lib/index.js',
   'react-json-tree/lib/index.js',
   'react-dock/lib/index.js',
@@ -27,11 +28,9 @@ var devPrefetches = [
   'redux-devtools-log-monitor/lib/index.js'
 ]
 
-var devPlugins = devPrefetches.map(function(prefetch) {
-  return new webpack.PrefetchPlugin(prefetch);
-})
+const devPlugins = devPrefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
-var prodPlugins = [
+const prodPlugins = [
   new ExtractTextPlugin('style.css', {allChunks: true}),
   new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.optimize.CommonsChunkPlugin('vendor','vendor.js')
@@ -60,7 +59,8 @@ module.exports = {
     alias: {},
     root: path.join(root, 'src')
   },
-  node: { //used for joi validation on client
+  // used for joi validation on client
+  node: {
     dns: 'mock',
     net: 'mock'
   },
@@ -89,25 +89,8 @@ module.exports = {
       //{ test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loaders: ['babel'],
         include: [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')],
-        //exclude: /node_modules/,
-        query: {
-          "stage": 0,
-          "plugins": ["react-transform"],
-          "extra": {
-            "react-transform": {
-              "transforms": [{
-                "transform": "react-transform-hmr",
-                "imports": ["react"],
-                "locals": ["module"]
-              }, {
-                "transform": "react-transform-catch-errors",
-                "imports": ["react", "redbox-react"]
-              }]
-            }
-          }
-        }
       }
     ]
   }

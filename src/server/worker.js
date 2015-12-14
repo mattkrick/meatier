@@ -26,6 +26,7 @@ module.exports.run = function (worker) {
   const scServer = worker.scServer;
   // setup middleware
   app.use(bodyParser.json());
+
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: config.output.publicPath

@@ -6,7 +6,7 @@ export default function(store) {
     path: 'kanban',
     getComponent(location, cb) {
       require.ensure([], (require) => {
-        cb(null, require('../containers/Kanban/KanbanContainer'))
+        cb(null, require('../containers/Kanban/KanbanContainer').default)
       })
     }
   }
