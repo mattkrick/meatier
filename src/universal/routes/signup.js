@@ -3,10 +3,10 @@ export default store => {
   return {
     onEnter: requireNoAuth,
     path: 'signup',
-    getComponent(location, cb) {
-      require.ensure([], (require) => {
-        cb(null, require('../containers/Auth/AuthContainer').default)
-      })
+    getComponent: async (location, cb) => {
+      let mod = await System.import('universal/containers/Auth/AuthContainer');
+      let component = mod.default;
+      cb(null, component)
     }
   }
 }

@@ -4,10 +4,9 @@ export default function(store) {
   return {
     onEnter: requireAuth,
     path: 'kanban',
-    getComponent(location, cb) {
-      require.ensure([], (require) => {
-        cb(null, require('../containers/Kanban/KanbanContainer').default)
-      })
+    getComponent: async (location, cb) => {
+      let mod = await System.import('../containers/Kanban/KanbanContainer');
+      cb(null, mod.default);
     }
   }
 }

@@ -32,17 +32,19 @@ const devPlugins = devPrefetches.map(specifier => new webpack.PrefetchPlugin(spe
 
 const prodPlugins = [
   new ExtractTextPlugin('style.css', {allChunks: true}),
-  new webpack.optimize.OccurenceOrderPlugin(),
-  new webpack.optimize.CommonsChunkPlugin('vendor','vendor.js')
+  //new webpack.optimize.OccurenceOrderPlugin(),
+  //new webpack.optimize.CommonsChunkPlugin('vendor','vendor.js')
 ]
 
 module.exports = {
+  //devtool: 'source-map',
   devtool: 'eval',
   entry: {
     app: ['babel-polyfill', './src/client/client.js', 'webpack-hot-middleware/client']
   },
   output: {
-    filename: '[name].js',
+    // https://github.com/webpack/webpack/issues/1752
+    filename: 'app.js',
     path: path.join(root, 'build'),
     publicPath: '/static/'
   },

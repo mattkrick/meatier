@@ -1,8 +1,8 @@
 export default {
   path: '*',
-  getComponent(location, cb) {
-    require.ensure([], (require) => {
-      cb(null, require('../components/NotFound/NotFound').default)
-    })
+  getComponent: async (location, cb) => {
+    let mod = await System.import('universal/components/NotFound/NotFound');
+    let component = mod.default;
+    cb(null, component)
   }
 }

@@ -1,9 +1,9 @@
 export default {
   path: 'logout',
 
-  getComponent(location, cb) {
-    require.ensure([], (require) => {
-      cb(null, require('../components/Logout/Logout').default)
-    })
+  getComponent: async (location, cb) => {
+    let mod = await System.import('universal/components/Logout/Logout');
+    let component = mod.default;
+    cb(null, component)
   }
 }
