@@ -2,11 +2,14 @@ import path from 'path';
 import express from 'express';
 import webpack from 'webpack';
 import bodyParser from 'body-parser';
-import config from '../../webpack/webpack.config.js';
+//import serveStatic from 'serve-static';
+import config from '../../webpack/webpack.config.dev.js';
 import createSSR from './createSSR.js';
 import {login, signup, loginToken, sendResetEmail, resetPassword, verifyEmail} from './controllers/auth';
+import {write} from './utils';
 
-//"live query"
+
+// "live query"
 import subscribeMiddleware from './publish/subscribeMiddleware';
 import subscribeHandler from './publish/subscribeHandler';
 import {ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes';
@@ -15,26 +18,32 @@ import {addLane, deleteLane, updateLane} from './controllers/lanes';
 import {addNote, deleteNote, updateNote} from './controllers/notes';
 import {googleAuthUrl, googleAuthCallback} from './controllers/oauthGoogle';
 
-const compiler = webpack(config);
-const authRouter = express.Router();
+const PROD = process.env.NODE_ENV === 'production';
 
 module.exports.run = function (worker) {
   console.log('   >> Worker PID:', process.pid);
   const app = express();
-
   const httpServer = worker.httpServer;
   const scServer = worker.scServer;
+
+  // HMR
+  if (!PROD) {
+    const compiler = webpack(config);
+    app.use(require('webpack-dev-middleware')(compiler, {
+      noInfo: true,
+      publicPath: config.output.publicPath
+    }));
+    app.use(require('webpack-hot-middleware')(compiler));
+  }
+
   // setup middleware
   app.use(bodyParser.json());
-
-  app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
-  }));
-  app.use(require('webpack-hot-middleware')(compiler));
-  app.use(require('serve-static')(path.join(__dirname, 'build')));
+  if (PROD) {
+    app.use('/static', express.static('build'))
+  }
 
   // Auth handler via HTTP (make sure to use HTTPS)
+  const authRouter = express.Router();
   app.use('/auth', authRouter);
   authRouter.route('/login').post(login);
   authRouter.route('/login-token').post(loginToken);

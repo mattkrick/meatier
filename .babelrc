@@ -1,31 +1,10 @@
 {
   "presets": ["react", "es2015", "stage-0"],
   "env": {
-    // this plugin will be included only in development mode, e.g.
-    // if NODE_ENV (or BABEL_ENV) environment variable is not set
-    // or is equal to "development"
-    "development": {
-      "plugins": [
-        ["transform-decorators-legacy"],
-        // must be an array with options object as second item
-        ["react-transform", {
-          // must be an array of objects
-          "transforms": [{
-            // can be an NPM module name or a local path
-            "transform": "react-transform-hmr",
-            // see transform docs for "imports" and "locals" dependencies
-            "imports": ["react"],
-            "locals": ["module"]
-          }, {
-            // you can have many transforms, not just one
-            "transform": "react-transform-catch-errors",
-            "imports": ["react", "redbox-react"]
-          }]
-          // by default we only look for `React.createClass` (and ES6 classes)
-          // but you can tell the plugin to look for different component factories:
-          // factoryMethods: ["React.createClass", "createClass"]
-        }]
-      ]
+      "production": {
+        "plugins": [
+          ["transform-decorators-legacy"]
+        ]
+      }
     }
-  }
 }

@@ -53,8 +53,20 @@ That's a lot of work, so what do you get for it that Meteor doesn't provide?
 - http://localhost:3000
 
 ##How it works
-When the page is opened, a basic HTML layout is sent to the client (SSR coming soon). The redux devtools is also
-loaded so you track your every state-changing action.
+####In development mode:
+When the page is opened, a basic HTML layout is sent to the client along with a stringified redux store and a request for the common chunk of the JS.
+The client then injects the redux store & router. 
+The redux devtools is also loaded so you track your every state-changing action. 
+The routes are loaded async, check your networks tab in chrome devtools and you'll see funny js files load now & again. 
+If this isn't crazy amazing to you, then go away.
+
+####In production mode:
+A webpack config builds the entire contents of the routes on the server side.
+This is required because node doesn't know how to require `.css`.
+When a request is sent to the server, react-router matches the url to the correct route & sends it to the client.
+To test this, disable javascript in the browser. You'll see the site & css loads without a FOUC.
+NOTE: react-router doesn't return when matched to a javascript-heavy page (eg login). PRs welcomed!
+
 
 When the page loads, it checks your localStorage for `Meatier.token` & will automatically log you in if the token is legit. 
 If not, just head to the 'Sign up' page. The 'Sign up' page uses redux-form, which handles all errors, schema validation,
