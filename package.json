@@ -15,7 +15,7 @@
     "prod": "NODE_ENV=production node ./src/server/server.babel.js",
     "build:client": "rimraf build && NODE_ENV=production webpack --progress --colors --config ./webpack/prod.babel.js",
     "build:server": " rimraf serverBuild && NODE_ENV=production webpack --progress --colors --config ./webpack/server.babel.js",
-    "build": "npm run build:client && npm run build:server && npm run prod",
+    "build": "npm run build:client && npm run build:server",
     "bs": "npm run build:server && npm run prod",
     "resetdb": "node ./src/server/database/resetdb.babel.js",
     "pretest": "NODE_ENV=testing node ./tests/pretest.babel.js",

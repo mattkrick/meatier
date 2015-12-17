@@ -37,6 +37,7 @@ Some of my chief complaints with Meteor
 - `git clone` this repo
 - `cd meatier`
 - `npm install`
+- `npm run build`
 - `rethinkdb`
 
 ##Client-side development
@@ -47,10 +48,10 @@ Rebuilds the client code in-memory & uses hot module reload so you can develop s
 On my 2013 MBA an initial build takes about 8 seconds and updates usually take 800ms
 
 ##Server-side development
-- `npm run build` (in a second terminal window)
+- `npm run prod` (in a second terminal window)
 - http://localhost:3000
+- If you edit any client or universal files, run `npm run bs` instead
 
-After the first `build` you can use `npm run bs` (as long as you didn't edit any css)
 This is beneficial because you can make changes to the server ***without having to recompile the client code***
 That means you only wait for the server to restart! GAME CHANGER!
 
