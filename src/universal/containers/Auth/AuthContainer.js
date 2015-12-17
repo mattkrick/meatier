@@ -8,9 +8,10 @@ import Joi from 'joi';
 import {postJSON, parseJSON} from '../../utils/utils';
 import {parsedJoiErrors} from '../../utils/schema';
 
-//use the same form to retain form values (there's really no difference between login and signup, it's just for show)
+// use the same form to retain form values (there's really no difference between login and signup, it's just for show)
 @connect(mapStateToProps)
-@reduxForm({form: 'authForm', fields: ['email', 'password'], validate}) //must come after connect to get the path field
+// must come after connect to get the path field
+@reduxForm({form: 'authForm', fields: ['email', 'password'], validate})
 export default class AuthContainer extends Component {
   static PropTypes = {
     location: PropTypes.object,

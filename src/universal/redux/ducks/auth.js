@@ -237,6 +237,7 @@ export function verifyEmail(verifiedToken) {
 }
 
 export function oauthLogin(providerEndpoint, redirect) {
+  if (!__CLIENT__) return;
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
     let res = await fetch(hostUrl() + providerEndpoint, {

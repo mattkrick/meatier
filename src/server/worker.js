@@ -2,11 +2,9 @@ import path from 'path';
 import express from 'express';
 import webpack from 'webpack';
 import bodyParser from 'body-parser';
-//import serveStatic from 'serve-static';
 import config from '../../webpack/webpack.config.dev.js';
 import createSSR from './createSSR.js';
 import {login, signup, loginToken, sendResetEmail, resetPassword, verifyEmail} from './controllers/auth';
-import {write} from './utils';
 
 
 // "live query"
@@ -38,6 +36,13 @@ module.exports.run = function (worker) {
 
   // setup middleware
   app.use(bodyParser.json());
+  app.use((req, res, next) => {
+    if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {
+      res.status(404).end();
+    } else {
+      next();
+    }
+  })
   if (PROD) {
     app.use('/static', express.static('build'))
   }

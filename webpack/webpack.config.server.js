@@ -34,26 +34,16 @@ const babelQuery = {
       "plugins": [
         ["transform-decorators-legacy"]
       ]
+    },
+    "development": {
+      "plugins": [
+        ["transform-decorators-legacy"]
+      ]
     }
   }
 }
 
-var commonLoaders = [
-  {
-    test: /\.js$|\.jsx$/,
-    loaders: ['babel'],
-    include: serverInclude
-  },
-  { test: /\.json$/, loader: "json-loader" },
-  { test: /\.png$/, loader: "url-loader" },
-  { test: /\.jpg$/, loader: "file-loader" },
-  { test: /\.css$/,
-    loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name].[local].[hash:base64:5]!postcss'),
-  }
-];
-
 export default {
-  name: "server-side rendering",
   context: path.join(root, "src"),
   entry: {
     app: "universal/routes/index.js"
@@ -62,23 +52,56 @@ export default {
   output: {
     path: path.join(root, 'serverBuild'),
     filename: "app.js",
-    chunkFilename: '[name].[hash].js',
     libraryTarget: "commonjs2"
+  },
+  // ignore these finals because they have dynamic requires & throw warnings
+  externals: {
+    'isomorphic-fetch': true,
+    'es6-promisify': true,
+    'socketcluster-client': true
   },
   postcss: [
     require('postcss-modules-values')
   ],
   module: {
-    loaders: commonLoaders
+    loaders: [
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
+        include: serverInclude
+      }, {
+        test: /\.txt$/,
+        loader: 'raw-loader',
+        include: serverInclude
+      }, {
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+        loader: 'url-loader?limit=10000',
+        include: serverInclude
+      }, {
+        test: /\.(eot|ttf|wav|mp3)$/,
+        loader: 'file-loader',
+        include: serverInclude
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name].[local].[hash:base64:5]!postcss'),
+        include: serverInclude
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel',
+        include: serverInclude,
+        query: babelQuery
+      }
+    ]
   },
   resolve: {
-    extensions: ['', '.js', '.css'],
-    modulesDirectories: [
-      "src", "node_modules"
-    ],
+    extensions: ['', '.js'],
+    root: path.join(root, 'src'),
     alias: {}
   },
   plugins: [
+    new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin("style.css"),
     new webpack.optimize.UglifyJsPlugin({
       compressor: {

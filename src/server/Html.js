@@ -3,7 +3,8 @@ import {Provider} from 'react-redux';
 import { match, RoutingContext } from 'react-router'
 
 // Injects the server rendered state and app into a basic html template
-export default class Html extends Component {
+export default class
+Html extends Component {
   static propTypes:{
     store: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
