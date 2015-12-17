@@ -4,7 +4,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
 
 const root = process.cwd();
-const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')];
+const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'),/joi/, /isemail/, /hoek/, /topo/];
 
 const vendor = [
   'react',
@@ -39,10 +39,9 @@ const babelQuery = {
 }
 
 export default {
-  devtool: 'eval',
   context: path.join(__dirname, "..", "src"),
   entry: {
-    app: ['babel-polyfill', 'client/client.js'],
+    app: ['babel-polyfill', 'client/client.js']
     //vendor
   },
   output: {
@@ -52,35 +51,6 @@ export default {
     path: path.join(root, 'build'),
     publicPath: '/static/'
   },
-  plugins: [...prefetchPlugins,
-    new ExtractTextPlugin('style.css', {allChunks: false}),
-    //new webpack.optimize.OccurenceOrderPlugin(),
-    //new webpack.optimize.CommonsChunkPlugin({
-    //  name: "vendor",
-    //  minChunks: Infinity
-    //}),
-    new AssetsPlugin({
-      path: path.join(root, 'build'),
-      filename: 'assets.json',
-    }),
-    new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({
-      "__CLIENT__": true,
-      "process.env.NODE_ENV": JSON.stringify('production')
-    })
-  ],
-  resolve: {
-    extensions: ['', '.js'],
-    root: path.join(root, 'src')
-  },
-  // used for joi validation on client
-  node: {
-    dns: 'mock',
-    net: 'mock'
-  },
-  postcss: [
-    require('postcss-modules-values')
-  ],
   module: {
     loaders: [
       {
@@ -112,5 +82,35 @@ export default {
         query: babelQuery
       }
     ]
-  }
+  },
+  plugins: [
+    new ExtractTextPlugin('style.css', {allChunks: false}),
+    //new webpack.optimize.CommonsChunkPlugin({
+    //  name: "vendor",
+    //  minChunks: Infinity
+    //}),
+    new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
+    new AssetsPlugin({
+      path: path.join(root, 'build'),
+      filename: 'assets.json',
+    }),
+    new webpack.NoErrorsPlugin(),
+    new webpack.DefinePlugin({
+      "__CLIENT__": true,
+      "process.env.NODE_ENV": JSON.stringify('production')
+    }),
+
+  ],
+  resolve: {
+    extensions: ['', '.js'],
+    root: path.join(root, 'src')
+  },
+  // used for joi validation on client
+  node: {
+    dns: 'mock',
+    net: 'mock'
+  },
+  postcss: [
+    require('postcss-modules-values')
+  ]
 };
