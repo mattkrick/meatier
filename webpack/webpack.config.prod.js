@@ -85,6 +85,7 @@ export default {
   },
   plugins: [
     new ExtractTextPlugin('style.css', {allChunks: false}),
+    //new webpack.optimize.OccurenceOrderPlugin(),
     //new webpack.optimize.CommonsChunkPlugin({
     //  name: "vendor",
     //  minChunks: Infinity

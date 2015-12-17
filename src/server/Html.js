@@ -13,6 +13,7 @@ Html extends Component {
 
   render() {
     const PROD = process.env.NODE_ENV === 'production';
+    const SSR = PROD;
     const {title, store, renderProps} = this.props;
     const initialState = 'window.__INITIAL_STATE__ = ' + JSON.stringify(store.getState());
     return (

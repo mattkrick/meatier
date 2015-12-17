@@ -2,10 +2,12 @@ import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
-
+//import StatsPlugin from 'stats-webpack-plugin';
+////import FakeStyleLoader from 'fake-style-loader';
+//
 const root = process.cwd();
 const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
-
+////
 const vendor = [
   'react',
   'react-dom',
@@ -51,15 +53,12 @@ export default {
   target: "node",
   output: {
     path: path.join(root, 'serverBuild'),
-    filename: "app.js",
+    chunkFilename: '[name].[hash].js',
+    filename: "[name].js",
     libraryTarget: "commonjs2"
   },
   // ignore these finals because they have dynamic requires & throw warnings
-  externals: {
-    'isomorphic-fetch': true,
-    'es6-promisify': true,
-    'socketcluster-client': true
-  },
+  externals: ['isomorphic-fetch','es6-promisify','socketcluster-client'],
   postcss: [
     require('postcss-modules-values')
   ],
@@ -84,8 +83,9 @@ export default {
       },
       {
         test: /\.css$/,
+        //loader: 'fake-style!css?modules&importLoaders=1&localIdentName=[name].[local].[hash:base64:5]!postcss',
         loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name].[local].[hash:base64:5]!postcss'),
-        include: serverInclude
+        include: serverInclude,
       },
       {
         test: /\.js$/,
@@ -112,6 +112,11 @@ export default {
       "__CLIENT__": false,
       "process.env.NODE_ENV": JSON.stringify('production')
     }),
-    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1})
+    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
+    //new StatsPlugin('stats.json', {
+    //  chunkModules: true,
+    //  exclude: [/node_modules[\\\/]react/]
+    //})
+
   ]
 };
