@@ -21,16 +21,9 @@ export default async function createSSR(req, res) {
     // just send a cheap html doc + stringified store
     renderApp(store, res, null);
   } else {
-    let makeRoutes;
-    try {
-      makeRoutes = require('../../build/prerender.js').default;
-    } catch(e) {
-      console.log('ERR', e, e.stack)
-    }
+    const makeRoutes = require('../../build/prerender.js').default;
     const routes = makeRoutes(store);
-    //console.log('madeRoutes', routes)
     match({routes, location: req.url}, (error, redirectLocation, renderProps) => {
-      //console.log('matched', req.url, renderProps)
       if (error) {
         res.status(500).send(error.message)
       } else if (redirectLocation) {

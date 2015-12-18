@@ -1,30 +1,18 @@
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-//
+
 const root = process.cwd();
-const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
-////
-const vendor = [
-  'react',
-  'react-dom',
-  'react-router',
-  'react-redux',
-  'redux',
-  'redux-logger',
-  'redux-thunk',
-  'redux-optimist',
-  'redux-form',
-  'regenerate',
-  'material-ui'
-];
+const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal')];
+
 
 const prefetches = [
-  //'react-dnd/lib/index.js',
-  //'joi/lib/index.js',
-  //'./src/universal/containers/Kanban/KanbanContainer.js'
+  'react-dnd-html5-backend/lib/index.js',
+  'react-dnd/lib/index.js',
+  'joi/lib/index.js',
+  'redux-form/lib/index.js',
+  'material-ui/lib/raised-button.js'
 ]
-
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
 const babelQuery = {
@@ -55,8 +43,8 @@ export default {
     libraryTarget: "commonjs2",
     publicPath: '/static/'
   },
-  // ignore these finals because they have dynamic requires & throw warnings
-  externals: ['isomorphic-fetch','es6-promisify','socketcluster-client'],
+  // ignore anything that throws warnings
+  externals: ['isomorphic-fetch','es6-promisify','socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],
   postcss: [
     require('postcss-modules-values')
   ],
@@ -98,7 +86,7 @@ export default {
     root: path.join(root, 'src'),
     alias: {}
   },
-  plugins: [
+  plugins: [...prefetchPlugins,
     new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin("[name].css"),
     new webpack.optimize.UglifyJsPlugin({
@@ -110,12 +98,6 @@ export default {
       "__CLIENT__": false,
       "process.env.NODE_ENV": JSON.stringify('production')
     }),
-    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
-    //new Webpack_isomorphic_tools_plugin(require('./webpack-isomorphic-tools'))
-    //new StatsPlugin('stats.json', {
-    //  chunkModules: true,
-    //  exclude: [/node_modules[\\\/]react/]
-    //})
-
+    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1})
   ]
 };

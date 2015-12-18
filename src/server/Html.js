@@ -28,6 +28,7 @@ export default class Html extends Component {
         </Provider> }
       </div>
       <script dangerouslySetInnerHTML={{__html: initialState}}/>
+      {PROD && <script src="/static/vendor.js"/>}
       <script src="/static/app.js"/>
       </body>
       </html>

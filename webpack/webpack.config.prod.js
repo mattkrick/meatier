@@ -6,18 +6,23 @@ import AssetsPlugin from 'assets-webpack-plugin';
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'),/joi/, /isemail/, /hoek/, /topo/];
 
+/*code can be: vendor-common, vendor-page-specific, meatier-common, meatier-page-specific
+* a small, fast landing page means only include the common from vendor + meatier
+* long-term caching means breaking apart meatier code from vendor code
+* The right balance in this case is to exclude material-ui from the vendor bundle
+* in order to keep the initial load small.
+* Cache vendor + app on a CDN and call it a day
+*/
+
 const vendor = [
   'react',
   'react-dom',
   'react-router',
   'react-redux',
   'redux',
-  'redux-logger',
   'redux-thunk',
-  'redux-optimist',
   'redux-form',
-  'regenerate',
-  'material-ui'
+  'joi'
 ];
 
 const prefetches = [
@@ -41,8 +46,8 @@ const babelQuery = {
 export default {
   context: path.join(__dirname, "..", "src"),
   entry: {
-    app: ['babel-polyfill', 'client/client.js']
-    //vendor
+    app: ['babel-polyfill', 'client/client.js'],
+    vendor,
   },
   output: {
     // https://github.com/webpack/webpack/issues/1752
@@ -87,10 +92,11 @@ export default {
   plugins: [
     new ExtractTextPlugin('_style.css'),
     //new webpack.optimize.OccurenceOrderPlugin(),
-    //new webpack.optimize.CommonsChunkPlugin({
-    //  name: "vendor",
-    //  minChunks: Infinity
-    //}),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      minChunks: Infinity
+    }),
+    new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
     new AssetsPlugin({
       path: path.join(root, 'build'),
@@ -100,8 +106,7 @@ export default {
     new webpack.DefinePlugin({
       "__CLIENT__": true,
       "process.env.NODE_ENV": JSON.stringify('production')
-    }),
-
+    })
   ],
   resolve: {
     extensions: ['', '.js'],
