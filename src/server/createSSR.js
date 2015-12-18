@@ -10,7 +10,6 @@ import {UPDATE_PATH} from 'redux-simple-router';
 function renderApp(store, res, renderProps) {
   const path = renderProps && renderProps.location ? renderProps.location.pathname : '/';
   store.dispatch({type: UPDATE_PATH, payload: {path}});
-  //console.log('REN PROP', renderProps);
   const html = renderToString(<Html title="meatier" store={store} renderProps={renderProps}/>)
   res.send('<!doctype html>\n' + html);
 }
@@ -24,12 +23,14 @@ export default async function createSSR(req, res) {
   } else {
     let makeRoutes;
     try {
-      makeRoutes = require('../../serverBuild/app.js').default;
+      makeRoutes = require('../../build/prerender.js').default;
     } catch(e) {
       console.log('ERR', e, e.stack)
     }
     const routes = makeRoutes(store);
+    //console.log('madeRoutes', routes)
     match({routes, location: req.url}, (error, redirectLocation, renderProps) => {
+      //console.log('matched', req.url, renderProps)
       if (error) {
         res.status(500).send(error.message)
       } else if (redirectLocation) {

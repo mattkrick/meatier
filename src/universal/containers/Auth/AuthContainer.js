@@ -26,6 +26,16 @@ export default class AuthContainer extends Component {
   };
 
   render() {
+    function visitReactElements(x, f, depth=0){
+      if (!x || !x.props) return;
+
+      f(x, depth);
+
+      React.Children.forEach(x.props.children, function(x){
+        visitReactElements(x, f, depth + 1);
+      })
+    }
+
     const isLogin = this.props.path.indexOf('/login') !== -1;
     return <Auth isLogin={isLogin} {...this.props}/>
   }

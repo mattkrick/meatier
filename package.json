@@ -13,16 +13,16 @@
   "scripts": {
     "start": "NODE_ENV=development node ./src/server/server.babel.js",
     "prod": "NODE_ENV=production node ./src/server/server.babel.js",
-    "build": "concurrent \"npm run build:client\" \"npm run build:server\"",
+    "build": "rimraf build && concurrent \"npm run build:client\" \"npm run build:server\"",
     "bs": "concurrent \"npm run build:server\" \"npm run prod\"",
-    "build:client": "rimraf build && NODE_ENV=production webpack --colors --config ./webpack/prod.babel.js",
-    "build:server": " rimraf serverBuild && NODE_ENV=production webpack --colors --config ./webpack/server.babel.js",
+    "build:client": "NODE_ENV=production webpack --colors --config ./webpack/prod.babel.js",
+    "build:server": "NODE_ENV=production webpack --colors --config ./webpack/server.babel.js",
     "resetdb": "node ./src/server/database/resetdb.babel.js",
     "pretest": "NODE_ENV=testing node ./tests/pretest.babel.js",
     "posttest": "NODE_ENV=testing node ./tests/pretest.babel.js",
     "test": "NODE_ENV=testing ava ./src/**/__tests__/**/*.js",
     "lint": "xo src/**/*.js --plugin=react --esnext --space --fix",
-    "profile": "webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
+    "profile": "webpack --config ./webpack/server.babel.js --profile --json > stats.json"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
   "license": "MIT",
@@ -64,6 +64,7 @@
     "webpack": "^2.0.1-beta",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0",
+    "webpack-isomorphic-tools": "^2.2.22",
     "xo": "^0.12.1"
   },
   "dependencies": {

@@ -72,6 +72,7 @@ export default {
       },
       {
         test: /\.css$/,
+        //loader: 'css?modules&importLoaders=1&localIdentName=[name].[local].[hash:base64:5]!postcss',
         loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name].[local].[hash:base64:5]!postcss'),
         include: clientInclude
       },
@@ -84,7 +85,7 @@ export default {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('style.css', {allChunks: false}),
+    new ExtractTextPlugin('_style.css'),
     //new webpack.optimize.OccurenceOrderPlugin(),
     //new webpack.optimize.CommonsChunkPlugin({
     //  name: "vendor",

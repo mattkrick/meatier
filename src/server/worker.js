@@ -46,7 +46,6 @@ module.exports.run = function (worker) {
   if (PROD) {
     app.use('/static', express.static('build'))
   }
-
   // Auth handler via HTTP (make sure to use HTTPS)
   const authRouter = express.Router();
   app.use('/auth', authRouter);
