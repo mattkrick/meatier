@@ -12,8 +12,9 @@ export default class App extends Component {
 
   render() {
     const {isAuthenticated, children} = this.props;
+    const maxWidth = __PRODUCTION__ ? '100%' : '1000px';
     return (
-      <div className={styles.app}>
+      <div className={styles.app} style={{maxWidth}}>
         <Header isAuthenticated={isAuthenticated}/>
         <div className={styles.component}>
           {children}

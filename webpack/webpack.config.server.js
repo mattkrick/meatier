@@ -52,7 +52,7 @@ export default {
     new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
     new webpack.DefinePlugin({
       "__CLIENT__": false,
-      "process.env.NODE_ENV": JSON.stringify('production')
+      "__PRODUCTION__": true
     })
   ],
   module: {
