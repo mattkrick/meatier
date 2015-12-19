@@ -47,7 +47,7 @@ export async function signupDB(email, submittedPassword) {
   } else {
     const hashedPass = await hash(submittedPassword, 10); //production should use 12+, but it's slower
     const id = uuid.v4();
-    const verifiedToken = makeSecretToken(id, 60 * 24);
+    const verifiedEmailToken = makeSecretToken(id, 60 * 24);
     const userDoc = {
       id,
       email,
@@ -56,7 +56,7 @@ export async function signupDB(email, submittedPassword) {
         local: {
           isVerified: false,
           password: hashedPass,
-          verifiedToken
+          verifiedEmailToken
         }
       }
     }
@@ -66,7 +66,7 @@ export async function signupDB(email, submittedPassword) {
     } catch (e) {
       throw e
     }
-    return [getSafeUser(newUser), verifiedToken];
+    return [getSafeUser(newUser), verifiedEmailToken];
   }
 }
 
@@ -164,16 +164,16 @@ export async function resetVerifiedTokenDB(id) {
   if (user.strategies.local.isVerified) {
     throw new AuthenticationError('Email already verified');
   }
-  const verifiedToken = makeSecretToken(id, 60 * 24);
+  const verifiedEmailToken = makeSecretToken(id, 60 * 24);
   try {
-    await User.get(user.id).update({strategies: {local: {verifiedToken}}}).execute()
+    await User.get(user.id).update({strategies: {local: {verifiedEmailToken}}}).execute()
   } catch (e) {
     throw e
   }
-  return verifiedToken;
+  return verifiedEmailToken;
 }
 
-export async function verifyEmailDB(id, verifiedToken) {
+export async function verifyEmailDB(id, verifiedEmailToken) {
   let user;
   try {
     user = await User.get(id).run();
@@ -183,14 +183,14 @@ export async function verifyEmailDB(id, verifiedToken) {
   if (user.strategies.local.isVerified) {
     throw new AuthenticationError('Email already verified');
   }
-  if (user.strategies.local.verifiedToken !== verifiedToken) {
+  if (user.strategies.local.verifiedEmailToken !== verifiedEmailToken) {
     throw new AuthenticationError('Invalid verification token');
   }
   const updates = {
     strategies: {
       local: {
         isVerified: true,
-        verifiedToken: null
+        verifiedEmailToken: null
       }
     }
   }

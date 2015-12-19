@@ -1,15 +1,8 @@
 // https://github.com/webpack/webpack/tree/master/examples/code-splitted-require.context
 //There's a lot of boilerplate here, but if the require isn't static, then webpack can't chunk properly
-//webpack 2 and systemjs may make things nicer
 import {requireNoAuth} from './utils';
-//const getAsync = specifier => {
-//  return async (location, cb) => {
-//    let mod = await System.import(specifier);
-//    cb(null, mod);
-//  }
-//}
 
-export default function () {
+export default store => {
   return {
     onEnter: requireNoAuth,
     path: 'login',
@@ -37,7 +30,7 @@ export default function () {
           }
         },
         {
-          path: 'reset-password',
+          path: 'reset-password/:resetToken',
           getComponent: async (location, cb) => {
             let mod = await System.import('universal/components/ResetPassword/ResetPassword');
             let component = mod.default;
@@ -48,14 +41,6 @@ export default function () {
           path: 'reset-password-success',
           getComponent: async (location, cb) => {
             let mod = await System.import('universal/components/ResetPasswordSuccess/ResetPasswordSuccess');
-            let component = mod.default;
-            cb(null, component)
-          }
-        },
-        {
-          path: 'verify-email/:verifiedToken',
-          getComponent: async (location, cb) => {
-            let mod = await System.import('universal/containers/VerifyEmail/VerifyEmailContainer');
             let component = mod.default;
             cb(null, component)
           }

@@ -1,21 +1,8 @@
 import {addImmutable, updateImmutable, deleteImmutable} from '../helpers.js';
 import uuid from 'node-uuid';
-import Joi from 'joi';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
 import {deleteNote} from './notes';
-
-/*
- * Schema
- */
-const idSchema = Joi.string().min(3).max(36);
-export const laneSchemaUpdate = Joi.object({
-  id: idSchema.required(),
-  title: Joi.string().max(30).trim(),
-  userId: idSchema,
-  isPrivate: Joi.boolean()
-});
-export const laneSchemaInsert = laneSchemaUpdate.requiredKeys('title', 'userId');
 
 /*
  * Action types

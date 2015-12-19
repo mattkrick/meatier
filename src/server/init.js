@@ -1,9 +1,9 @@
-module.exports.run = function (thisProcess) {
+module.exports.run = function () {
   require('babel-register')({
-    only: function(filename) {
-      return (filename.indexOf('build') === -1 && filename.indexOf('node_modules') === -1)
+    only(filename) {
+      return (filename.indexOf('build') === -1 && filename.indexOf('node_modules') === -1);
     }
-  })
-  require('babel-polyfill')
+  });
+  require('babel-polyfill');
 };
 

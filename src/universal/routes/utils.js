@@ -1,5 +1,5 @@
-import {loginToken} from 'universal/redux/ducks/auth';
-import socketOptions from 'universal/utils/socketOptions';
+import {loginToken} from '../redux/ducks/auth';
+import socketOptions from '../utils/socketOptions';
 
 export const requireNoAuth = async (nextState, replaceState, cb) => {
   if (!__CLIENT__) return cb();

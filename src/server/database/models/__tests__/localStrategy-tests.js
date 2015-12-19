@@ -1,5 +1,4 @@
 import test from 'ava';
-import 'babel-core/register';
 import promisify from 'es6-promisify';
 import validateSecretToken from '../../../../universal/utils/validateSecretToken'
 import bcrypt from 'bcrypt';
@@ -134,7 +133,7 @@ test('LocalStrategy:resetVerifiedTokenDB:Success', async t => {
   const [safeUser, verifiedEmailToken] = await signupDB('resetVerifiedTokenDB@Success', '123123');
   const returnedVerifiedEmailToken = await resetVerifiedTokenDB(safeUser.id);
   const user = await User.get(safeUser.id).run();
-  const storedVerifiedEmailToken = user.strategies.local.verifiedToken;
+  const storedVerifiedEmailToken = user.strategies.local.verifiedEmailToken;
   t.not(verifiedEmailToken, returnedVerifiedEmailToken);
   t.is(returnedVerifiedEmailToken, storedVerifiedEmailToken);
 });
@@ -157,6 +156,6 @@ test('LocalStrategy:verifyEmailDB:Success', async t => {
   const [safeUser, verifiedEmailToken] = await signupDB('verifyEmailDB@Success', '123123');
   await verifyEmailDB(safeUser.id, verifiedEmailToken);
   const user = await User.get(safeUser.id).run();
-  t.is(user.strategies.local.verifiedToken, null);
+  t.is(user.strategies.local.verifiedEmailToken, null);
   t.true(user.strategies.local.isVerified);
 });

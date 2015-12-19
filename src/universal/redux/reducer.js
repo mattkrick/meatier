@@ -34,4 +34,4 @@ function reducer(state, action) {
 }
 
 export default reducer;
-//export default optimist(reducer);
+export default optimist(reducer);

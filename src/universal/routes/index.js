@@ -10,11 +10,12 @@ export default store => {
       component: Home
     },
     childRoutes: [
+      require('./verifyEmail').default,
       require('./kanban').default(store),
       require('./login').default(store),
       require('./signup').default(store),
       require('./logout').default,
-      require('./notFound').default(),
+      require('./notFound').default,
     ]
   }
 }

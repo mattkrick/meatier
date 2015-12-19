@@ -1,3 +1,6 @@
-require('babel-core/register');
+require('babel-register');
+require('babel-polyfill')
 var pretest = require('./pretest.js');
-pretest();
+console.log(pretest);
+console.log(pretest.default);
+pretest.default();

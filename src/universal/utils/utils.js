@@ -23,12 +23,11 @@ export function hostUrl() {
 }
 
 export function postJSON(route, obj) {
-  if (!__CLIENT__) return;
   return fetch(hostUrl() + route, {
     method: 'post',
     credentials: 'include',
     headers: {
-      'Accept': 'application/json',
+      'Accept'  : 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(obj)

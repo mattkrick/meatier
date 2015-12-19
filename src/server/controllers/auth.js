@@ -7,7 +7,7 @@ import {loginDB, getUserByIdDB, signupDB, setResetTokenDB, resetPasswordFromToke
 import jwt from 'jsonwebtoken';
 import promisify from 'es6-promisify';
 import {jwtSecret} from '../secrets';
-import {authSchemaInsert, authSchemaEmail, authSchemaPassword} from '../../universal/redux/ducks/auth';
+import {authSchemaInsert, authSchemaEmail, authSchemaPassword} from '../../universal/schemas/auth';
 import validateSecretToken from '../../universal/utils/validateSecretToken';
 import Joi from 'joi';
 import {parsedJoiErrors} from '../../universal/utils/schema';
@@ -20,9 +20,9 @@ export async function signup(req, res) {
   if (schemaError) {
     return res.status(401).json({error: schemaError});
   }
-  let user, verifiedToken;
+  let user, verifiedEmailToken;
   try {
-    [user, verifiedToken] = await signupDB(email, password);
+    [user, verifiedEmailToken] = await signupDB(email, password);
   } catch (e) {
     let error = {_error: 'Cannot create account'};
     if (e.name === 'AuthenticationError') {
@@ -32,10 +32,10 @@ export async function signup(req, res) {
     }
     return res.status(401).json({error})
   }
-  //verifiedToken is null if we found out it's actually a login)
-  if (verifiedToken) {
+  //verifiedEmailToken is null if we found out it's actually a login)
+  if (verifiedEmailToken) {
     //TODO send email with verifiedEmailToken via mailgun or whatever
-    console.log('Verify url:', `http://localhost:3000/login/verify-email/${verifiedToken}`);
+    console.log('Verify url:', `http://localhost:3000/verify-email/${verifiedEmailToken}`);
   }
 
   const authToken = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});

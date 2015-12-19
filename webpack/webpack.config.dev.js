@@ -10,7 +10,7 @@ const devPrefetches = [
   'react-dock/lib/index.js',
   'lodash/object/mapValues.js',
   'joi/lib/index.js',
-  './src/universal/containers/Kanban/KanbanContainer.js',
+  'universal/containers/Kanban/KanbanContainer.js',
   'redux-devtools-log-monitor/lib/index.js'
 ]
 const devPrefetchPlugins = devPrefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
@@ -37,13 +37,14 @@ const babelQuery = {
 
 export default {
   devtool: 'eval',
+  //context: path.join(root, "src"),
   entry: {
-    app: ['babel-polyfill', './src/client/client.js', 'webpack-hot-middleware/client']
+    app: ['babel-polyfill', 'client/client.js', 'webpack-hot-middleware/client']
   },
   output: {
     // https://github.com/webpack/webpack/issues/1752
-    filename: '[name].js',
-    chunkFilename: '[name].[hash].js',
+    filename: 'app.js',
+    chunkFilename: '[name]_[chunkhash].js',
     path: path.join(root, 'build'),
     publicPath: '/static/'
   },
@@ -69,34 +70,24 @@ export default {
   ],
   module: {
     loaders: [
-      {
-        test: /\.json$/,
-        loader: 'json-loader',
-        include: clientInclude
-      }, {
-        test: /\.txt$/,
-        loader: 'raw-loader',
-        include: clientInclude
-      }, {
-        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
-        loader: 'url-loader?limit=10000',
-        include: clientInclude
-      }, {
-        test: /\.(eot|ttf|wav|mp3)$/,
-        loader: 'file-loader',
-        include: clientInclude
-      },
+      {test: /\.json$/, loader: 'json-loader'},
+      {test: /\.txt$/, loader: 'raw-loader'},
+      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000'},
+      {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
       {
         test: /\.css$/,
-        loader: 'style!css?modules&importLoaders=1&localIdentName=[name].[local].[hash:base64:5]!postcss',
+        loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
         include: clientInclude
       },
       {
         test: /\.js$/,
         loader: 'babel',
         include: clientInclude,
-        query: babelQuery
+        query: babelQuery,
       }
     ]
+  },
+  resolveLoader: {
+    root: path.join(root, 'src')
   }
 };

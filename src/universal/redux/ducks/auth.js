@@ -1,7 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import fetch from 'isomorphic-fetch';
 import {pushPath, replacePath} from 'redux-simple-router';
-import Joi from 'joi';
 import {postJSON, parseJSON, getJSON, hostUrl} from '../../utils/utils';
 import socketOptions from '../../utils/socketOptions';
 import validateSecretToken from '../../utils/validateSecretToken';
@@ -17,32 +16,6 @@ export const SIGNUP_USER_SUCCESS = 'SIGNUP_USER_SUCCESS';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const VERIFY_EMAIL_ERROR = 'VERIFY_EMAIL_ERROR';
 export const VERIFY_EMAIL_SUCCESS = 'VERIFY_EMAIL_SUCCESS';
-
-const anyErrors = {
-  required: '!!Required',
-  empty: '!!Required'
-};
-
-export const authSchemaInsert = Joi.object().keys({
-  email: Joi.string().email().label('Email').required().options({
-    language: {
-      any: anyErrors,
-      string: {
-        email: '!!That\'s not an email!'
-      }
-    }
-  }),
-  password: Joi.string().min(6).label('Password').required().options({
-    language: {
-      any: anyErrors,
-      string: {
-        min: '{{!key}} should be at least {{limit}} chars long'
-      }
-    }
-  })
-});
-export const authSchemaEmail = authSchemaInsert.optionalKeys('password');
-export const authSchemaPassword = authSchemaInsert.optionalKeys('email');
 
 const initialState = {
   error: {},
@@ -222,9 +195,9 @@ export function loginToken(authToken) {
   }
 }
 
-export function verifyEmail(verifiedToken) {
+export function verifyEmail(verifiedEmailToken) {
   return async function (dispatch) {
-    let res = await postJSON('/auth/verify-email', {verifiedToken});
+    let res = await postJSON('/auth/verify-email', {verifiedEmailToken});
     if (res.status === 200) {
       return dispatch({type: VERIFY_EMAIL_SUCCESS});
     }
@@ -237,7 +210,6 @@ export function verifyEmail(verifiedToken) {
 }
 
 export function oauthLogin(providerEndpoint, redirect) {
-  if (!__CLIENT__) return;
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
     let res = await fetch(hostUrl() + providerEndpoint, {

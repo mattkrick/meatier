@@ -1,11 +1,10 @@
-import path from 'path';
 import express from 'express';
 import webpack from 'webpack';
 import bodyParser from 'body-parser';
+import compression from 'compression';
 import config from '../../webpack/webpack.config.dev.js';
 import createSSR from './createSSR.js';
 import {login, signup, loginToken, sendResetEmail, resetPassword, verifyEmail} from './controllers/auth';
-
 
 // "live query"
 import subscribeMiddleware from './publish/subscribeMiddleware';
@@ -42,9 +41,10 @@ module.exports.run = function (worker) {
     } else {
       next();
     }
-  })
+  });
   if (PROD) {
-    app.use('/static', express.static('build'))
+    app.use(compression());
+    app.use('/static', express.static('build'));
   }
   // Auth handler via HTTP (make sure to use HTTPS)
   const authRouter = express.Router();
@@ -65,6 +65,7 @@ module.exports.run = function (worker) {
 
   // server-side rendering
   app.get('*', createSSR);
+
   // startup
   httpServer.on('request', app);
 

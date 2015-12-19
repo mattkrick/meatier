@@ -5,7 +5,8 @@ import styles from './LostPassword.css';
 import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
-import {authSchemaEmail, sendResetEmail} from '../../redux/ducks/auth';
+import {sendResetEmail} from '../../redux/ducks/auth';
+import {authSchemaEmail} from '../../schemas/auth'
 import {parsedJoiErrors} from '../../utils/schema';
 
 @reduxForm({form: 'lostPasswordForm', fields: ['email'], validate})
@@ -18,7 +19,7 @@ export default class LostPassword extends Component {
         <span className={styles.instructions}>Enter your email address and we'll send you a password reset link.</span>
         {error && <span>{error}</span>}
         <form className={styles.lostPasswordForm} onSubmit={handleSubmit(sendResetEmail)}>
-          <input style={{display:'none'}} type="text" name="chromeisabitch"/>
+          <input style={{display:'none'}} type="text" name="javascript-disabled"/>
 
           <TextField {...email}
             type="text"
@@ -28,7 +29,7 @@ export default class LostPassword extends Component {
             defaultValue={location.query.e}
             autoFocus={true}
           />
-          <input style={{display:'none'}} type="text" name="chromeisabitch"/>
+          <input style={{display:'none'}} type="text" name="javascript-disabled"/>
           <div className={styles.lostPasswordButton}>
             <RaisedButton
               label='Send password reset'

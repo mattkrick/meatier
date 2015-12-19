@@ -1,41 +1,51 @@
 import React from 'react';
-import {renderToString} from 'react-dom/server';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import rootReducer from '../universal/redux/reducer.js';
-import {match} from 'react-router'
+import {match} from 'react-router';
 import Html from './Html.js';
 import {UPDATE_PATH} from 'redux-simple-router';
+import {renderToStaticMarkup} from 'react-dom-stream/server';
+import fs from 'fs';
+import {join, basename} from 'path';
+import promisify from 'es6-promisify';
+import thunkMiddleware from 'redux-thunk';
+
 // https://github.com/systemjs/systemjs/issues/953
 
-function renderApp(store, res, renderProps) {
+function renderApp(res, store, assets, renderProps) {
   const path = renderProps && renderProps.location ? renderProps.location.pathname : '/';
   store.dispatch({type: UPDATE_PATH, payload: {path}});
-  const html = renderToString(<Html title="meatier" store={store} renderProps={renderProps}/>)
-  res.send('<!doctype html>\n' + html);
+  const htmlStream = renderToStaticMarkup(<Html title="meatier" store={store} assets={assets} renderProps={renderProps}/>);
+  htmlStream.pipe(res, {end: false});
+  htmlStream.on('end', () => res.end());
 }
 
 export default async function createSSR(req, res) {
   const initialState = {};
-  const store = createStore(rootReducer, initialState);
-  if (process.env.NODE_ENV !== 'production') {
-    // just send a cheap html doc + stringified store
-    renderApp(store, res, null);
-  } else {
+  const finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
+  const store = finalCreateStore(rootReducer, initialState);
+  if (process.env.NODE_ENV === 'production') {
     const makeRoutes = require('../../build/prerender.js').default;
+    const assets = require('../../build/assets.json');
+    const readFile = promisify(fs.readFile);
+    assets.manifest.text = await readFile(join(__dirname, '..', '..', 'build', basename(assets.manifest.js)), 'utf-8');
     const routes = makeRoutes(store);
     match({routes, location: req.url}, (error, redirectLocation, renderProps) => {
       if (error) {
-        res.status(500).send(error.message)
+        res.status(500).send(error.message);
       } else if (redirectLocation) {
-        res.redirect(redirectLocation.pathname + redirectLocation.search)
+        res.redirect(redirectLocation.pathname + redirectLocation.search);
       } else if (renderProps) {
         // just look away, this is ugly & wrong https://github.com/callemall/material-ui/pull/2172
-        GLOBAL.navigator = {userAgent: req.headers['user-agent']}
-        renderApp(store, res, renderProps)
+        GLOBAL.navigator = {userAgent: req.headers['user-agent']};
+        renderApp(res, store, assets, renderProps);
       } else {
-        res.status(404).send('Not found')
+        res.status(404).send('Not found');
       }
-    })
+    });
+  } else {
+    // just send a cheap html doc + stringified store
+    renderApp(res, store);
   }
 }
 

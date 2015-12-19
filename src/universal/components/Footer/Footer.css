@@ -1,4 +1,4 @@
-@value maxWidth: 'universal/styles/layout.css';
+@value maxWidth: '../../styles/layout.css';
 
 .Footer {
   background: #333;

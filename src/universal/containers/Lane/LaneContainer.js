@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {noteActions} from '../../redux/ducks/notes.js';
-import Lane from './../../components/Lane/Lane';
-//import {createSelector} from 'reselect'; //TODO
+import Lane from '../../components/Lane/Lane';
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LaneContainer extends Component {
@@ -15,7 +14,6 @@ export default class LaneContainer extends Component {
     dispatch: PropTypes.func.isRequired,
     userId: PropTypes.string.isRequired
   };
-
   render() {
     return <Lane {...this.props}/>
   }

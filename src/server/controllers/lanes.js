@@ -1,6 +1,6 @@
 import {addLaneDB, deleteLaneDB, updateLaneDB} from '../database/models/lanes';
 import promisify from 'es6-promisify';
-import {laneSchemaInsert, laneSchemaUpdate} from '../../universal/redux/ducks/lanes';
+import {laneSchemaInsert, laneSchemaUpdate} from '../../universal/schemas/lanes';
 import Joi from 'joi';
 import {parsedJoiErrors} from '../../universal/utils/schema';
 

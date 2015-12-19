@@ -1,21 +1,7 @@
 import {addImmutable, updateImmutable, deleteImmutable, findInState} from '../helpers.js';
-import Joi from 'joi';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
 import update from 'react/lib/update';
-
-/*
- * Schema
- */
-const idSchema = Joi.string().min(3).max(36);
-export const noteSchemaUpdate = Joi.object({
-  id: idSchema.required(),
-  title: Joi.string().max(30).trim(),
-  laneId: idSchema,
-  userId: idSchema,
-  index: Joi.number()
-});
-export const noteSchemaInsert = noteSchemaUpdate.requiredKeys('title', 'laneId', 'userId', 'index');
 
 /*
  * Action types

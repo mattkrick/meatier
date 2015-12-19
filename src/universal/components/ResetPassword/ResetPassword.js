@@ -5,7 +5,8 @@ import styles from './ResetPassword.css';
 import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
-import {authSchemaPassword, resetPassword} from '../../redux/ducks/auth';
+import {authSchemaPassword} from '../../schemas/auth';
+import {resetPassword} from '../../redux/ducks/auth'
 import {parsedJoiErrors} from '../../utils/schema';
 
 @reduxForm({form: 'resetPasswordForm', fields: ['password'], validate})
@@ -26,7 +27,7 @@ export default class ResetPassword extends Component {
             hintText="hunter2"
             errorText={ password.touched && password.error || ''}
           />
-          <input style={{display:'none'}} type="text" name="chromeisabitch"/>
+          <input style={{display:'none'}} type="text" name="javascriptDisabled"/>
           <div className={styles.resetPasswordButton}>
             <RaisedButton
               label='Set new password'

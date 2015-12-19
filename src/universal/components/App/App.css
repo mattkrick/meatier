@@ -1,4 +1,5 @@
-@value maxWidth from 'universal/styles/layout.css';
+@value layout: '../../styles/layout.css';
+@value maxWidth from layout;
 
 .app {
   max-width: maxWidth;
