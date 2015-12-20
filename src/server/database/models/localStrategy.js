@@ -184,6 +184,7 @@ export async function verifyEmailDB(id, verifiedEmailToken) {
     throw new AuthenticationError('Email already verified');
   }
   if (user.strategies.local.verifiedEmailToken !== verifiedEmailToken) {
+    console.log('verifDB', user.strategies, verifiedEmailToken);
     throw new AuthenticationError('Invalid verification token');
   }
   const updates = {

@@ -15,11 +15,23 @@ import {addLane, deleteLane, updateLane} from './controllers/lanes';
 import {addNote, deleteNote, updateNote} from './controllers/notes';
 import {googleAuthUrl, googleAuthCallback} from './controllers/oauthGoogle';
 
+const PROD = process.env.NODE_ENV === 'production';
+
 module.exports.run = function (worker) {
   console.log('   >> Worker PID:', process.pid);
   const app = express();
   const httpServer = worker.httpServer;
   const scServer = worker.scServer;
+
+  // HMR
+  if (!PROD) {
+    const compiler = webpack(config);
+    app.use(require('webpack-dev-middleware')(compiler, {
+      noInfo: true,
+      publicPath: config.output.publicPath
+    }));
+    app.use(require('webpack-hot-middleware')(compiler));
+  }
 
   // setup middleware
   app.use(bodyParser.json());
@@ -30,20 +42,10 @@ module.exports.run = function (worker) {
       next();
     }
   });
-
-  // Environment middleware: HMR for dev, serve compressed static files for prod
-  if (process.env.NODE_ENV === 'production') {
+  if (PROD) {
     app.use(compression());
     app.use('/static', express.static('build'));
-  } else {
-    const compiler = webpack(config);
-    app.use(require('webpack-dev-middleware')(compiler, {
-      noInfo: true,
-      publicPath: config.output.publicPath
-    }));
-    app.use(require('webpack-hot-middleware')(compiler));
   }
-
   // Auth handler via HTTP (make sure to use HTTPS)
   const authRouter = express.Router();
   app.use('/auth', authRouter);

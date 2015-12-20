@@ -1,7 +1,7 @@
 import {loginToken} from '../redux/ducks/auth';
 import socketOptions from '../utils/socketOptions';
 
-export const requireNoAuth = async (nextState, replaceState, cb) => {
+export const requireNoAuth = store => (nextState, replaceState, cb) => {
   if (!__CLIENT__) return cb();
   const redirect = '/';
   const {isAuthenticated} = store.getState().auth;
@@ -12,7 +12,7 @@ export const requireNoAuth = async (nextState, replaceState, cb) => {
   cb()
 }
 
-export const requireAuth = async (nextState, replaceState, cb) => {
+export const requireAuth = store => async (nextState, replaceState, cb) => {
   const next = nextState.location.pathname;
   if (!__CLIENT__) {
     replaceState(null, '/login', {next});

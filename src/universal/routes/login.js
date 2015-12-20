@@ -4,7 +4,7 @@ import {requireNoAuth} from './utils';
 
 export default store => {
   return {
-    onEnter: requireNoAuth,
+    onEnter: requireNoAuth(store),
     path: 'login',
     getIndexRoute: async (location, cb) => {
       let mod = await System.import('universal/containers/Auth/AuthContainer');

@@ -28,10 +28,8 @@ export default class Html extends Component {
       <div id="root">
         {PROD && renderToString(
           <Provider store={store}>
-            <div>
-              <RoutingContext {...renderProps} />
-            </div>
-          </Provider>)}
+          <RoutingContext {...renderProps} />
+        </Provider>)}
       </div>
       {PROD && <script dangerouslySetInnerHTML={{__html: manifest.text}}/>}
       {PROD && <script src={vendor.js}/>}
