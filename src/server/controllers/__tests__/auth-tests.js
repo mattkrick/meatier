@@ -2,7 +2,7 @@ import test from 'ava';
 import 'babel-core/register';
 import {login} from '../auth';
 import fetch from 'isomorphic-fetch';
-import {hostUrl, postJSON} from '../../../universal/utils/utils'
+import {hostUrl, postJSON} from '../../../universal/utils/fetching'
 
 test('AuthController:signup:Success', async t => {
   t.plan(4);

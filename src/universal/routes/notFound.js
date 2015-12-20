@@ -1,8 +1,7 @@
 export default {
   path: '*',
   getComponent: async (location, cb) => {
-    let mod = await System.import('universal/components/NotFound/NotFound');
-    let component = mod.default;
+    let component = await System.import('universal/components/NotFound/NotFound');
     cb(null, component)
   }
 }

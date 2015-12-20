@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
+import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
@@ -33,16 +34,6 @@ const prefetches = [
 
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
-const babelQuery = {
-  "env": {
-    "production": {
-      "plugins": [
-        ["transform-decorators-legacy"]
-      ]
-    }
-  }
-}
-
 export default {
   context: path.join(root, "src"),
   entry: {
@@ -63,10 +54,9 @@ export default {
     dns: 'mock',
     net: 'mock'
   },
-  postcss: [
-    require('postcss-modules-values')
-  ],
+  postcss: [cssModulesValues],
   plugins: [
+    ...prefetchPlugins,
     new webpack.NamedModulesPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest'],
@@ -74,13 +64,12 @@ export default {
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.MinChunkSizePlugin({minChunkSize: 50000}),
-    //new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
+    new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
     new AssetsPlugin({path: path.join(root, 'build'), filename: 'assets.json'}),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       "__CLIENT__": true,
       "__PRODUCTION__": true,
-      // this will override the var inside the npm packages like history & invariant. not sure if brilliant or hacky...
       "process.env.NODE_ENV": JSON.stringify('production')
     })
   ],
@@ -98,8 +87,7 @@ export default {
       {
         test: /\.js$/,
         loader: 'babel',
-        include: clientInclude,
-        query: babelQuery
+        include: clientInclude
       }
     ]
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStore, applyMiddleware} from 'redux';
-import rootReducer from '../universal/redux/reducer.js';
+import makeReducer from '../universal/redux/makeReducer';
 import {match} from 'react-router';
 import Html from './Html.js';
 import {UPDATE_PATH} from 'redux-simple-router';
@@ -23,7 +23,7 @@ function renderApp(res, store, assets, renderProps) {
 export default async function createSSR(req, res) {
   const initialState = {};
   const finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
-  const store = finalCreateStore(rootReducer, initialState);
+  const store = finalCreateStore(makeReducer(), initialState);
   if (process.env.NODE_ENV === 'production') {
     const makeRoutes = require('../../build/prerender.js').default;
     const assets = require('../../build/assets.json');

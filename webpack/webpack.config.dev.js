@@ -1,10 +1,11 @@
 import path from 'path';
 import webpack from 'webpack';
+import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')];
 
-const devPrefetches = [
+const prefetches = [
   'react-dnd/lib/index.js',
   'react-json-tree/lib/index.js',
   'react-dock/lib/index.js',
@@ -13,31 +14,27 @@ const devPrefetches = [
   'universal/containers/Kanban/KanbanContainer.js',
   'redux-devtools-log-monitor/lib/index.js'
 ]
-const devPrefetchPlugins = devPrefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
+const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
 const babelQuery = {
-  "env": {
-    "development": {
-      "plugins": [
-        ["transform-decorators-legacy"],
-        ["react-transform", {
-          "transforms": [{
-            "transform": "react-transform-hmr",
-            "imports": ["react"],
-            "locals": ["module"]
-          }, {
-            "transform": "react-transform-catch-errors",
-            "imports": ["react", "redbox-react"]
-          }]
-        }]
-      ]
-    }
-  }
+  "plugins": [
+    ["transform-decorators-legacy"],
+    ["react-transform", {
+      "transforms": [{
+        "transform": "react-transform-hmr",
+        "imports": ["react"],
+        "locals": ["module"]
+      }, {
+        "transform": "react-transform-catch-errors",
+        "imports": ["react", "redbox-react"]
+      }]
+    }]
+  ]
 }
 
 export default {
   devtool: 'eval',
-  //context: path.join(root, "src"),
+  context: path.join(root, "src"),
   entry: {
     app: ['babel-polyfill', 'client/client.js', 'webpack-hot-middleware/client']
   },
@@ -48,7 +45,8 @@ export default {
     path: path.join(root, 'build'),
     publicPath: '/static/'
   },
-  plugins: [...devPrefetchPlugins,
+  plugins: [
+    ...prefetchPlugins,
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
@@ -66,9 +64,7 @@ export default {
     dns: 'mock',
     net: 'mock'
   },
-  postcss: [
-    require('postcss-modules-values')
-  ],
+  postcss: [cssModulesValues],
   module: {
     loaders: [
       {test: /\.json$/, loader: 'json-loader'},

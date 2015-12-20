@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './Auth.css';
 import {Link} from 'react-router';
 import {loginUser, signupUser, oauthLogin} from '../../redux/ducks/auth';
-import {getJSON} from '../../utils/utils';
+import {getJSON} from '../../utils/fetching';
 
 export default class Auth extends Component {
   static PropTypes = {

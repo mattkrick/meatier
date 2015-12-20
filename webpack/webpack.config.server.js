@@ -1,6 +1,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal')];
@@ -14,16 +15,6 @@ const prefetches = [
 ]
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
-const babelQuery = {
-  "env": {
-    "production": {
-      "plugins": [
-        ["transform-decorators-legacy"]
-      ]
-    }
-  }
-}
-
 export default {
   context: path.join(root, "src"),
   entry: {prerender: "universal/routes/index.js"},
@@ -35,11 +26,9 @@ export default {
     libraryTarget: "commonjs2",
     publicPath: '/static/'
   },
-  // ignore anything that throws warnings
+  // ignore anything that throws warnings & doesn't affect the view
   externals: ['isomorphic-fetch','es6-promisify','socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],
-  postcss: [
-    require('postcss-modules-values')
-  ],
+  postcss: [cssModulesValues],
   resolve: {
     extensions: ['', '.js'],
     root: path.join(root, 'src'),
@@ -70,8 +59,7 @@ export default {
       {
         test: /\.js$/,
         loader: 'babel',
-        include: serverInclude,
-        query: babelQuery
+        include: serverInclude
       }
     ]
   }

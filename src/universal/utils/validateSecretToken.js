@@ -5,7 +5,7 @@ export default function validateSecretToken(secretToken) {
       _error: 'Invalid Token'
     }
   }
-  if (!secretToken || typeof secretToken !== 'string') {
+  if (typeof secretToken !== 'string') {
     return invalidToken;
   }
   let secretTokenStr;

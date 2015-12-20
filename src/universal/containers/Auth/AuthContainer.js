@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Auth from '../../components/Auth/Auth';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
-import {postJSON, parseJSON} from '../../utils/utils';
+import {postJSON, parseJSON} from '../../utils/fetching';
 import {parsedJoiErrors} from '../../utils/schema';
 
 // use the same form to retain form values (there's really no difference between login and signup, it's just for show)

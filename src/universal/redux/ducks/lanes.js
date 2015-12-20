@@ -32,7 +32,7 @@ const initialState = {
   data: []
 };
 
-export default function reducer(state = initialState, action = {}) {
+export function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case ADD_LANE:
       return Object.assign({}, state, {

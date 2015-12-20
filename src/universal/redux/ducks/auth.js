@@ -1,7 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import fetch from 'isomorphic-fetch';
 import {pushPath, replacePath} from 'redux-simple-router';
-import {postJSON, parseJSON, getJSON, hostUrl} from '../../utils/utils';
+import {postJSON, parseJSON, getJSON, hostUrl} from '../../utils/fetching';
 import socketOptions from '../../utils/socketOptions';
 import validateSecretToken from '../../utils/validateSecretToken';
 
