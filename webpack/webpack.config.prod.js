@@ -79,6 +79,8 @@ export default {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       "__CLIENT__": true,
+      "__PRODUCTION__": true,
+      // this will override the var inside the npm packages like history & invariant. not sure if brilliant or hacky...
       "process.env.NODE_ENV": JSON.stringify('production')
     })
   ],

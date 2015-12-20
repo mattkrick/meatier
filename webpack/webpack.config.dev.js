@@ -53,7 +53,8 @@ export default {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       "__CLIENT__": true,
-      "process.env.NODE_ENV": JSON.stringify('development')
+      "__PRODUCTION__": false,
+      "process.env.NODE_ENV": JSON.stringify('development'),
     })
   ],
   resolve: {
