@@ -38,6 +38,7 @@ Some of my chief complaints with Meteor
 - `cd meatier`
 - `npm install`
 - `npm run build`
+- `npm i -g webpack@2.0.1-beta` (optional, but recommended)
 - `rethinkdb`
 
 ##Client-side development
@@ -50,20 +51,27 @@ On my 2013 MBA an initial build takes about 8 seconds and updates usually take 8
 ##Server-side development
 - `npm run prod` (in a second terminal window)
 - http://localhost:3000
-- If you edit any client or universal files, run `npm run bs` instead
+- If you edit any client or universal files, run `npm run bs` to rebuild & serve the bundle
 
-This is beneficial because you can make changes to the server ***without having to recompile the client code***
+This mode is great because you can make changes to the server ***without having to recompile the client code***
 That means you only wait for the server to restart! GAME CHANGER!
 
 ##Webpack configs
-####client configs (dev/prod):
+####Development config
 When the page is opened, a basic HTML layout is sent to the client along with a stringified redux store and a request for the common chunk of the JS.
-The client then injects the redux store & router. 
-The redux devtools is also loaded so you track your every state-changing action. 
+The client then injects the redux store & router to create the page.
+The redux devtools & logger are also loaded so you track your every state-changing action. 
 The routes are loaded async, check your networks tab in chrome devtools and you'll see funny js files load now & again. 
 If this isn't crazy amazing to you, then go away.
 
-####server config:
+####Production config
+Builds the website & saves it to the `build` folder.
+Maps the styles to the components, but uses the prerendered CSS from the server config (below)
+Separates the `vendor` packages and the `app` packages for a super quick, cachable second visit.
+Creates a webpack manifest to enable longterm caching (eg can push new vendor.js without pushing a new app.js)
+Optimizes the number of chunks, sometimes it's better to have the modules of 2 routes in the same chunk if they're small
+
+####server config
 A webpack config builds the entire contents of the routes on the server side.
 This is required because node doesn't know how to require `.css`.
 When a request is sent to the server, react-router matches the url to the correct route & sends it to the client.
