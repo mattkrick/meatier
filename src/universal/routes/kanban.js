@@ -33,7 +33,6 @@ function getKanbanImports(importMap) {
     optimist: importMap.get('optimist'),
     lanes: importMap.get('lanes').reducer,
     notes: importMap.get('notes').reducer,
-    //notes2: importMap.get('notes').reducer,
     socket: importMap.get('socket').socketClusterReducer
   }
 }

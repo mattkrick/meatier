@@ -1,10 +1,12 @@
 import React, { Component, PropTypes } from 'react';
+import Header from '../Header/Header';
 
 export default class Home extends Component {
   render() {
     return (
       <div>
-        <h1>Welcome to Meatier!</h1>
+        <Header/>
+        <h1>...Nothing here. Try the kanban already.</h1>
       </div>
     );
   }

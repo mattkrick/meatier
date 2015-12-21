@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {IndexRoute, Router, Route} from 'react-router';
 import { createStore,compose, combineReducers } from 'redux';
 import { Provider, connect } from 'react-redux';
-import DevTools from './DevTools';
 import routes from '../universal/routes/index';
 
 export default class Root extends Component {

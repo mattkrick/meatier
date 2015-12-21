@@ -25,7 +25,7 @@ export default async function createSSR(req, res) {
   const finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
   const store = finalCreateStore(makeReducer(), initialState);
   if (process.env.NODE_ENV === 'production') {
-    const makeRoutes = require('../../build/prerender.js').default;
+    const makeRoutes = require('../../build/prerender.js');
     const assets = require('../../build/assets.json');
     const readFile = promisify(fs.readFile);
     assets.manifest.text = await readFile(join(__dirname, '..', '..', 'build', basename(assets.manifest.js)), 'utf-8');

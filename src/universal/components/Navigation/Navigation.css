@@ -1,34 +1,29 @@
-/* React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
+@value primary, secondary from '../../styles/colors.css';
 
-.link {
-  display: inline-block;
-  padding: 3px 8px;
+.nav {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: secondary !important;
+}
+
+.menuButtons {
+  display: flex;
+  align-items: center;
+  /*font-weight: 700;*/
+}
+
+.buttonBuffer {
+  padding: 8px;
+}
+.menuButton {
+  font-weight: 500 !important;
+  color: primary !important;
+}
+.brand {
+  color: primary;
   text-decoration: none;
-  font-size: 1.125em; /* ~18px */
-}
-
-.link,
-.link:active,
-.link:visited {
-  color: rgba(255, 255, 255, .6);
-}
-
-.link:hover {
-  color: rgba(255, 255, 255, 1);
-}
-
-.highlight {
-  margin-right: 8px;
-  margin-left: 8px;
-  border-radius: 3px;
-  background: rgba(0, 0, 0, .15);
-  color: #fff;
-}
-
-.highlight:hover {
-  background: rgba(0, 0, 0, .3);
-}
-
-.spacer {
-  color: rgba(255, 255, 255, .3);
+  font-size: 1.75em; /* ~28px */
 }

@@ -3,30 +3,12 @@
 
 
 .header {
-  background: secondary;
+  background-image: url('./paddleboard.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   color: #fff;
+  min-height: 700px;
 
-}
-
-.container {
-  margin: 0 auto;
-  padding: 20px 0;
-  max-width: maxWidth;
-}
-
-.brand {
-  color: primary;
-  text-decoration: none;
-  font-size: 1.75em; /* ~28px */
-}
-
-.brandTxt {
-  margin-left: 10px;
-}
-
-.nav {
-  float: right;
-  margin-top: 6px;
 }
 
 .banner {
@@ -36,14 +18,20 @@
 .bannerTitle {
   margin: 0;
   padding: 10px;
-  font-weight: normal;
+  padding-top: 50px;
+  font-weight: 500;
   font-size: 4em;
   line-height: 1em;
 }
 
 .bannerDesc {
   padding: 0;
-  color: rgba(255, 255, 255, .5);
+  color: rgba(255, 255, 255, .9);
   font-size: 1.25em;
+  font-weight: 300;
   margin: 0;
+}
+
+.tryButton {
+  padding-top: 24px;
 }
