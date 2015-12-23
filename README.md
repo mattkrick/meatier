@@ -23,13 +23,13 @@ Some of my chief complaints with Meteor
 | Client-side cache | [Minimongo](https://www.meteor.com/mini-databases)                    | [redux](http://redux.js.org/)          | Bonus logging, time traveling, and undo functionality               |
 | socket server     | [DDP-server](https://www.meteor.com/ddp)                   | [socketcluster](http://socketcluster.io/#!/)  | super easy scaling, pubsub, and auth                                |
 | Authentication    | Meteor accounts              | [JWTs](https://jwt.io)           | JWTs can also serve to authorize actions, too                       |
-| Auth-transport    | DDP                          | HTTP           | Don't use sockets until you need to                                 |
-| Front-end         | Blaze                        | [React](https://facebook.github.io/react/)          | Not dependent on MDG releases                                       |
+| Auth-transport    | [DDP](https://www.meteor.com/ddp)                          | HTTP           | Don't use sockets until you need to                                 |
+| Front-end         | [Blaze](https://www.meteor.com/blaze)                        | [React](https://facebook.github.io/react/)          | Not dependent on MDG releases                                       |
 | Build system      | meteor                       | [webpack](https://webpack.github.io/)        | using webpack inside meteor is very limited                         |
 | CSS               | magically bundle & serve     | [css-modules](https://github.com/css-modules/css-modules)    | component-scoped css with variables available in a file or embedded |
 | Optimistic UI     | latency compensation         | [redux-optimist](https://github.com/ForbesLindesay/redux-optimist) | super flexible!                                                     |
-| Testing           | Velocity (or nothing at all) | Ava            | awesome es2016 testing                                              |
-| Linting           | Your choice                  | xo             | no dotfiles, fixes errors                                           |
+| Testing           | Velocity (or nothing at all) | [Ava](https://github.com/sindresorhus/ava)            | awesome es2016 testing                                              |
+| Linting           | Your choice                  | [xo](https://www.npmjs.com/package/xo)             | no dotfiles, fixes errors                                           |
 | Server            | Node 0.10.41                 | Node 5         | Faster, maintained, not a dinosaur...                               |
  
 ##Installation
