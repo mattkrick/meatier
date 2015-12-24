@@ -16,20 +16,20 @@ Some of my chief complaints with Meteor
  
 | Problem           | Meteor's solution            | My solution    | Result                                                              |
 |-------------------|------------------------------|----------------|---------------------------------------------------------------------|
-| Database          | MongoDB                      | RethinkDB      | Built in reactivity, but you can use any DB you like                |
-| Database schema   | Simple Schema                | Joi            | Thinky works too, but Joi has nicer error handling                  |
-| Database hooks    | Collections2                 | Thinky         | I don't use thinky as an ORM, more like a wrapper for rethinkdbdash |
-| Forms             | AutoForm                     | redux-form     | state tracking awesomeness that works beautifully with react        |
-| Client-side cache | Minimongo                    | redux          | Bonus logging, time traveling, and undo functionality               |
-| socket server     | DDP-server                   | socketcluster  | super easy scaling, pubsub, and auth                                |
-| Authentication    | Meteor accounts              | JWTs           | JWTs can also serve to authorize actions, too                       |
-| Auth-transport    | DDP                          | HTTP           | Don't use sockets until you need to                                 |
-| Front-end         | Blaze                        | React          | Not dependent on MDG releases                                       |
-| Build system      | meteor                       | webpack        | using webpack inside meteor is very limited                         |
-| CSS               | magically bundle & serve     | css-modules    | component-scoped css with variables available in a file or embedded |
-| Optimistic UI     | latency compensation         | redux-optimist | super flexible!                                                     |
-| Testing           | Velocity (or nothing at all) | Ava            | awesome es2016 testing                                              |
-| Linting           | Your choice                  | xo             | no dotfiles, fixes errors                                           |
+| Database          | [MongoDB](https://www.mongodb.org/)                      | [RethinkDB](https://www.rethinkdb.com/)      | Built in reactivity, but you can use any DB you like                |
+| Database schema   | [Simple Schema](https://github.com/aldeed/meteor-simple-schema)                | [Joi](https://github.com/hapijs/joi)            | Thinky works too, but Joi has nicer error handling                  |
+| Database hooks    | [Collections2](https://github.com/aldeed/meteor-collection2)                 | [Thinky](https://github.com/neumino/thinky)         | I don't use thinky as an ORM, more like a wrapper for rethinkdbdash |
+| Forms             | [AutoForm](https://github.com/aldeed/meteor-autoform)                     | [redux-form](https://github.com/erikras/redux-form)     | state tracking awesomeness that works beautifully with react        |
+| Client-side cache | [Minimongo](https://www.meteor.com/mini-databases)                    | [redux](http://redux.js.org/)          | Bonus logging, time traveling, and undo functionality               |
+| socket server     | [DDP-server](https://www.meteor.com/ddp)                   | [socketcluster](http://socketcluster.io/#!/)  | super easy scaling, pubsub, and auth                                |
+| Authentication    | Meteor accounts              | [JWTs](https://jwt.io)           | JWTs can also serve to authorize actions, too                       |
+| Auth-transport    | [DDP](https://www.meteor.com/ddp)                          | HTTP           | Don't use sockets until you need to                                 |
+| Front-end         | [Blaze](https://www.meteor.com/blaze)                        | [React](https://facebook.github.io/react/)          | Not dependent on MDG releases                                       |
+| Build system      | meteor                       | [webpack](https://webpack.github.io/)        | using webpack inside meteor is very limited                         |
+| CSS               | magically bundle & serve     | [css-modules](https://github.com/css-modules/css-modules)    | component-scoped css with variables available in a file or embedded |
+| Optimistic UI     | latency compensation         | [redux-optimist](https://github.com/ForbesLindesay/redux-optimist) | super flexible!                                                     |
+| Testing           | Velocity (or nothing at all) | [Ava](https://github.com/sindresorhus/ava)            | awesome es2016 testing                                              |
+| Linting           | Your choice                  | [xo](https://www.npmjs.com/package/xo)             | no dotfiles, fixes errors                                           |
 | Server            | Node 0.10.41                 | Node 5         | Faster, maintained, not a dinosaur...                               |
  
 ##Installation
