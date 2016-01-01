@@ -113,6 +113,11 @@ When the note is dropped to its new location, the change is persisted.
 I don't know of any place that hosts RethinkDB for free...so here's a gif. 
 ![Meatier](http://imgur.com/B3IErZr.gif)
 
+##Contributing
+ - Pull requests welcomed!
+ - Use the gitter for any questions
+ - No donations necessary (but if you know of any jobs that'll let me move back to San Diego, let me know :wink:)
+
 ##License
 MIT
 
