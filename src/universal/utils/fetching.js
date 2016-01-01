@@ -6,13 +6,14 @@ export function parseJSON(response) {
 
 export function hostUrl() {
   let host, protocol;
-  if (__CLIENT__) {
-    host = window.location.host;
-    protocol = window.location.protocol;
-  } else {
-    host = 'localhost:3000';
-    protocol= 'http:';
-  }
+  //testing doesn't know about webpack & throws an error if window is inside a conditional
+  //if (__CLIENT__) {
+  //  host = window.location.host;
+  //  protocol = window.location.protocol;
+  //} else {
+  host = 'localhost:3000';
+  protocol = 'http:';
+  //}
   return `${protocol}//${host}`;
 }
 
@@ -21,7 +22,7 @@ export function postJSON(route, obj) {
     method: 'post',
     credentials: 'include',
     headers: {
-      'Accept'  : 'application/json',
+      'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(obj)

@@ -1,5 +1,7 @@
 import test from 'ava';
 import promisify from 'es6-promisify';
+import 'babel-register';
+import 'babel-polyfill';
 import validateSecretToken from '../../../../universal/utils/validateSecretToken'
 import bcrypt from 'bcrypt';
 import {User, loginDB, signupDB, getUserByIdDB, setResetTokenDB,

@@ -1,5 +1,6 @@
 import test from 'ava';
-import 'babel-core/register';
+import 'babel-register';
+import 'babel-polyfill';
 import {login} from '../auth';
 import fetch from 'isomorphic-fetch';
 import {hostUrl, postJSON} from '../../../universal/utils/fetching'

@@ -1,5 +1,6 @@
 import test from 'ava';
-import 'babel-core/register';
+import 'babel-register';
+import 'babel-polyfill';
 import {getAltLoginMessage} from '../utils';
 
 test('DatabaseUtils:getAltLoginMessage:LocalAndGoogle', t => {
