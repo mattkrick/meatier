@@ -22,7 +22,7 @@ export async function loginWithGoogleDB(profile) {
           name: profile.name,
           firstName: profile.given_name,
           lastName: profile.family_name,
-          picutre: profile.picture,
+          picture: profile.picture,
           gender: profile.gender,
           locale: profile.locale
         }
