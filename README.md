@@ -38,7 +38,7 @@ Some of my chief complaints with Meteor
 - `cd meatier`
 - `npm install`
 - `npm run build`
-- `npm i -g webpack@2.0.1-beta` (optional, but recommended)
+- `npm i -g webpack@2.0.2-beta` (optional, but recommended)
 - `rethinkdb`
 
 ##Client-side development
