@@ -32,7 +32,7 @@ const initialState = {
   data: []
 };
 
-export function reducer(state = initialState, action = {}) {
+export function reducer(state = initialState, action) {
   switch (action.type) {
     case ADD_NOTE:
       return Object.assign({}, state, {
@@ -54,14 +54,15 @@ export function reducer(state = initialState, action = {}) {
     case CLEAR_NOTES:
       return Object.assign({}, initialState)
     case DRAG_NOTE:
-      const {sourceId, targetLaneId, monitor} = action.payload;
-      const newIndex = getNewIndex(state.data, action.payload);
-      const updates = {
-        index: newIndex,
-        laneId: targetLaneId
-      }
+      //console.log('calling dragNote reducer', action);
+      const {sourceId, ...updates} = action.payload;
+      //const newIndex = getNewIndex(state.data, action.payload);
+      //const updates = {
+      //  index: newIndex,
+      //  laneId: targetLaneId
+      //}
       //mutate the source props so we can drag on draggin on
-      Object.assign(monitor.getItem(), updates)
+      //Object.assign(monitor.getItem(), updates)
       return Object.assign({}, state, {
         data: state.data.map(note =>
           note.id === sourceId ? Object.assign({}, note, updates) : note
@@ -162,10 +163,13 @@ export function deleteNote(id, meta) {
   };
 }
 
-export function dragNote(payload) {
-  return {
-    type: DRAG_NOTE,
-    payload
+export function dragNote(data) {
+  return function (dispatch, getState) {
+    const index = getNewIndex(getState().notes.data, data);
+    const updates = {index, laneId: data.targetLaneId};
+    const payload = Object.assign({}, updates, {sourceId: data.sourceId})
+    Object.assign(data.monitor.getItem(), updates)
+    dispatch({type: DRAG_NOTE, payload});
   }
 }
 
