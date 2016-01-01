@@ -45,7 +45,7 @@ export default class Auth extends Component {
             errorText={ password.touched && password.error || ''}
           />
 
-          {isLogin ? <Link to="/login/lost-password" query={{e:email.value}} className={styles.lostPassword}>Forgot your password?</Link> : null}
+          {isLogin ? <Link to={{pathname: "/login/lost-password", query: {e:email.value}}} className={styles.lostPassword}>Forgot your password?</Link> : null}
 
           <div className={styles.loginButton}>
             <RaisedButton
