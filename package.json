@@ -19,7 +19,7 @@
     "build:server": "NODE_ENV=production webpack --colors --config ./webpack/server.babel.js",
     "resetdb": "node ./src/server/database/resetdb.babel.js",
     "pretest": "NODE_ENV=testing node ./tests/pretest.babel.js",
-    "test": "NODE_ENV=testing ava ./src/**/__tests___/**/*.js --verbose",
+    "test": "NODE_ENV=testing ava ./src/**/__tests__/**/*.js --verbose",
     "lint": "xo src/**/*.js --plugin=react --env node --env browser --esnext --space --fix",
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
   },
