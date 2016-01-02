@@ -43,6 +43,7 @@ export async function signup(req, res) {
 }
 
 export async function login(req, res) {
+  console.log('in login')
   const {email, password} = req.body;
   const schemaError = validateAuthSchema(req.body, authSchemaInsert);
   if (schemaError) {

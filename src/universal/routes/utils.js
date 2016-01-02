@@ -15,7 +15,7 @@ export const requireNoAuth = store => (nextState, replaceState, cb) => {
 export const requireAuth = store => async (nextState, replaceState, cb) => {
   const next = nextState.location.pathname;
   if (!__CLIENT__) {
-    replaceState(null, {pathname: '/login', query: {next}});
+    replaceState(null, '/login', {next});
     return cb();
   }
   let {isAuthenticated} = store.getState().auth;
@@ -24,13 +24,13 @@ export const requireAuth = store => async (nextState, replaceState, cb) => {
   }
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   if (!authToken) {
-    replaceState(null, {pathname: '/login', query: {next}});
+    replaceState(null, '/login', {next});
     return cb();
   }
   await store.dispatch(loginToken(authToken));
   ({isAuthenticated} = store.getState().auth);
   if (!isAuthenticated) {
-    replaceState(null, {pathname: '/login', query: {next}});
+    replaceState(null, '/login', {next});
   }
   cb()
 }

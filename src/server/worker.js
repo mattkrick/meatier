@@ -1,10 +1,9 @@
 import express from 'express';
 import webpack from 'webpack';
-import bodyParser from 'body-parser';
 import compression from 'compression';
-import config from '../../webpack/webpack.config.dev.js';
-import createSSR from './createSSR.js';
-import {login, signup, loginToken, sendResetEmail, resetPassword, verifyEmail} from './controllers/auth';
+import config from '../../webpack/webpack.config.dev';
+import createSSR from './createSSR';
+import makeAuthEndpoints from './controllers/makeAuthEndpoints';
 
 // "live query"
 import subscribeMiddleware from './publish/subscribeMiddleware';
@@ -13,11 +12,10 @@ import {ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/redux/ducks/lanes
 import {ADD_NOTE, UPDATE_NOTE, DELETE_NOTE} from '../universal/redux/ducks/notes';
 import {addLane, deleteLane, updateLane} from './controllers/lanes';
 import {addNote, deleteNote, updateNote} from './controllers/notes';
-import {googleAuthUrl, googleAuthCallback} from './controllers/oauthGoogle';
 
 const PROD = process.env.NODE_ENV === 'production';
 
-module.exports.run = function (worker) {
+export function run(worker) {
   console.log('   >> Worker PID:', process.pid);
   const app = express();
   const httpServer = worker.httpServer;
@@ -34,7 +32,6 @@ module.exports.run = function (worker) {
   }
 
   // setup middleware
-  app.use(bodyParser.json());
   app.use((req, res, next) => {
     if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {
       res.status(404).end();
@@ -47,21 +44,7 @@ module.exports.run = function (worker) {
     app.use('/static', express.static('build'));
   }
   // Auth handler via HTTP (make sure to use HTTPS)
-  const authRouter = express.Router();
-  app.use('/auth', authRouter);
-  authRouter.route('/login').post(login);
-  authRouter.route('/login-token').post(loginToken);
-  authRouter.route('/signup').post(signup);
-  authRouter.route('/send-reset-email').post(sendResetEmail);
-  authRouter.route('/reset-password').post(resetPassword);
-  authRouter.route('/verify-email').post(verifyEmail);
-  authRouter.route('/google').get(async (req, res) => {
-    res.statusCode = 302;
-    res.setHeader('Location', googleAuthUrl);
-    res.setHeader('Content-Length', '0');
-    res.end();
-  });
-  authRouter.route('/google/callback').get(googleAuthCallback);
+  makeAuthEndpoints(app)
 
   // server-side rendering
   app.get('*', createSSR);
@@ -85,5 +68,5 @@ module.exports.run = function (worker) {
     socket.on(DELETE_NOTE, deleteNote);
     socket.on(UPDATE_NOTE, updateNote);
   });
-};
+}
 // TODO: dont let tokens expire while still connected, depends on PR to SC

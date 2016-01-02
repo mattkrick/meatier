@@ -19,7 +19,7 @@
     "build:server": "NODE_ENV=production webpack --colors --config ./webpack/server.babel.js",
     "resetdb": "node ./src/server/database/resetdb.babel.js",
     "pretest": "NODE_ENV=testing node ./tests/pretest.babel.js",
-    "test": "NODE_ENV=testing ava ./src/**/__tests__/**/*.js",
+    "test": "NODE_ENV=testing ava ./src/**/__tests___/**/*.js --verbose",
     "lint": "xo src/**/*.js --plugin=react --env node --env browser --esnext --space --fix",
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
   },
@@ -60,6 +60,7 @@
     "rimraf": "^2.5.0",
     "stats-webpack-plugin": "^0.2.2",
     "style-loader": "^0.13.0",
+    "supertest-as-promised": "^2.0.2",
     "url-loader": "^0.5.7",
     "webpack": "^2.0.1-beta",
     "webpack-dev-middleware": "^1.4.0",

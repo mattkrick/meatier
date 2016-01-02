@@ -1,12 +1,11 @@
-import SC from 'socketcluster';
+import {SocketCluster} from 'socketcluster';
 import os from 'os';
 import {jwtSecret} from './secrets';
 import path from 'path';
 
 const numCpus = os.cpus().length;
-const SocketCluster = SC.SocketCluster;
-const socketCluster = new SocketCluster({
-  authKey: jwtSecret,
+
+export const options = {
   logLevel: 1,
   // change this to scale vertically
   workers: 1 || numCpus,
@@ -19,4 +18,5 @@ const socketCluster = new SocketCluster({
   brokerController: path.join(__dirname, '/broker.js'),
   socketChannelLimit: 1000,
   rebootWorkerOnCrash: true
-});
+}
+const socketCluster = new SocketCluster(options);
