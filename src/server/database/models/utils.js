@@ -29,7 +29,6 @@ export function makeSecretToken(userId, minutesToExpire) {
 }
 
 export async function getUserByEmail(email) {
-  email = email.toLowerCase();
   let users;
   try {
     users = await User.getAll(email, {index: 'email'}).limit(1).run();

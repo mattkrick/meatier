@@ -15,8 +15,7 @@ import {parsedJoiErrors} from '../../universal/utils/schema';
 const verifyToken = promisify(jwt.verify);
 
 export async function signup(req, res) {
-  const {email, password} = req.body;
-  const schemaError = validateAuthSchema(req.body, authSchemaInsert);
+  const {error: schemaError, value: {email,password}} = validateAuthSchema(req.body, authSchemaInsert);
   if (schemaError) {
     return res.status(401).json({error: schemaError});
   }
@@ -43,9 +42,7 @@ export async function signup(req, res) {
 }
 
 export async function login(req, res) {
-  console.log('in login')
-  const {email, password} = req.body;
-  const schemaError = validateAuthSchema(req.body, authSchemaInsert);
+  const {error: schemaError, value: {email,password}} = validateAuthSchema(req.body, authSchemaInsert);
   if (schemaError) {
     return res.status(401).json({error: schemaError});
   }
@@ -85,8 +82,7 @@ export async function loginToken(req, res) {
 }
 
 export async function sendResetEmail(req, res) {
-  const {email} = req.body;
-  const schemaError = validateAuthSchema(req.body, authSchemaEmail);
+  const {error: schemaError, value: {email}} = validateAuthSchema(req.body, authSchemaEmail);
   if (schemaError) {
     return res.status(401).json({error: schemaError});
   }
@@ -96,7 +92,7 @@ export async function sendResetEmail(req, res) {
   } catch (e) {
     let error = {_error: 'Reset failed'};
     if (e.name === 'DocumentNotFoundError') {
-        error.email = 'Email not found';
+      error.email = 'Email not found';
     } else {
       error._error = e.message;
     }
@@ -108,14 +104,14 @@ export async function sendResetEmail(req, res) {
 }
 
 export async function resetPassword(req, res) {
-  const {resetToken, password} = req.body;
-  const schemaError = validateAuthSchema({password}, authSchemaPassword);
+  const {resetToken, password: inputPassword} = req.body;
+  const {error: schemaError, value: {password}} = validateAuthSchema({password: inputPassword}, authSchemaPassword);
   if (schemaError) {
     return res.status(401).json({error: schemaError});
   }
   const resetTokenObject = validateSecretToken(resetToken);
   if (resetTokenObject.error) {
-    return res.status(401).json({error: {_error: resetTokenObject.error}});
+    return res.status(401).json(resetTokenObject);
   }
   let user;
   try {
@@ -156,9 +152,9 @@ export async function resendVerifiedEmail(req, res) {
 
 export async function verifyEmail(req, res) {
   const {verifiedEmailToken} = req.body;
-  const verifiedEmailTokenObj= validateSecretToken(verifiedEmailToken);
+  const verifiedEmailTokenObj = validateSecretToken(verifiedEmailToken);
   if (verifiedEmailTokenObj.error) {
-    return res.status(401).json({error: verifiedEmailTokenObj.error});
+    return res.status(401).json(verifiedEmailTokenObj);
   }
   try {
     await verifyEmailDB(verifiedEmailTokenObj.id, verifiedEmailToken);
@@ -177,13 +173,15 @@ export async function verifyEmail(req, res) {
 function validateAuthSchema(credentials, schema) {
   //Failing here means they passed the client validation, so they're probably up to no good
   const results = Joi.validate(credentials, schema, {abortEarly: false});
-  const error = parsedJoiErrors(results.error);
-  if (Object.keys(error).length) {
-    error._error = 'Invalid credentials';
-    return error;
+  console.log(results);
+  results.error = parsedJoiErrors(results.error);
+  if (results.error) {
+    results.error._error = 'Invalid credentials';
   }
+  return results;
 }
 
-export function signJwt(user) {
-  return jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'}); //sync https://github.com/auth0/node-jsonwebtoken/issues/111
+export function signJwt({id}) {
+  //sync https://github.com/auth0/node-jsonwebtoken/issues/111
+  return jwt.sign({id}, jwtSecret, {expiresIn: '7d'});
 }

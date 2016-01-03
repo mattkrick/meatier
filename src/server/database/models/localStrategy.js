@@ -24,12 +24,11 @@ export const User = thinky.createModel("users", {});
 User.ensureIndex("email");
 
 export async function signupDB(email, submittedPassword) {
-  email = email.toLowerCase();
   let user;
   try {
     user = await getUserByEmail(email);
   } catch (e) {
-    throw e;
+    throw new DocumentNotFoundError('User not found');
   }
   if (user) {
     const {strategies} = user;
@@ -71,7 +70,6 @@ export async function signupDB(email, submittedPassword) {
 }
 
 export async function loginDB(email, submittedPassword) {
-  email = email.toLowerCase();
   let user
   try {
     user = await getUserByEmail(email);
@@ -79,7 +77,7 @@ export async function loginDB(email, submittedPassword) {
     throw e
   }
   if (!user) {
-    throw new DocumentNotFoundError();
+    throw new DocumentNotFoundError('User not found');
   }
   const {strategies} = user;
   const userPassword = strategies.local && strategies.local.password;
@@ -101,13 +99,12 @@ export async function getUserByIdDB(id) {
   try {
     user = await User.get(id).pluck(['id', 'email', 'strategies']).run();
   } catch (e) {
-    throw e;
+    throw new DocumentNotFoundError('User not found');
   }
   return getSafeUser(user);
 }
 
 export async function setResetTokenDB(email) {
-  email = email.toLowerCase();
   let user
   try {
     user = await getUserByEmail(email);
@@ -115,7 +112,7 @@ export async function setResetTokenDB(email) {
     throw e
   }
   if (!user) {
-    throw new DocumentNotFoundError();
+    throw new DocumentNotFoundError('User not found');
   }
   const resetToken = makeSecretToken(user.id, 60 * 24)
   try {
@@ -129,9 +126,9 @@ export async function setResetTokenDB(email) {
 export async function resetPasswordFromTokenDB(id, resetToken, newPassword) {
   let user;
   try {
-    user = await User.get(id).pluck('id', 'strategies').run();
+    user = await User.get(id).pluck('id', 'email', 'strategies').run();
   } catch (e) {
-    throw e
+    throw new DocumentNotFoundError('User not found');
   }
   const userResetToken = user.strategies.local && user.strategies.local.resetToken;
   if (!userResetToken || userResetToken !== resetToken) {
@@ -159,7 +156,7 @@ export async function resetVerifiedTokenDB(id) {
   try {
     user = await User.get(id).pluck('id', {strategies: {local: 'isVerified'}}).run();
   } catch (e) {
-    throw e
+    throw new DocumentNotFoundError('User not found');
   }
   if (user.strategies.local.isVerified) {
     throw new AuthenticationError('Email already verified');
@@ -178,7 +175,7 @@ export async function verifyEmailDB(id, verifiedEmailToken) {
   try {
     user = await User.get(id).run();
   } catch (e) {
-    throw e
+    throw new DocumentNotFoundError('User not found');
   }
   if (user.strategies.local.isVerified) {
     throw new AuthenticationError('Email already verified');

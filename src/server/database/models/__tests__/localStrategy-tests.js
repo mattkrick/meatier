@@ -11,7 +11,7 @@ const compare = promisify(bcrypt.compare);
 
 test('LocalStrategy:signupDB:Success', async t => {
   t.plan(3);
-  const [safeUser, verifiedEmailToken] = await signupDB('Signup@success', '123123');
+  const [safeUser, verifiedEmailToken] = await signupDB('signup@success', '123123');
   t.is(safeUser.email, 'signup@success');
   t.same(safeUser.strategies, {local: {isVerified: false}});
   t.ok(verifiedEmailToken);
@@ -42,7 +42,7 @@ test('LocalStrategy:signupDB:AlreadyExists', async t => {
 test('LocalStrategy:signupDB:DuplicateFound', async t => {
   t.plan(1)
   await User.save({email: 'signup@nolocalstrategy', strategies: {noLocal: {isVerified: true}}});
-  return t.throws(signupDB('signup@nolocalstrategy', 'XXXXXX'), /DuplicateFoundError/)
+  t.throws(signupDB('signup@nolocalstrategy', 'XXXXXX'), /DuplicateFoundError/)
 });
 
 test('LocalStrategy:signupDB:ConvertToLogin', async t => {
@@ -56,8 +56,8 @@ test('LocalStrategy:signupDB:ConvertToLogin', async t => {
 
 test('LocalStrategy:loginDB:Password', async t => {
   t.plan(2)
-  await signupDB('Login@password', '123123');
-  const user = await loginDB('logiN@password', '123123');
+  await signupDB('login@password', '123123');
+  const user = await loginDB('login@password', '123123');
   t.is(user.email, 'login@password');
   t.same(user.strategies, {local: {isVerified: false}});
 });
