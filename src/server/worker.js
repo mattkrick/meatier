@@ -1,6 +1,7 @@
 import express from 'express';
 import webpack from 'webpack';
 import compression from 'compression';
+import cors from 'cors';
 import config from '../../webpack/webpack.config.dev';
 import createSSR from './createSSR';
 import makeAuthEndpoints from './controllers/makeAuthEndpoints';
@@ -31,6 +32,7 @@ export function run(worker) {
     app.use(require('webpack-hot-middleware')(compiler));
   }
 
+  app.use(cors({origin: true, credentials: true}));
   // setup middleware
   app.use((req, res, next) => {
     if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {

@@ -173,9 +173,8 @@ export async function verifyEmail(req, res) {
 function validateAuthSchema(credentials, schema) {
   //Failing here means they passed the client validation, so they're probably up to no good
   const results = Joi.validate(credentials, schema, {abortEarly: false});
-  console.log(results);
-  results.error = parsedJoiErrors(results.error);
   if (results.error) {
+    results.error = parsedJoiErrors(results.error);
     results.error._error = 'Invalid credentials';
   }
   return results;
