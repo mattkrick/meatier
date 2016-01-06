@@ -155,9 +155,7 @@ export function dragNote(data) {
     const index = getNewIndex(notes, data);
     const updates = {index, laneId: data.targetLaneId};
     const payload = Object.assign({}, updates, {sourceId: data.sourceId});
-    console.log('item',data.monitor.getItem(), updates);
     Object.assign(data.monitor.getItem(), updates)
-    console.log('item',data.monitor.getItem(), updates);
     dispatch({type: DRAG_NOTE, payload});
   }
 }

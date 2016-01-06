@@ -8,6 +8,7 @@ const noteSource = {
     return {
       id: props.note.id,
       index: props.note.index,
+      startingIndex: props.note.index,
       laneId: props.note.laneId,
       onMove: props.onMove
     };
@@ -21,9 +22,8 @@ const noteSource = {
     }
     const {note, updateNote} = props;
     const item = monitor.getItem();
-    console.log('did drop', item, note)
     const updates = {};
-    if (note.index !== item.index) {
+    if (item.index !== item.startingIndex) {
       updates.index = item.index;
     }
     if (note.laneId !== item.laneId) {
