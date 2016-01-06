@@ -6,6 +6,7 @@ import path from 'path';
 const numCpus = os.cpus().length;
 
 export const options = {
+  authKey: jwtSecret,
   logLevel: 1,
   // change this to scale vertically
   workers: 1 || numCpus,

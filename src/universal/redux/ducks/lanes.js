@@ -3,6 +3,7 @@ import uuid from 'node-uuid';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
 import {deleteNote} from './notes';
+import {fromJS} from 'immutable';
 
 /*
  * Action types
@@ -26,38 +27,37 @@ const DELETE_LANE_ERROR = 'DELETE_LANE_ERROR';
  * If synced is false, it means what you see is optimistic, not from the db
  * If there is an error, then you can use that in the UI somewhere
  */
-const initialState = {
+const initialState = fromJS({
   synced: false,
   error: null,
   data: []
-};
+});
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case ADD_LANE:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: addImmutable(action.payload, state.data)
+        data: state.get('data').push(fromJS(action.payload))
       });
-
     case UPDATE_LANE:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: updateImmutable(action.payload, state.data)
+        data: state.get('data').map(item => item.get('id') === action.payload.id ? item.merge(action.payload) : item)
       });
 
     case DELETE_LANE:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: deleteImmutable(action.payload.id, state.data)
+        data: state.get('data').filter(item => item.get('id') !== action.payload.id)
       });
     case CLEAR_LANES:
-      return Object.assign({}, initialState)
+      return initialState
 
     case ADD_LANE_SUCCESS:
     case UPDATE_LANE_SUCCESS:
     case DELETE_LANE_SUCCESS:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: true,
         error: null
       });
@@ -65,7 +65,7 @@ export function reducer(state = initialState, action = {}) {
     case ADD_LANE_ERROR:
     case UPDATE_LANE_ERROR:
     case DELETE_LANE_ERROR:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: true,
         error: action.error || 'Error'
       });
@@ -76,7 +76,8 @@ export function reducer(state = initialState, action = {}) {
 }
 
 /*
- *Action creators
+ * Action creators
+ * Actions are pure JS objects, save the immutable stuff for the store
  */
 const baseMeta = {
   table: LANES,
@@ -112,7 +113,7 @@ export function addLane(payload, meta) {
   return {
     type: ADD_LANE,
     payload,
-    meta: Object.assign({}, baseMeta, meta)
+    meta: Object.assign({},baseMeta, meta)
   }
 }
 
@@ -120,13 +121,13 @@ export function updateLane(payload, meta) {
   return {
     type: UPDATE_LANE,
     payload,
-    meta: Object.assign({}, baseMeta, meta)
+    meta: Object.assign({},baseMeta, meta)
   };
 }
 
 export function deleteLane(id, meta) {
   return (dispatch, getState) => {
-    const noteState = getState().notes;
+    const noteState = getState().get('notes').toJS();
     if (noteState && noteState.data) {
       noteState.data.forEach(note => {
         if (note.laneId === id) {
@@ -137,7 +138,7 @@ export function deleteLane(id, meta) {
     dispatch({
       type: DELETE_LANE,
       payload: {id},
-      meta: Object.assign({}, baseMeta, meta)
+      meta: Object.assign({},baseMeta, meta)
     });
   }
 }

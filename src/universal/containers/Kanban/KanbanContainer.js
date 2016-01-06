@@ -34,12 +34,12 @@ export default class KanbanContainer extends Component {
 }
 
 function mapStateToProps(state) {
+  const auth = state.get('auth');
   return {
-    lanes: state.lanes,
-    userId: state.auth.user.id,
-    socketState: state.socket.state,
-    isAuthenticated: state.auth.isAuthenticated,
-    isAuthenticating: state.auth.isAuthenticating
+    lanes: state.get('lanes').toJS(),
+    userId: auth.getIn(['user','id']),
+    socketState: state.get('socket').state,
+    isAuthenticated: auth.get('isAuthenticated')
   };
 }
 

@@ -33,6 +33,7 @@ const babelQuery = {
 }
 
 export default {
+  //devtool: 'source-maps ',
   devtool: 'eval',
   context: path.join(root, "src"),
   entry: {

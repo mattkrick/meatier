@@ -4,6 +4,8 @@ import {pushPath, replacePath} from 'redux-simple-router';
 import {postJSON, parseJSON, getJSON, hostUrl} from '../../utils/fetching';
 import socketOptions from '../../utils/socketOptions';
 import validateSecretToken from '../../utils/validateSecretToken';
+import Immutable from 'immutable';
+
 
 const {authTokenName} = socketOptions;
 
@@ -17,7 +19,7 @@ export const LOGOUT_USER = 'LOGOUT_USER';
 export const VERIFY_EMAIL_ERROR = 'VERIFY_EMAIL_ERROR';
 export const VERIFY_EMAIL_SUCCESS = 'VERIFY_EMAIL_SUCCESS';
 
-const initialState = {
+const initialState = Immutable.fromJS({
   error: {},
   isAuthenticated: false,
   isAuthenticating: false,
@@ -27,20 +29,20 @@ const initialState = {
     email: null,
     strategies: {}
   }
-};
+});
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOGIN_USER_REQUEST:
     case SIGNUP_USER_REQUEST:
-      return Object.assign({}, state, {
+      return state.merge({
         error: {},
         isAuthenticating: true
       });
     case LOGIN_USER_SUCCESS:
     case SIGNUP_USER_SUCCESS:
       const {authToken, user} = action.payload;
-      return Object.assign({}, state, {
+      return state.merge({
         error: {},
         isAuthenticating: false,
         isAuthenticated: true,
@@ -49,7 +51,7 @@ export default function reducer(state = initialState, action = {}) {
       });
     case LOGIN_USER_ERROR:
     case SIGNUP_USER_ERROR:
-      return Object.assign({}, state, {
+      return state.merge({
         error: action.error,
         isAuthenticating: false,
         isAuthenticated: false,
@@ -57,21 +59,20 @@ export default function reducer(state = initialState, action = {}) {
         user: {}
       });
     case LOGOUT_USER:
-      return Object.assign({}, initialState);
+      return initialState;
     case VERIFY_EMAIL_ERROR:
-      return Object.assign({}, state, {
+      return state.merge({
         error: action.error
       });
     case VERIFY_EMAIL_SUCCESS:
-      //yikes, this gets ugly. maybe time to use immutablejs
-      return Object.assign({}, state, {
-        user: Object.assign({}, state.user, {
-          strategies: Object.assign({}, state.user.strategies, {
-            local: Object.assign({}, state.user.strategies.local, {
+      return state.merge({
+        user: {
+          strategies: {
+            local: {
               isVerified: true
-            })
-          })
-        })
+            }
+          }
+        }
       });
     default:
       return state;
@@ -180,7 +181,9 @@ export function signupUser(dispatch, data, redirect) {
 
 export function loginToken(authToken) {
   return async function (dispatch, getState) {
-    const {auth: {isAuthenticating, isAuthenticated}} = getState();
+    const auth = getState().get('auth');
+    const isAuthenticated = auth.get('isAuthenticated');
+    const isAuthenticating = auth.get('isAuthenticating');
     //stop duplicate since it could come from onEnter or from AppContainer
     if (isAuthenticated || isAuthenticating) return;
     dispatch({type: LOGIN_USER_REQUEST});

@@ -21,6 +21,7 @@ const noteSource = {
     }
     const {note, updateNote} = props;
     const item = monitor.getItem();
+    console.log('did drop', item, note)
     const updates = {};
     if (note.index !== item.index) {
       updates.index = item.index;

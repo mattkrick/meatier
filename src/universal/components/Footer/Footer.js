@@ -1,10 +1,8 @@
-/*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
-
 import React, { PropTypes, Component } from 'react';
 import styles from './Footer.css';
 import {Link} from 'react-router';
 
-class Footer extends Component {
+export default class Footer extends Component {
 
   render() {
     return (
@@ -21,7 +19,4 @@ class Footer extends Component {
       </div>
     );
   }
-
 }
-
-export default Footer;

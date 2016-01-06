@@ -15,7 +15,7 @@ export default class App extends Component {
     const {isAuthenticated, children} = this.props;
     return (
       <div className={styles.app} style={{maxWidth}}>
-        <Navigation className={styles.nav} isAuthenticated={this.props.isAuthenticated}/>
+        <Navigation className={styles.nav} isAuthenticated={isAuthenticated}/>
         <div className={styles.component}>
           {children}
         </div>

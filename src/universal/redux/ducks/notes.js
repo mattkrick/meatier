@@ -2,7 +2,7 @@ import {addImmutable, updateImmutable, deleteImmutable, findInState} from '../he
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
 import update from 'react/lib/update';
-
+import {fromJS} from 'immutable';
 /*
  * Action types
  */
@@ -26,56 +26,50 @@ const DROP_NOTE_ERROR = 'DROP_NOTE_ERROR';
 /*
  * Reducer
  */
-const initialState = {
+const initialState = fromJS({
   synced: false,
   error: null,
   data: []
-};
+});
 
 export function reducer(state = initialState, action) {
   switch (action.type) {
     case ADD_NOTE:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: addImmutable(action.payload, state.data)
+        data: state.get('data').push(fromJS(action.payload))
       });
-
     case UPDATE_NOTE:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: updateImmutable(action.payload, state.data)
+        data: state.get('data').map(item => item.get('id') === action.payload.id ? item.merge(action.payload) : item)
       });
-
     case DELETE_NOTE:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: deleteImmutable(action.payload.id, state.data)
+        data: state.get('data').filter(item => item.get('id') !== action.payload.id)
       });
     case CLEAR_NOTES:
-      return Object.assign({}, initialState)
+      return initialState;
     case DRAG_NOTE:
       const {sourceId, ...updates} = action.payload;
-      return Object.assign({}, state, {
-        data: state.data.map(note =>
-          note.id === sourceId ? Object.assign({}, note, updates) : note
-        )
-      });
+      return state.merge({
+        data: state.get('data').map(item => item.get('id') === sourceId ? item.merge(updates) : item)
+      })
     case ADD_NOTE_SUCCESS:
     case UPDATE_NOTE_SUCCESS:
     case DELETE_NOTE_SUCCESS:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: true,
         error: null
       });
-
     case ADD_NOTE_ERROR:
     case UPDATE_NOTE_ERROR:
     case DELETE_NOTE_ERROR:
-      return Object.assign({}, state, {
+      return state.merge({
         synced: true,
         error: action.error || 'Error'
       });
-
     default:
       return state;
   }
@@ -157,10 +151,13 @@ export function deleteNote(id, meta) {
 
 export function dragNote(data) {
   return function (dispatch, getState) {
-    const index = getNewIndex(getState().notes.data, data);
+    const notes = getState().getIn(['notes', 'data']).toJS();
+    const index = getNewIndex(notes, data);
     const updates = {index, laneId: data.targetLaneId};
-    const payload = Object.assign({}, updates, {sourceId: data.sourceId})
+    const payload = Object.assign({}, updates, {sourceId: data.sourceId});
+    console.log('item',data.monitor.getItem(), updates);
     Object.assign(data.monitor.getItem(), updates)
+    console.log('item',data.monitor.getItem(), updates);
     dispatch({type: DRAG_NOTE, payload});
   }
 }

@@ -3,12 +3,22 @@ import React from 'react';
 import {syncReduxAndRouter} from 'redux-simple-router';
 import makeReducer from '../universal/redux/makeReducer';
 import {browserHistory} from 'react-router'
+import {Map, fromJS} from 'immutable';
 
-const initialState = window.__INITIAL_STATE__ || {};
 const createStore = __PRODUCTION__ ? require('./createStore.prod.js') : require('./createStore.dev.js');
 const Root = __PRODUCTION__ ? require('./Root.prod.js') : require('./Root.dev.js');
+const {auth, routing, form} = window.__INITIAL_STATE__;
+
+// Currently has mutable objects in immutable state Map, not great
+// form: https://github.com/erikras/redux-form/issues/487#issuecomment-168943880
+// routing: the sync function uglies up state if i use immutable, need to research this more
+let initialState = Map([
+  ['auth', fromJS(auth)],
+  ['routing', routing],
+  ['form', form]
+]);
 const store = createStore(makeReducer(), initialState);
-syncReduxAndRouter(browserHistory, store);
+syncReduxAndRouter(browserHistory, store, state => state.get('routing'));
 
 // Will implement when react-router supports HMR
 //if (module.hot) {

@@ -45,7 +45,10 @@ export default class Auth extends Component {
             errorText={ password.touched && password.error || ''}
           />
 
-          {isLogin ? <Link to={{pathname: "/login/lost-password", query: {e:email.value}}} className={styles.lostPassword}>Forgot your password?</Link> : null}
+          {isLogin ?
+            <Link to={{pathname: "/login/lost-password", query: {e:email.value}}} className={styles.lostPassword}>
+              Forgot your password?
+            </Link> : null}
 
           <div className={styles.loginButton}>
             <RaisedButton
@@ -61,18 +64,20 @@ export default class Auth extends Component {
         <div className={styles.hrWithText}>
           <span className={styles.hrText}>or</span>
         </div>
-        <span onClick={this.loginWithGoogle.bind(this)} >Login with Google</span>
+        <span onClick={this.loginWithGoogle.bind(this)}>Login with Google</span>
       </div>
     );
   }
+
   async loginWithGoogle() {
     const redirectRoute = this.props.location.query.next || '/';
     this.props.dispatch(oauthLogin('/auth/google'));
   }
-  onSubmit(data,dispatch) {
+
+  onSubmit(data, dispatch) {
     //gotta get that redirect from props
     const redirectRoute = this.props.location.query.next || '/';
     const authFunc = this.props.isLogin ? loginUser : signupUser;
-    return authFunc(dispatch,data, redirectRoute);
+    return authFunc(dispatch, data, redirectRoute);
   }
 }

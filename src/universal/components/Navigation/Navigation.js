@@ -3,15 +3,12 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
 import React, { PropTypes, Component } from 'react';
-import classNames from 'classnames';
 import styles from './Navigation.css';
 import {Link} from 'react-router';
 import smallLogo from './../Navigation/logo-small.png';
 
-class Navigation extends Component {
-
+export default class Navigation extends Component {
   static propTypes = {
-    className: PropTypes.string,
     isAuthenticated: PropTypes.bool.isRequired
   };
 
@@ -28,23 +25,23 @@ class Navigation extends Component {
           </Link>
 
           <span className="spacer"> | </span>
-          {this.renderAuthButtons()}
+          {this.props.isAuthenticated ? this.renderLoggedIn() : this.renderLoggedOut()}
         </div>
       </Paper>
-      //</div>
     );
   }
 
-  renderAuthButtons() {
-    if (this.props.isAuthenticated) {
-      return (
-        <Link className={styles.buttonBuffer} to="/logout">
-          <FlatButton className={styles.menuButton} label="Logout"/>
-        </Link>
-      )
-    } else {
-      return (
-        <span>
+  renderLoggedIn() {
+    return (
+      <Link className={styles.buttonBuffer} to="/logout">
+        <FlatButton className={styles.menuButton} label="Logout"/>
+      </Link>
+    )
+  }
+
+  renderLoggedOut() {
+    return (
+      <span>
           <Link className={styles.buttonBuffer} to="/login">
             <FlatButton className={styles.menuButton} label="Login"/>
           </Link>
@@ -52,10 +49,6 @@ class Navigation extends Component {
             <RaisedButton secondary={true} className={styles.menuButton} label="Sign up"/>
           </Link>
         </span>
-      )
-    }
+    )
   }
-
 }
-
-export default Navigation;

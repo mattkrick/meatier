@@ -3,7 +3,7 @@ import styles from './Header.css';
 import {Link} from 'react-router';
 import RaisedButton from 'material-ui/lib/raised-button';
 
-class Header extends Component {
+export default class Header extends Component {
   render() {
     return (
       <div className={styles.header}>
@@ -19,7 +19,4 @@ class Header extends Component {
       </div>
     );
   }
-
 }
-
-export default Header;

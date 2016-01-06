@@ -8,8 +8,9 @@ import Joi from 'joi';
 import {authSchemaPassword} from '../../schemas/auth';
 import {resetPassword} from '../../redux/ducks/auth'
 import {parsedJoiErrors} from '../../utils/schema';
+import {getFormState} from '../../redux/helpers';
 
-@reduxForm({form: 'resetPasswordForm', fields: ['password'], validate})
+@reduxForm({form: 'resetPasswordForm', fields: ['password'], validate, getFormState})
 export default class ResetPassword extends Component {
   render() {
     const {fields: {password}, error, handleSubmit, submitting} = this.props;

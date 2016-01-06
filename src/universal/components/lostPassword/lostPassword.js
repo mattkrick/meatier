@@ -8,8 +8,9 @@ import Joi from 'joi';
 import {sendResetEmail} from '../../redux/ducks/auth';
 import {authSchemaEmail} from '../../schemas/auth'
 import {parsedJoiErrors} from '../../utils/schema';
+import {getFormState} from '../../redux/helpers';
 
-@reduxForm({form: 'lostPasswordForm', fields: ['email'], validate})
+@reduxForm({form: 'lostPasswordForm', fields: ['email'], validate, getFormState})
 export default class LostPassword extends Component {
   render() {
     const {fields: {email}, error, handleSubmit, submitting, location} = this.props;

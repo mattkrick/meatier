@@ -2,11 +2,10 @@ import React, {PropTypes, Component} from 'react';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
 import Editable from '../../components/Editable/Editable';
-import _ from 'lodash';
-
+import {getFormState} from '../../redux/helpers';
 //TODO validate the title
 
-@reduxForm()
+@reduxForm({getFormState})
 export default class EditableContainer extends Component {
   static PropTypes = {
     item: PropTypes.object.isRequired,
@@ -20,9 +19,10 @@ export default class EditableContainer extends Component {
     const {fields} = this.props;
     const fieldName = Object.keys(fields)[0];
     const field = fields[fieldName];
-    const compProps = _.pick(this.props, 'dispatch', 'item', 'updateItem','handleSubmit');
+    const {dispatch, item, updateItem, handleSubmit} = this.props;
     const isEditing = this.props.active === fieldName;
-    return <Editable isEditing={isEditing} {...compProps} formProps={field}/>
+    const compProps = {dispatch, item, updateItem, handleSubmit, isEditing};
+    return <Editable {...compProps} formProps={field}/>
   }
 }
 

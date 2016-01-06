@@ -12,7 +12,6 @@ injectTapeEventPlugin();
 export default class AppContainer extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
-    dispatch: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired
   };
 
@@ -22,8 +21,7 @@ export default class AppContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  const {auth: {isAuthenticated}} = state;
   return {
-    isAuthenticated
+    isAuthenticated: state.getIn(['auth', 'isAuthenticated'])
   }
 }

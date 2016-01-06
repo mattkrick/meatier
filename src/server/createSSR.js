@@ -9,19 +9,21 @@ import fs from 'fs';
 import {join, basename} from 'path';
 import promisify from 'es6-promisify';
 import thunkMiddleware from 'redux-thunk';
+import {Map} from 'immutable';
 
 // https://github.com/systemjs/systemjs/issues/953
 
 function renderApp(res, store, assets, renderProps) {
   const path = renderProps && renderProps.location ? renderProps.location.pathname : '/';
   store.dispatch({type: UPDATE_PATH, payload: {path}});
-  const htmlStream = renderToStaticMarkup(<Html title="meatier" store={store} assets={assets} renderProps={renderProps}/>);
+  const htmlStream = renderToStaticMarkup(<Html title="meatier" store={store} assets={assets}
+                                                renderProps={renderProps}/>);
   htmlStream.pipe(res, {end: false});
   htmlStream.on('end', () => res.end());
 }
 
 export default async function createSSR(req, res) {
-  const initialState = {};
+  const initialState = Map({});
   const finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
   const store = finalCreateStore(makeReducer(), initialState);
   if (process.env.NODE_ENV === 'production') {

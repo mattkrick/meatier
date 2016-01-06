@@ -7,11 +7,12 @@ import {reduxForm} from 'redux-form';
 import Joi from 'joi';
 import {postJSON, parseJSON} from '../../utils/fetching';
 import {parsedJoiErrors} from '../../utils/schema';
+import {getFormState} from '../../redux/helpers';
 
 // use the same form to retain form values (there's really no difference between login and signup, it's just for show)
 @connect(mapStateToProps)
 // must come after connect to get the path field
-@reduxForm({form: 'authForm', fields: ['email', 'password'], validate})
+@reduxForm({form: 'authForm', fields: ['email', 'password'], validate, getFormState})
 export default class AuthContainer extends Component {
   static PropTypes = {
     location: PropTypes.object,
@@ -26,28 +27,18 @@ export default class AuthContainer extends Component {
   };
 
   render() {
-    function visitReactElements(x, f, depth=0){
-      if (!x || !x.props) return;
-
-      f(x, depth);
-
-      React.Children.forEach(x.props.children, function(x){
-        visitReactElements(x, f, depth + 1);
-      })
-    }
-
     const isLogin = this.props.path.indexOf('/login') !== -1;
     return <Auth isLogin={isLogin} {...this.props}/>
   }
 }
 
 function mapStateToProps(state) {
-  const {auth: {isAuthenticating, isAuthenticated, error}, routing: {path}} = state;
+  const auth = state.get('auth');
   return {
-    isAuthenticating,
-    isAuthenticated,
-    authError: error,
-    path
+    isAuthenticated: auth.get('isAuthenticated'),
+    isAuthenticating: auth.get('isAuthenticating'),
+    authError: auth.get('error'),
+    path: state.get('routing').path
   }
 }
 
