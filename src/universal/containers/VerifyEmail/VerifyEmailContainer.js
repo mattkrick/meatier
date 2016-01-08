@@ -6,8 +6,9 @@ import {ensureState} from 'redux-optimistic-ui';
 
 @connect(mapStateToProps)
 export default class VerifyEmailContainer extends Component {
-  componentWillMount() {
-    this.verifyHandler(this.props);
+  constructor(props) {
+    super(props);
+    this.verifyHandler(props);
   }
   componentWillReceiveProps (nextProps) {
     this.verifyHandler(nextProps);

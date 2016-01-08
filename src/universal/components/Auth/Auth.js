@@ -27,7 +27,7 @@ export default class Auth extends Component {
       <div className={styles.loginForm}>
         <h3>{isLogin ? 'Login' : 'Sign up'}</h3>
         {localError && <span>{localError}</span>}
-        <form className={styles.loginForm} onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+        <form className={styles.loginForm} onSubmit={handleSubmit(this.onSubmit)}>
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
 
           <TextField {...email}
@@ -56,7 +56,7 @@ export default class Auth extends Component {
               secondary={true}
               type='submit'
               disabled={isAuthenticating}
-              onClick={handleSubmit(this.onSubmit.bind(this))}
+              onClick={handleSubmit(this.onSubmit)}
             />
 
           </div>
@@ -64,17 +64,17 @@ export default class Auth extends Component {
         <div className={styles.hrWithText}>
           <span className={styles.hrText}>or</span>
         </div>
-        <span onClick={this.loginWithGoogle.bind(this)}>Login with Google</span>
+        <span onClick={this.loginWithGoogle}>Login with Google</span>
       </div>
     );
   }
 
-  async loginWithGoogle() {
+  async loginWithGoogle = () => {
     const redirectRoute = this.props.location.query.next || '/';
     this.props.dispatch(oauthLogin('/auth/google'));
   }
 
-  onSubmit(data, dispatch) {
+  onSubmit = (data, dispatch) => {
     //gotta get that redirect from props
     const redirectRoute = this.props.location.query.next || '/';
     const authFunc = this.props.isLogin ? loginUser : signupUser;

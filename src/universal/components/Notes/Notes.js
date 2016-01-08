@@ -25,10 +25,6 @@ const noteTarget = {
 }))
 
 export default class Notes extends Component {
-  constructor(props) {
-    super(props);
-    this.renderNote = this.renderNote.bind(this);
-  }
 
   render() {
     const {notes,connectDropTarget} = this.props;
@@ -36,7 +32,7 @@ export default class Notes extends Component {
     return connectDropTarget(<ul className={styles.notes}>{sortedNotes.map(this.renderNote)}</ul>);
   }
 
-  renderNote(note, index) {
+  renderNote = (note, index) => {
     const {updateNote, dragNote, deleteNote} = this.props.noteActions;
     return (
       <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote} index={index}>

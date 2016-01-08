@@ -20,8 +20,9 @@ export default class KanbanContainer extends Component {
     userId: PropTypes.string.isRequired
   };
 
-  componentWillMount() {
-    const {dispatch, socketState} = this.props;
+  constructor(props) {
+    super(props);
+    const {dispatch, socketState} = props;
     if (socketState === 'closed') {
       //handle here & not in middleware to make it atomic, otherwise state could change between loadLanes & loadNotes
       dispatch(loadLanes());

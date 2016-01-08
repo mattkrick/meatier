@@ -12,19 +12,16 @@ let currentReducers = {
 }
 
 export default (newReducers, reducerEnhancers) => {
-  //if (module.hot && module.hot.data) {
-  //  currentReducers = module.hot.data.currentReducers;
-  //}
-
   Object.assign(currentReducers, newReducers);
   const reducer = combineReducers({...currentReducers})
   if (reducerEnhancers){
     return Array.isArray(reducerEnhancers) ? compose(...reducerEnhancers)(reducer) : reducerEnhancers(reducer);
   }
-  //return optimistic(reducer);
   return reducer;
 }
-
+//if (module.hot && module.hot.data) {
+//  currentReducers = module.hot.data.currentReducers;
+//}
 //if (module.hot) {
 //  module.hot.dispose(function(data) { data.currentReducers = currentReducers; })
 //}

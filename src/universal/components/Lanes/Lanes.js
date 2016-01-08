@@ -6,16 +6,12 @@ export default class Lanes extends Component {
     laneActions: PropTypes.object.isRequired,
     lanes: PropTypes.object.isRequired
   };
-  constructor(props) {
-    super(props);
-    this.renderLane = this.renderLane.bind(this);
-  }
   render() {
     const {data} = this.props.lanes;
     return <div className="lanes">{data.map(this.renderLane)}</div>;
   }
 
-  renderLane(lane) {
+  renderLane = (lane) => {
     const {laneActions, userId} = this.props;
     return <LaneContainer key={`lane${lane.id}`} lane={lane} userId={userId} laneActions={laneActions}/>;
   }

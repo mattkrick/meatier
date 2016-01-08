@@ -11,13 +11,6 @@ export default class Editable extends Component {
     updateItem: PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-    this.renderEdit = this.renderEdit.bind(this);
-    this.renderItem = this.renderItem.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
   render() {
     return (
       <div>
@@ -26,24 +19,24 @@ export default class Editable extends Component {
     );
   }
 
-  renderEdit() {
+  renderEdit = () => {
     const {item:{title}, formProps, handleSubmit} = this.props;
     return (
-      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+      <form onSubmit={handleSubmit(this.onSubmit)}>
         <input {...formProps}
           ref={formProps.name}
           type="text"
           autoFocus={true}
           defaultValue={title}
-          onSubmit={handleSubmit(this.onSubmit.bind(this))}
+          onSubmit={handleSubmit(this.onSubmit)}
           onFocus={()=>{}}
-          onBlur={handleSubmit(this.onSubmit.bind(this))}
+          onBlur={handleSubmit(this.onSubmit)}
         />
       </form>
     )
   }
 
-  onSubmit(data, dispatch) {
+  onSubmit =(data, dispatch) => {
     const {item:{id, title}, formProps, updateItem} = this.props;
     const val = this.refs[formProps.name].value;
     formProps.onBlur();
@@ -55,7 +48,7 @@ export default class Editable extends Component {
     updateItem(payload);
   }
 
-  renderItem() {
+  renderItem = () => {
     const {item:{title}, formProps} = this.props;
     return (
       <span onClick={formProps.onFocus}>

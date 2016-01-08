@@ -3,7 +3,8 @@ import {loginToken} from '../../redux/ducks/auth';
 
 export default authTokenName => ComposedComponent => {
   return class TokenizedComp extends Component {
-    componentWillMount() {
+    constructor(props) {
+      super(props);
       if (__CLIENT__) {
         let authToken = localStorage.getItem(authTokenName);
         if (authToken) {
