@@ -60,6 +60,7 @@
     "rimraf": "^2.5.0",
     "stats-webpack-plugin": "^0.2.2",
     "style-loader": "^0.13.0",
+    "supertest": "^1.1.0",
     "supertest-as-promised": "^2.0.2",
     "url-loader": "^0.5.7",
     "webpack": "^2.0.1-beta",
