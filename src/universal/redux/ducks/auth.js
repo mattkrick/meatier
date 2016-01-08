@@ -5,6 +5,7 @@ import {postJSON, parseJSON, getJSON, hostUrl} from '../../utils/fetching';
 import socketOptions from '../../utils/socketOptions';
 import validateSecretToken from '../../utils/validateSecretToken';
 import Immutable from 'immutable';
+import {ensureState} from 'redux-optimistic-ui';
 
 
 const {authTokenName} = socketOptions;
@@ -181,7 +182,7 @@ export function signupUser(dispatch, data, redirect) {
 
 export function loginToken(authToken) {
   return async function (dispatch, getState) {
-    const auth = getState().get('auth');
+    const auth = ensureState(getState()).get('auth');
     const isAuthenticated = auth.get('isAuthenticated');
     const isAuthenticating = auth.get('isAuthenticating');
     //stop duplicate since it could come from onEnter or from AppContainer

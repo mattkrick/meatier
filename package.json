@@ -1,6 +1,6 @@
 {
   "name": "meatier",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Like meteor, but meatier",
   "repository": {
     "type": "git",
@@ -104,6 +104,7 @@
     "redux-immutablejs": "0.0.8",
     "redux-logger": "^2.3.1",
     "redux-optimist": "0.0.2",
+    "redux-optimistic-ui": "^0.1.1",
     "redux-promise": "^0.5.0",
     "redux-simple-router": "1.0.2",
     "redux-socket-cluster": "^0.3.1",

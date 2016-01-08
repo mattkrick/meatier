@@ -1,9 +1,9 @@
-import {addImmutable, updateImmutable, deleteImmutable} from '../helpers.js';
 import uuid from 'node-uuid';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
 import {deleteNote} from './notes';
 import {fromJS} from 'immutable';
+import {ensureState} from 'redux-optimistic-ui';
 
 /*
  * Action types
@@ -127,7 +127,7 @@ export function updateLane(payload, meta) {
 
 export function deleteLane(id, meta) {
   return (dispatch, getState) => {
-    const noteState = getState().get('notes').toJS();
+    const noteState = ensureState(getState()).get('notes').toJS();
     if (noteState && noteState.data) {
       noteState.data.forEach(note => {
         if (note.laneId === id) {

@@ -1,10 +1,11 @@
 import {loginToken} from '../redux/ducks/auth';
 import socketOptions from '../utils/socketOptions';
+import {ensureState} from 'redux-optimistic-ui';
 
 export const requireNoAuth = store => (nextState, replaceState, cb) => {
   if (!__CLIENT__) return cb();
   const redirect = '/';
-  const isAuthenticated = store.getState().getIn(['auth', 'isAuthenticated']);
+  const isAuthenticated = ensureState(store.getState()).getIn(['auth', 'isAuthenticated']);
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   if (isAuthenticated || authToken) {
     replaceState(null, redirect);
@@ -24,7 +25,7 @@ export const requireAuth = store => async (nextState, replaceState, cb) => {
     replaceState(null, '/login', {next});
     return cb();
   }
-  let isAuthenticated = store.getState().getIn(['auth', 'isAuthenticated']);
+  let isAuthenticated = ensureState(store.getState()).getIn(['auth', 'isAuthenticated']);
   if (isAuthenticated) {
     return cb()
   }
@@ -33,9 +34,9 @@ export const requireAuth = store => async (nextState, replaceState, cb) => {
     replaceState(null, '/login', {next});
     return cb();
   }
-  let isAuthenticating = store.getState().getIn(['auth', 'isAuthenticating']);
+  let isAuthenticating = ensureState(store.getState()).getIn(['auth', 'isAuthenticating']);
   await store.dispatch(loginToken(authToken));
-  isAuthenticated = store.getState().getIn(['auth', 'isAuthenticated']);
+  isAuthenticated = ensureState(store.getState()).getIn(['auth', 'isAuthenticated']);
   if (!isAuthenticated) {
     replaceState(null, '/login', {next});
   }

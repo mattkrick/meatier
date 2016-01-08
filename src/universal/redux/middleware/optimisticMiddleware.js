@@ -1,4 +1,4 @@
-import {BEGIN, COMMIT, REVERT} from 'redux-optimist';
+import {BEGIN, COMMIT, REVERT} from 'redux-optimistic-ui';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
 
@@ -16,17 +16,19 @@ export default function (store) {
     if (!meta.isOptimistic) return next(action);
 
     let transactionID = nextTransactionID++;
-    next(Object.assign({}, action, {optimist: {type: BEGIN, id: transactionID}})); //execute optimistic update
+    next(Object.assign({}, action, {meta: {optimistic: {type: BEGIN, id: transactionID}}})); //execute optimistic update
     const socket = socketCluster.connect(socketOptions);
-    socket.emit(type, payload, (_e,error) => {
+    socket.emit(type, payload, (_e, error) => {
       //we dont' want SCv3 to throw an error, so we put the error in the result
       next({
         type: type + (error ? _ERROR : _SUCCESS),
         error,
         payload,
-        meta: {synced: true},
-        optimist: error ? {type: REVERT, id: transactionID} : {type: COMMIT, id: transactionID}
+        meta: {
+          synced: true,
+          optimistic: error ? {type: REVERT, id: transactionID} : {type: COMMIT, id: transactionID}
+        }
       });
-    });
+    })
   }
 };

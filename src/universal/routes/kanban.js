@@ -10,8 +10,8 @@ export default function (store) {
     getComponent: async (location, cb) => {
       let promiseMap = setKanbanImports();
       let importMap = await resolvePromiseMap(promiseMap);
-      let {component, optimist, ...asyncReducers} = getKanbanImports(importMap);
-      let newReducer = makeReducer(asyncReducers, optimist);
+      let {component, optimistic, ...asyncReducers} = getKanbanImports(importMap);
+      let newReducer = makeReducer(asyncReducers, optimistic);
       store.replaceReducer(newReducer);
       cb(null, component);
     }
@@ -21,7 +21,7 @@ export default function (store) {
 function setKanbanImports() {
   return new Map([
     ['component', System.import('../containers/Kanban/KanbanContainer')],
-    ['optimist', System.import('../redux-optimist')],
+    ['optimistic', System.import('redux-optimistic-ui')],
     ['lanes', System.import('../redux/ducks/lanes')],
     ['notes', System.import('../redux/ducks/notes')],
     ['socket', System.import('redux-socket-cluster')]
@@ -31,7 +31,7 @@ function setKanbanImports() {
 function getKanbanImports(importMap) {
   return {
     component: importMap.get('component'),
-    optimist: importMap.get('optimist').optimist,
+    optimistic: importMap.get('optimistic').optimistic,
     lanes: importMap.get('lanes').reducer,
     notes: importMap.get('notes').reducer,
     socket: importMap.get('socket').socketClusterReducer

@@ -8,6 +8,7 @@ import {reduxSocket} from 'redux-socket-cluster';
 import socketOptions from '../../utils/socketOptions';
 import {loadLanes, laneActions} from '../../redux/ducks/lanes';
 import {loadNotes} from '../../redux/ducks/notes';
+import {ensureState} from 'redux-optimistic-ui';
 
 @DragDropContext(HTML5Backend)
 @connect(mapStateToProps, mapDispatchToProps)
@@ -34,6 +35,7 @@ export default class KanbanContainer extends Component {
 }
 
 function mapStateToProps(state) {
+  state = ensureState(state);
   const auth = state.get('auth');
   return {
     lanes: state.get('lanes').toJS(),

@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import socketOptions from '../../utils/socketOptions';
 import loginWithToken from '../../decorators/loginWithToken/loginWithToken';
+import {ensureState} from 'redux-optimistic-ui';
 
 injectTapeEventPlugin();
 @connect(mapStateToProps)
@@ -22,6 +23,6 @@ export default class AppContainer extends Component {
 
 function mapStateToProps(state) {
   return {
-    isAuthenticated: state.getIn(['auth', 'isAuthenticated'])
+    isAuthenticated: ensureState(state).getIn(['auth', 'isAuthenticated'])
   }
 }

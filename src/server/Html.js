@@ -20,7 +20,7 @@ export default class Html extends Component {
     const root = PROD && renderToString(
         <Provider store={store}>
           <RouterContext {...renderProps} />
-        </Provider>)
+        </Provider>);
     return (
       <html>
       <head>

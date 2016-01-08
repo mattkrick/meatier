@@ -8,6 +8,7 @@ import Joi from 'joi';
 import {postJSON, parseJSON} from '../../utils/fetching';
 import {parsedJoiErrors} from '../../utils/schema';
 import {getFormState} from '../../redux/helpers';
+import {ensureState} from 'redux-optimistic-ui';
 
 // use the same form to retain form values (there's really no difference between login and signup, it's just for show)
 @connect(mapStateToProps)
@@ -33,6 +34,7 @@ export default class AuthContainer extends Component {
 }
 
 function mapStateToProps(state) {
+  state = ensureState(state);
   const auth = state.get('auth');
   return {
     isAuthenticated: auth.get('isAuthenticated'),

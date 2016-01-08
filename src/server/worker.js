@@ -46,7 +46,7 @@ export function run(worker) {
     app.use('/static', express.static('build'));
   }
   // Auth handler via HTTP (make sure to use HTTPS)
-  makeAuthEndpoints(app)
+  makeAuthEndpoints(app);
 
   // server-side rendering
   app.get('*', createSSR);

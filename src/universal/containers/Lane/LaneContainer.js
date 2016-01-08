@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {noteActions} from '../../redux/ducks/notes.js';
 import Lane from '../../components/Lane/Lane';
 import {List} from 'immutable';
+import {ensureState} from 'redux-optimistic-ui';
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LaneContainer extends Component {
@@ -23,7 +24,7 @@ export default class LaneContainer extends Component {
 function mapStateToProps(state, props) {
   //TODO implement reselctor here as an example
   return {
-    notes: state.getIn(['notes','data']).toJS().filter(note => note.laneId === props.lane.id)
+    notes: ensureState(state).getIn(['notes','data']).toJS().filter(note => note.laneId === props.lane.id)
   };
 }
 

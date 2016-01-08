@@ -1,8 +1,9 @@
-import {addImmutable, updateImmutable, deleteImmutable, findInState} from '../helpers.js';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../utils/socketOptions';
 import update from 'react/lib/update';
 import {fromJS} from 'immutable';
+import {ensureState} from 'redux-optimistic-ui';
+
 /*
  * Action types
  */
@@ -151,7 +152,7 @@ export function deleteNote(id, meta) {
 
 export function dragNote(data) {
   return function (dispatch, getState) {
-    const notes = getState().getIn(['notes', 'data']).toJS();
+    const notes = ensureState(getState()).getIn(['notes', 'data']).toJS();
     const index = getNewIndex(notes, data);
     const updates = {index, laneId: data.targetLaneId};
     const payload = Object.assign({}, updates, {sourceId: data.sourceId});

@@ -19,5 +19,5 @@ export const options = {
   brokerController: path.join(__dirname, '/broker.js'),
   socketChannelLimit: 1000,
   rebootWorkerOnCrash: true
-}
+};
 const socketCluster = new SocketCluster(options);

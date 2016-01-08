@@ -2,8 +2,9 @@ import {render} from 'react-dom';
 import React from 'react';
 import {syncReduxAndRouter} from 'redux-simple-router';
 import makeReducer from '../universal/redux/makeReducer';
-import {browserHistory} from 'react-router'
-import {Map, fromJS} from 'immutable';
+import {browserHistory} from 'react-router';
+import im, {Map, fromJS} from 'immutable';
+import {ensureState} from 'redux-optimistic-ui';
 
 const createStore = __PRODUCTION__ ? require('./createStore.prod.js') : require('./createStore.dev.js');
 const Root = __PRODUCTION__ ? require('./Root.prod.js') : require('./Root.dev.js');
@@ -17,8 +18,9 @@ let initialState = Map([
   ['routing', routing],
   ['form', form]
 ]);
+window.im = im;
 const store = createStore(makeReducer(), initialState);
-syncReduxAndRouter(browserHistory, store, state => state.get('routing'));
+syncReduxAndRouter(browserHistory, store, state => ensureState(state).get('routing'));
 
 // Will implement when react-router supports HMR
 //if (module.hot) {

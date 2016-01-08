@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import {verifyEmail} from '../../redux/ducks/auth';
 import { connect } from 'react-redux';
 import VerifyEmail from '../../components/VerifyEmail/VerifyEmail';
+import {ensureState} from 'redux-optimistic-ui';
 
 @connect(mapStateToProps)
 export default class VerifyEmailContainer extends Component {
@@ -32,7 +33,7 @@ export default class VerifyEmailContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  const auth = state.get('auth');
+  const auth = ensureState(state).get('auth');
   return {
     authError: auth.get('error'),
     isAuthenticating: auth.get('isAuthenticating'),
