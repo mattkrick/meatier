@@ -1,6 +1,6 @@
 // https://github.com/webpack/webpack/tree/master/examples/code-splitted-require.context
 //There's a lot of boilerplate here, but if the require isn't static, then webpack can't chunk properly
-import {requireNoAuth} from './utils';
+import {requireNoAuth} from './requireNoAuth';
 import {resolvePromiseMap} from '../utils/promises';
 
 import makeReducer from '../redux/makeReducer';

@@ -9,10 +9,12 @@ import socketOptions from '../../utils/socketOptions';
 import {loadLanes, laneActions} from '../../redux/ducks/lanes';
 import {loadNotes} from '../../redux/ducks/notes';
 import {ensureState} from 'redux-optimistic-ui';
+import requireAuth from '../../decorators/requireAuth/requireAuth';
 
-@DragDropContext(HTML5Backend)
 @connect(mapStateToProps, mapDispatchToProps)
+@requireAuth
 @reduxSocket(socketOptions)
+@DragDropContext(HTML5Backend)
 export default class KanbanContainer extends Component {
   static propTypes = {
     laneActions: PropTypes.object.isRequired,
@@ -42,7 +44,8 @@ function mapStateToProps(state) {
     lanes: state.get('lanes').toJS(),
     userId: auth.getIn(['user','id']),
     socketState: state.get('socket').state,
-    isAuthenticated: auth.get('isAuthenticated')
+    isAuthenticated: auth.get('isAuthenticated'),
+    hasAuthError: !!auth.get('error').size
   };
 }
 

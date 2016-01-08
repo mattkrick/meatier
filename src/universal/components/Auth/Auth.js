@@ -68,8 +68,8 @@ export default class Auth extends Component {
       </div>
     );
   }
-
-  async loginWithGoogle = () => {
+  //need async?
+  loginWithGoogle = () => {
     const redirectRoute = this.props.location.query.next || '/';
     this.props.dispatch(oauthLogin('/auth/google'));
   }

@@ -106,7 +106,7 @@
     "redux-optimist": "0.0.2",
     "redux-optimistic-ui": "^0.1.1",
     "redux-promise": "^0.5.0",
-    "redux-simple-router": "1.0.2",
+    "redux-simple-router": "^1.0.2",
     "redux-socket-cluster": "^0.3.1",
     "redux-thunk": "^1.0.3",
     "reselect": "^2.0.1",

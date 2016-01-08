@@ -3,14 +3,14 @@ import {loginToken} from '../../redux/ducks/auth';
 
 export default authTokenName => ComposedComponent => {
   return class TokenizedComp extends Component {
-    constructor(props) {
-      super(props);
+    componentWillMount() {
       if (__CLIENT__) {
         let authToken = localStorage.getItem(authTokenName);
         if (authToken) {
           this.props.dispatch(loginToken(authToken));
         }
       }
+      //TODO: goto url next query param upon success (needs redux-simple-router@2)
     }
 
     render() {

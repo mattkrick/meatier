@@ -1,11 +1,11 @@
-import {requireAuth} from './utils';
+import {requireAuth} from './requireNoAuth';
 import makeReducer from '../redux/makeReducer';
 import {resolvePromiseMap} from '../utils/promises';
 
 export default function (store) {
   return {
     // sometimes onEnter is called twice when async func requireAuth uses immutable-js. w.t.f.
-    onEnter: requireAuth(store),
+    //onEnter: requireAuth(store),
     path: 'kanban',
     getComponent: async (location, cb) => {
       let promiseMap = setKanbanImports();

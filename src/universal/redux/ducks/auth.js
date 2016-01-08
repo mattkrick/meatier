@@ -182,7 +182,8 @@ export function signupUser(dispatch, data, redirect) {
 
 export function loginToken(authToken) {
   return async function (dispatch, getState) {
-    const auth = ensureState(getState()).get('auth');
+    const state = ensureState(getState());
+    const auth = state.get('auth');
     const isAuthenticated = auth.get('isAuthenticated');
     const isAuthenticating = auth.get('isAuthenticating');
     //stop duplicate since it could come from onEnter or from AppContainer
@@ -196,6 +197,7 @@ export function loginToken(authToken) {
     let parsedRes = await parseJSON(res);
     const payload = {authToken, user: parsedRes.user};
     dispatch(loginUserSuccess(payload));
+    //if (state.get('routing'))
   }
 }
 

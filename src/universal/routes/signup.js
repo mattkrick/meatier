@@ -1,4 +1,4 @@
-import {requireNoAuth} from './utils';
+import {requireNoAuth} from './requireNoAuth';
 import makeReducer from '../redux/makeReducer';
 
 export default store => {
