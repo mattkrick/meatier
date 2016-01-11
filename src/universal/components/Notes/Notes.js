@@ -30,7 +30,7 @@ export default class Notes extends Component {
     const {notes,connectDropTarget} = this.props;
     const sortedNotes = notes.sort((a,b) => a.index - b.index);
     return connectDropTarget(<ul className={styles.notes}>{sortedNotes.map(this.renderNote)}</ul>);
-  }
+  };
 
   renderNote = (note, index) => {
     const {updateNote, dragNote, deleteNote} = this.props.noteActions;
@@ -47,7 +47,7 @@ export default class Notes extends Component {
         <div className={styles.delete} onClick={() => deleteNote(note.id)}>x</div>
       </Note>
     );
-  }
+  };
 }
 
 

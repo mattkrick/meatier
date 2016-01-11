@@ -43,7 +43,7 @@ function mapStateToProps(state) {
   return {
     lanes: state.get('lanes').toJS(),
     userId: auth.getIn(['user','id']),
-    socketState: state.get('socket').state,
+    socketState: state.getIn(['socket','state']),
     isAuthenticated: auth.get('isAuthenticated'),
     hasAuthError: !!auth.get('error').size
   };

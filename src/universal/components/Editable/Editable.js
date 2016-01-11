@@ -17,7 +17,7 @@ export default class Editable extends Component {
         {this.props.isEditing ? this.renderEdit() : this.renderItem()}
       </div>
     );
-  }
+  };
 
   renderEdit = () => {
     const {item:{title}, formProps, handleSubmit} = this.props;
@@ -34,7 +34,7 @@ export default class Editable extends Component {
         />
       </form>
     )
-  }
+  };
 
   onSubmit =(data, dispatch) => {
     const {item:{id, title}, formProps, updateItem} = this.props;
@@ -46,7 +46,7 @@ export default class Editable extends Component {
       id
     }
     updateItem(payload);
-  }
+  };
 
   renderItem = () => {
     const {item:{title}, formProps} = this.props;
@@ -55,5 +55,5 @@ export default class Editable extends Component {
         <span className={styles.title}>{title}</span>
       </span>
     );
-  }
+  };
 }

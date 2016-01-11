@@ -9,10 +9,10 @@ export default class Lanes extends Component {
   render() {
     const {data} = this.props.lanes;
     return <div className="lanes">{data.map(this.renderLane)}</div>;
-  }
+  };
 
   renderLane = (lane) => {
     const {laneActions, userId} = this.props;
     return <LaneContainer key={`lane${lane.id}`} lane={lane} userId={userId} laneActions={laneActions}/>;
-  }
+  };
 }

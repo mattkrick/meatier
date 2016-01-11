@@ -46,7 +46,7 @@ export default class ResetPassword extends Component {
     const {resetToken} = this.props.params;
     const outData = Object.assign({}, data, {resetToken});
     return resetPassword(outData, dispatch);
-  }
+  };
 }
 
 function validate(values) {

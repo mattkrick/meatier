@@ -15,7 +15,7 @@ export async function addNote(data, callback) {
     await addNoteDB(data);
   } catch (e) {
     this.docQueue.delete(data.id);
-    return callback(null, {_error: e.message})
+    return callback({_error: e.message})
   }
   callback();
 }
@@ -31,7 +31,7 @@ export async function updateNote(data, callback) {
     await updateNoteDB(data);
   } catch (e) {
     this.docQueue.delete(data.id);
-    return callback(null, {_error: e.message})
+    return callback({_error: e.message})
   }
   callback();
 }
@@ -43,7 +43,7 @@ export async function deleteNote(payload, callback) {
     await deleteNoteDB(id);
   } catch (e) {
     this.docQueue.delete(data.id);
-    return callback(null, {_error: e.message})
+    return callback({_error: e.message})
   }
   callback();
 }

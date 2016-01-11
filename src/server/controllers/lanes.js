@@ -14,7 +14,7 @@ export async function addLane(data, callback) {
     await addLaneDB(data);
   } catch (e) {
     this.docQueue.delete(data.id);
-    return callback(null, {_error: e.message})
+    return callback({_error: e.message})
   }
   callback();
 }
@@ -31,7 +31,7 @@ export async function updateLane(data, callback) {
     await updateLaneDB(data);
   } catch (e) {
     this.docQueue.delete(data.id);
-    return callback(null, {_error: e.message})
+    return callback({_error: e.message})
   }
   callback();
 }
@@ -39,12 +39,12 @@ export async function updateLane(data, callback) {
 export async function deleteLane(payload, callback) {
   const {id} = payload;
   this.docQueue.add(id);
-  try {
-    await deleteLaneDB(id);
-  } catch (e) {
+  //try {
+  //  await deleteLaneDB(id);
+  //} catch (e) {
     this.docQueue.delete(id);
-    return callback(null, {_error: e.message})
-  }
+    return callback({_error: e.message})
+  //}
   callback();
 }
 

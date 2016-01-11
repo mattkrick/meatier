@@ -72,12 +72,12 @@ export default class Auth extends Component {
   loginWithGoogle = () => {
     const redirectRoute = this.props.location.query.next || '/';
     this.props.dispatch(oauthLogin('/auth/google'));
-  }
+  };
 
   onSubmit = (data, dispatch) => {
     //gotta get that redirect from props
     const redirectRoute = this.props.location.query.next || '/';
     const authFunc = this.props.isLogin ? loginUser : signupUser;
     return authFunc(dispatch, data, redirectRoute);
-  }
+  };
 }

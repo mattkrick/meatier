@@ -17,8 +17,7 @@ export default store => next => action => {
   let transactionID = nextTransactionID++;
   next(Object.assign({}, action, {meta: {optimistic: {type: BEGIN, id: transactionID}}})); //execute optimistic update
   const socket = socketCluster.connect(socketOptions);
-  socket.emit(type, payload, (_e, error) => {
-    //we dont' want SCv3 to throw an error, so we put the error in the result
+  socket.emit(type, payload, error => {
     next({
       type: type + (error ? _ERROR : _SUCCESS),
       error,
