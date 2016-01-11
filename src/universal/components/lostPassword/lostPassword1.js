@@ -1,15 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
-import styles from './LostPassword.css';
+import styles from './lostPassword1.css';
 import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
 import {sendResetEmail} from '../../redux/ducks/auth';
 import {authSchemaEmail} from '../../schemas/auth'
 import {parsedJoiErrors} from '../../utils/schema';
+import {getFormState} from '../../redux/helpers';
 
-@reduxForm({form: 'lostPasswordForm', fields: ['email'], validate})
+@reduxForm({form: 'lostPasswordForm', fields: ['email'], validate, getFormState})
 export default class LostPassword extends Component {
   render() {
     const {fields: {email}, error, handleSubmit, submitting, location} = this.props;
