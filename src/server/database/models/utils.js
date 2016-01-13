@@ -2,17 +2,11 @@ import crypto from 'crypto';
 import {User} from './localStrategy';
 
 /*if login fails with 1 strategy, suggest another*/
-export function getAltLoginMessage(userStrategies) {
+export function getAltLoginMessage(userStrategies = {}) {
   const authTypes = Object.keys(userStrategies);
-  if (!authTypes.length) {
-    //they don't have any strategies. Shouldn't happen
-    return
-  }
-  let authStr = '';
-  authTypes.forEach(type => authStr += `${type}, or `)
-  authStr = authStr.slice(0, -5); //remove last ', or'
-  authStr = authStr.replace('local', 'your password');
-  return `Try logging in with ${authStr}`
+  let authStr = authTypes.reduce((reduction, type) => reduction + `${type}, or `, 'Try logging in with ');
+  authStr = authStr.slice(0, -5).replace('local', 'your password');
+  return authTypes.length ? authStr : 'Create a new account';
 }
 
 /*a secret token has the user id, an expiration, and a secret

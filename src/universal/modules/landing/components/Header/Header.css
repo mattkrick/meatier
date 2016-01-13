@@ -1,5 +1,5 @@
-@value primary, secondary from '../../styles/colors.css';
-@value maxWidth from '../../styles/layout.css';
+@value primary, secondary from '../../../../styles/colors.css';
+@value maxWidth from '../../../../styles/layout.css';
 
 
 .header {

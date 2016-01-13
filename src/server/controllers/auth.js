@@ -25,7 +25,7 @@ export async function signup(req, res) {
   } catch (e) {
     let error = {_error: 'Cannot create account'};
     if (e.name === 'AuthenticationError') {
-      error.email = 'Email already exists';
+      error.email = 'w';
     } else {
       error._error = e.message;
     }
@@ -36,7 +36,7 @@ export async function signup(req, res) {
     //TODO send email with verifiedEmailToken via mailgun or whatever
     console.log('Verify url:', `http://localhost:3000/verify-email/${verifiedEmailToken}`);
   }
-
+  console.log('AUTH TOKEN', authToken);
   const authToken = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});
   res.status(200).json({authToken, user})
 }

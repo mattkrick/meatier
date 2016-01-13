@@ -33,7 +33,7 @@ const babelQuery = {
 }
 
 export default {
-  //devtool: 'source-maps ',
+  //devtool: 'source-maps',
   devtool: 'eval',
   context: path.join(root, "src"),
   entry: {
@@ -75,13 +75,19 @@ export default {
       {
         test: /\.css$/,
         loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
+        exclude: /graphiql.css/,
         include: clientInclude
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css',
+        include: /graphiql.css/,
       },
       {
         test: /\.js$/,
         loader: 'babel',
-        include: clientInclude,
         query: babelQuery,
+        include: clientInclude
       }
     ]
   },

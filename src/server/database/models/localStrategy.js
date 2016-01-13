@@ -8,8 +8,8 @@ import promisify from 'es6-promisify';
 import bcrypt from 'bcrypt';
 import {DocumentNotFoundError, AuthenticationError, DuplicateFoundError} from '../errors';
 import uuid from 'node-uuid';
+import jwt from 'jsonwebtoken';
 import {makeSecretToken, getUserByEmail, getSafeUser, getAltLoginMessage} from './utils';
-
 const compare = promisify(bcrypt.compare);
 const hash = promisify(bcrypt.hash);
 

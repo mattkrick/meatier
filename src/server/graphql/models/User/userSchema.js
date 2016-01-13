@@ -1,0 +1,84 @@
+import r from '../../../database/rethinkdriver';
+
+import {
+  GraphQLInt,
+  GraphQLBoolean,
+  GraphQLFloat,
+  GraphQLString,
+  GraphQLList,
+  GraphQLObjectType,
+  GraphQLEnumType,
+  GraphQLNonNull,
+  GraphQLSchema,
+  graphql
+} from 'graphql';
+import {GraphQLEmailType, GraphQLDateType, GraphQLURLType} from '../types';
+import {resolveForAdmin} from '../utils';
+
+const GoogleStrategy = new GraphQLObjectType({
+  name: 'GoogleStrategy',
+  description: 'The google strategy for a user account',
+  fields: () => ({
+    id: {type: GraphQLString, description: 'Google userId'},
+    email: {type: GraphQLEmailType, description: 'Email registered with google'},
+    isVerified: {type: GraphQLBoolean, description: 'Google email state of email verification'},
+    name: {type: GraphQLString, description: 'Name associated with Google account'},
+    firstName: {type: GraphQLString, description: 'First name associated with Google account'},
+    lastName: {type: GraphQLString, description: 'Last name associated with Google account'},
+    picture: {type: GraphQLURLType, description: 'url of google account profile picture'},
+    gender: {type: GraphQLString, description: 'gender of google user'},
+    locale: {type: GraphQLString, description: 'locale of user to help determine language'}
+  })
+})
+
+const LocalStrategy = new GraphQLObjectType({
+  name: 'LocalStrategy',
+  description: 'The local (username, password) strategy for a user account',
+  fields: () => ({
+    isVerified: {type: GraphQLBoolean, description: 'Account state of email verification'},
+    password: {
+      type: GraphQLString,
+      description: 'Hashed password',
+      resolve: () => null
+    },
+    verifiedEmailToken: {
+      type: GraphQLString,
+      description: 'The token sent to the user\'s email for verification',
+      resolve: (source, args, info) => resolveForAdmin(source, args, info)
+    },
+    resetToken: {
+      type: GraphQLString,
+      description: 'The token used to reset the user\'s password',
+      resolve: (source, args, info) => resolveForAdmin(source, args, info)
+    }
+  })
+});
+
+const UserStrategies = new GraphQLObjectType({
+  name: 'UserStrategies',
+  fields: () => ({
+    local: {type: LocalStrategy, description: 'The local authentication strategy'},
+    google: {type: GoogleStrategy, description: 'The google authentication strategy'}
+  })
+});
+
+export const User =  new GraphQLObjectType({
+  name: 'User',
+  description: 'The user account',
+  fields: () => ({
+    id: {type: new GraphQLNonNull(GraphQLString), description: 'The userId'},
+    email: {type: new GraphQLNonNull(GraphQLEmailType), description: 'The user email'},
+    createdAt: {type: GraphQLString, description: 'The datetime the user was created'},
+    updatedAt: {type: GraphQLString, description: 'The datetime the user was last updated'},
+    strategies: {type: UserStrategies, description: 'The login strategies used by the user'}
+  })
+});
+
+export const UserWithAuthToken = new GraphQLObjectType({
+  name: 'UserWithAuthToken',
+  description: 'The user account with an optional auth token',
+  fields: () => ({
+    user: {type: User, description: 'The user account'},
+    authToken: {type: GraphQLString, description: 'The auth token to allow for quick login'}
+  })
+});

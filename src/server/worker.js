@@ -2,9 +2,15 @@ import express from 'express';
 import webpack from 'webpack';
 import compression from 'compression';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import config from '../../webpack/webpack.config.dev';
 import createSSR from './createSSR';
 import makeAuthEndpoints from './controllers/makeAuthEndpoints';
+import {graphql} from 'graphql';
+import graphqlHTTP from 'express-graphql';
+import Schema from './graphql/rootSchema';
+import jwt from 'express-jwt';
+import {jwtSecret} from './secrets';
 
 // "live query"
 import subscribeMiddleware from './publish/subscribeMiddleware';
@@ -31,7 +37,7 @@ export function run(worker) {
     }));
     app.use(require('webpack-hot-middleware')(compiler));
   }
-
+  app.use(bodyParser.json());
   app.use(cors({origin: true, credentials: true}));
   // setup middleware
   app.use((req, res, next) => {
@@ -45,21 +51,40 @@ export function run(worker) {
     app.use(compression());
     app.use('/static', express.static('build'));
   }
-  // Auth handler via HTTP (make sure to use HTTPS)
-  makeAuthEndpoints(app);
 
-  // server-side rendering
+  // HTTP GraphQL endpoint
+  app.post('/graphql', jwt({secret: jwtSecret, credentialsRequired: false}), async (req, res) => {
+    // Check for admin privileges
+    const {query, variables} = req.body;
+    const authToken = req.user || {};
+    const result = await graphql(Schema, query, {authToken}, variables);
+    res.send(result);
+  })
+
+  makeAuthEndpoints(app);
+// server-side rendering
   app.get('*', createSSR);
 
-  // startup
+// startup
   httpServer.on('request', app);
 
-  // handle sockets
+// handle sockets
   scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, subscribeMiddleware);
   scServer.on('connection', socket => {
     // hold the client-submitted docs in a queue while they get validated & handled in the DB
     // then, when the DB emits a change, we know if the client caused it or not
     console.log('Client connected:', socket.id);
+    socket.on('graphql', async (data, cb) => {
+      const {query, variables} = data;
+      let result;
+      try {
+        result = await graphql(Schema, query, {authToken: req.user}, variables);
+      } catch (e) {
+        return cb(e);
+      }
+      cb(null, result)
+
+    })
     socket.docQueue = new Set();
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', () => console.log('Client disconnected:', socket.id));

@@ -5,6 +5,9 @@ import makeReducer from '../universal/redux/makeReducer';
 import {browserHistory} from 'react-router';
 import im, {Map, fromJS} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
+//import TodoApp from './TodoApp';
+import Model from './model';
+
 
 const createStore = __PRODUCTION__ ? require('./createStore.prod.js') : require('./createStore.dev.js');
 const Root = __PRODUCTION__ ? require('./Root.prod.js') : require('./Root.dev.js');
@@ -30,6 +33,7 @@ syncReduxAndRouter(browserHistory, store, state => ensureState(state).get('routi
 //  })
 //  //module.hot.dispose(data => data.foo = 'hi');
 //}
-
+//const model = new Model();
+//render(<TodoApp model={model}/>, document.getElementById('root'));
 render(<Root store={store} history={browserHistory}/>, document.getElementById('root'));
 

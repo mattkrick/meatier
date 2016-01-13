@@ -1,21 +1,18 @@
 import React from 'react';
 import AppContainer from './../containers/App/AppContainer';
-import Home from './../components/Home/Home';
+import LandingContainer from '../modules/Landing/containers/Landing/LandingContainer';
+import Home from '../modules/Landing/components/Home/Home';
+import {Route, IndexRoute, IndexRedirect} from 'react-router';
 
 export default store => {
   return {
-    path: '/',
     component: AppContainer,
-    indexRoute: {
-      component: Home
-    },
     childRoutes: [
-      require('./verifyEmail'),
+      require('./landing'),
       require('./kanban')(store),
-      require('./login')(store),
-      require('./signup')(store),
-      require('./logout'),
-      require('./notFound'),
+      require('./accounts')(store),
+      require('./graphql'),
+      require('./notFound')
     ]
   }
 }

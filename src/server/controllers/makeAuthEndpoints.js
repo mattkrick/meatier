@@ -1,11 +1,9 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import {login, signup, loginToken, sendResetEmail, resetPassword, verifyEmail} from './auth';
 import {googleAuthUrl, googleAuthCallback} from './oauthGoogle';
 const authRouter = express.Router();
 
 export default function makeAuthEndpoints(app) {
-  app.use(bodyParser.json());
   app.use('/auth', authRouter);
   authRouter.route('/login').post(login);
   authRouter.route('/login-token').post(loginToken);
