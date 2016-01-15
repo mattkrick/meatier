@@ -25,7 +25,6 @@ export default class Html extends Component {
       <html>
       <head>
         <meta charSet="utf-8"/>
-        <link rel="stylesheet" href="/static/graphiql.css" type="text/css"/>
         {PROD && <link rel="stylesheet" href="/static/prerender.css" type="text/css"/>}
         <title>{title}</title>
       </head>

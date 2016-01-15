@@ -1,7 +1,7 @@
 import thinky from './thinky';
 
-export const Note = thinky.createModel("notes", {});
-Note.ensureIndex("laneId");
+//export const Note = thinky.createModel("notes", {});
+//Note.ensureIndex("laneId");
 
 export async function addNoteDB(note) {
   note.createdAt = Date.now()

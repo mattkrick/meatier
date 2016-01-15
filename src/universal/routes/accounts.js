@@ -1,7 +1,4 @@
-import {requireAuth} from './requireNoAuth';
-import makeReducer from '../redux/makeReducer';
-import {resolvePromiseMap} from '../utils/promises';
-import LandingContainer from '../modules/Landing/containers/Landing/LandingContainer';
+import LandingContainer from '../modules/landing/containers/Landing/LandingContainer';
 
 export default function (store) {
   return {

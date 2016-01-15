@@ -1,7 +1,6 @@
 import React, { Component,PropTypes } from 'react';
-import {loginToken} from '../../redux/ducks/auth';
 import {pushPath, replacePath} from 'redux-simple-router';
-import socketOptions from '../../utils/socketOptions';
+import socketOptions from 'universal/utils/socketOptions';
 
 export default ComposedComponent => {
   return class RequiredAuth extends Component {
@@ -19,6 +18,7 @@ export default ComposedComponent => {
 
     render() {
       let {isAuthenticated} = this.props
+      console.log('isAUTH', isAuthenticated)
       if (isAuthenticated) {
         return <ComposedComponent {...this.props}/>
       }

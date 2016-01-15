@@ -11,7 +11,7 @@ const prefetches = [
   'react-dock/lib/index.js',
   'lodash/object/mapValues.js',
   'joi/lib/index.js',
-  'universal/containers/Kanban/KanbanContainer.js',
+  'universal/modules/kanban/containers/Kanban/KanbanContainer.js',
   'redux-devtools-log-monitor/lib/index.js'
 ]
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
@@ -90,8 +90,5 @@ export default {
         include: clientInclude
       }
     ]
-  },
-  resolveLoader: {
-    root: path.join(root, 'src')
   }
 };

@@ -16,6 +16,13 @@ import {GraphQLEmailType, GraphQLDateType, GraphQLURLType} from '../types';
 import {resolveForAdmin} from '../utils';
 
 const GoogleStrategy = new GraphQLObjectType({
+  /*  As is, we can share everything with the client
+   We don't store a refresh_token because those don't expire so storing them opens us up to attacks
+   we don't store an access_token because they expire in 1 hour
+   we don't store an id_token because they expire in 1 hour (and we issue our own, 7 day token)
+   if we needed authorization (eg facebook friends list) we could grab it immediately & store it in the DB
+   if we needed authorization that updates before token expiration,
+   we'd store the id_token in localStorage & refresh it from an in-memory refresh_token (or have them re-auth) */
   name: 'GoogleStrategy',
   description: 'The google strategy for a user account',
   fields: () => ({

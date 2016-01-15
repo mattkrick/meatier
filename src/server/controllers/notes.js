@@ -1,6 +1,6 @@
 import {addNoteDB, deleteNoteDB, updateNoteDB} from '../database/models/notes';
 import promisify from 'es6-promisify';
-import {noteSchemaInsert, noteSchemaUpdate} from '../../universal/schemas/notes';
+import {noteSchemaInsert, noteSchemaUpdate} from '../../universal/modules/kanban/schemas/notes';
 import Joi from 'joi';
 import {parsedJoiErrors} from '../../universal/utils/schema';
 

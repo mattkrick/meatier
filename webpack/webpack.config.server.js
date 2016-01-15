@@ -54,7 +54,13 @@ export default {
       {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('fake-style', 'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'),
-        include: serverInclude
+        include: serverInclude,
+        exclude: /graphiql.css/
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('fake-style', 'css'),
+        include: /graphiql.css/
       },
       {
         test: /\.js$/,

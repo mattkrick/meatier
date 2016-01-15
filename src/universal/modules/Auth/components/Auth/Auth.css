@@ -1,0 +1,34 @@
+@value primary, secondary from 'universal/styles/colors.css';
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loginButton {
+  padding-top: 24px;
+}
+
+.lostPassword {
+  margin-top: 16px;
+  font-size: .8em;
+  align-self: flex-end;
+  text-decoration: none;
+  font-weight: 500;
+  color: primary;
+}
+
+.hrWithText {
+  margin: 16px;
+  border-bottom: darkgrey 1px solid;
+  height: 1.25em;
+  line-height: 2.5em;
+  align-self: stretch;
+  text-align: center;
+}
+
+.hrText {
+  background: white;
+  padding: 8px;
+}

@@ -1,0 +1,17 @@
+@value colors: 'universal/styles/colors.css';
+@value primary from colors;
+
+.kanban {
+}
+
+.title {
+  font-weight: 400;
+  text-align: center;
+}
+
+.addLane {
+  background: primary;
+  font-size: 16px;
+  border-radius: 5px;
+
+}

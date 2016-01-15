@@ -1,4 +1,4 @@
-@value primary, secondary from '../../styles/colors.css';
+@value primary, secondary from 'universal/styles/colors.css';
 
 .nav {
   height: 64px;

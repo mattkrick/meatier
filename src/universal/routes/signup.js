@@ -1,12 +1,11 @@
 import {requireNoAuth} from './requireNoAuth';
-import makeReducer from '../redux/makeReducer';
 
 export default store => {
   return {
     onEnter: requireNoAuth,
     path: 'signup',
     getComponent: async (location, cb) => {
-      let component = await System.import('universal/containers/Auth/AuthContainer');
+      let component = await System.import('universal/modules/auth/containers/auth/AuthContainer');
       cb(null, component)
     }
   }

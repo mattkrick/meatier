@@ -4,7 +4,13 @@ import {User, UserWithAuthToken} from './userSchema';
 import {GraphQLError, locatedError} from 'graphql/error';
 import {errorObj} from '../utils';
 import {GraphQLEmailType, GraphQLPasswordType} from '../types';
-import {getUserByEmail} from './helpers';
+import {getUserByEmail, signJwt} from './helpers';
+import {jwtSecret} from '../../../secrets';
+import promisify from 'es6-promisify';
+import bcrypt from 'bcrypt';
+
+const compare = promisify(bcrypt.compare);
+const hash = promisify(bcrypt.hash);
 
 export default {
   getUserById: {
@@ -13,6 +19,7 @@ export default {
       id: {type: new GraphQLNonNull(GraphQLString)}
     },
     resolve: (rootValue, args, info) => {
+      console.log(rootValue, args, info);
       const {authToken: {id: verifiedId, isAdmin}} = info.rootValue;
       if (verifiedId !== args.id && !isAdmin) {
         throw errorObj({_error: 'Unauthorized'});
@@ -27,6 +34,7 @@ export default {
       password: {type: new GraphQLNonNull(GraphQLPasswordType)}
     },
     async resolve(source, args) {
+      const {email, password} = args;
       let user;
       try {
         user = await getUserByEmail(email);
@@ -41,14 +49,30 @@ export default {
       if (!localPassword) {
         throw errorObj({_error: getAltLoginMessage(strategies)});
       }
-      let isCorrectPass = await compare(submittedPassword, localPassword);
+      let isCorrectPass = await compare(password, localPassword);
       if (isCorrectPass) {
-        const authToken = jwt.sign({id: user.id}, jwtSecret, {expiresIn: '7d'});
+        const authToken = signJwt({id: user.id});
         return {authToken, user};
       } else {
         throw errorObj({_error: 'Login failed', password: 'Incorrect password'});
       }
     }
-  }
+  },
+  loginAuthToken: {
+    type: User,
+    async resolve(source, args, {rootValue}) {
+      const {id} = rootValue.authToken;
+      if (!id) {
+        throw errorObj({_error: 'Invalid authentication Token'});
+      }
+      let user;
+      try {
+        user = await r.table('users').get(id).run()
+      } catch (e) {
+        throw errorObj({_error: 'User not found'});
+      }
+      return user;
+    }
+  },
 }
 

@@ -1,5 +1,5 @@
 import socketCluster from 'socketcluster-client';
-import socketOptions from '../../utils/socketOptions';
+import socketOptions from 'universal/utils/socketOptions';
 import {BEGIN, COMMIT, REVERT} from 'redux-optimistic-ui';
 
 const _SUCCESS = '_SUCCESS';

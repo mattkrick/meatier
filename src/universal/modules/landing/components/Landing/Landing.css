@@ -1,20 +1,3 @@
-@value layout: '../../../../styles/layout.css';
-@value maxWidth from layout;
-
-.app {
-  max-width: maxWidth;
-  font-family: sans-serif;
-  color: #222;
-  font-weight: 100;
-  font-size: 1em; /* ~16px; */
-  line-height: 1.375; /* ~22px */
-  margin: 0;
-  padding: 0;
-}
-body :global {
-  margin: 0;
-}
-
 .component {
   min-height: 700px;
   display: flex;

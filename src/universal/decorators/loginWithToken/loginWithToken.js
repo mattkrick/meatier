@@ -1,5 +1,5 @@
 import React, { Component,PropTypes } from 'react';
-import {loginToken} from '../../redux/ducks/auth';
+import {loginToken} from '../../modules/auth/ducks/auth';
 
 export default authTokenName => ComposedComponent => {
   return class TokenizedComp extends Component {
@@ -7,7 +7,7 @@ export default authTokenName => ComposedComponent => {
       if (__CLIENT__) {
         let authToken = localStorage.getItem(authTokenName);
         if (authToken) {
-          this.props.dispatch(loginToken(authToken));
+          this.props.dispatch(loginToken());
         }
       }
       //TODO: goto url next query param upon success (needs redux-simple-router@2)

@@ -1,8 +1,4 @@
-import React from 'react';
-import AppContainer from './../containers/App/AppContainer';
-import LandingContainer from '../modules/Landing/containers/Landing/LandingContainer';
-import Home from '../modules/Landing/components/Home/Home';
-import {Route, IndexRoute, IndexRedirect} from 'react-router';
+import AppContainer from 'universal/containers/App/AppContainer';
 
 export default store => {
   return {

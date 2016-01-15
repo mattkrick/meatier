@@ -8,7 +8,7 @@ const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
 
 /*code can be: vendor-common, vendor-page-specific, meatier-common, meatier-page-specific
- * a small, fast Landing page means only include the common from vendor + meatier
+ * a small, fast landing page means only include the common from vendor + meatier
  * long-term caching means breaking apart meatier code from vendor code
  * The right balance in this case is to exclude material-ui from the vendor bundle
  * in order to keep the initial load small.
@@ -29,7 +29,7 @@ const vendor = [
 const prefetches = [
   'react-dnd/lib/index.js',
   'joi/lib/index.js',
-  'universal/containers/Kanban/KanbanContainer.js'
+  'universal/modules/kanban/containers/Kanban/KanbanContainer.js'
 ]
 
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
@@ -82,7 +82,13 @@ export default {
       {
         test: /\.css$/,
         loader: 'fake-style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
-        include: clientInclude
+        include: clientInclude,
+        exclude: /graphiql.css/
+      },
+      {
+        test: /\.css$/,
+        loader: 'fake-style!css',
+        include: /graphiql.css/
       },
       {
         test: /\.js$/,

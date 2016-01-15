@@ -1,5 +1,5 @@
 import React, {PropTypes, Component} from 'react';
-import Landing from '../../components/Landing/Landing';
+import Landing from 'universal/modules/landing/components/Landing/Landing';
 import {connect} from 'react-redux';
 import {ensureState} from 'redux-optimistic-ui';
 

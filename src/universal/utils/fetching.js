@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import socketOptions from './socketOptions';
 
 export function parseJSON(response) {
   return response.json()
@@ -36,4 +37,37 @@ export function getJSON(route) {
 //export function pick(o, ...fields) {
 //  return Object.assign({}, ...(for (p of fields) {[p]: o[p]}));
 //}
+export const getGraphQLError = errors => {
+  const error = errors[0].message;
+  if (error.indexOf('{_error') === -1) {
+    return error;
+  }
+  return JSON.parse(error);
+}
+
+export const parseGraphQL = res => {
+  const {data, errors} = res;
+  if (errors) {
+    const error = getGraphQLError(errors)
+    console.log('sending err data', data, error)
+    return {data, error}
+  }
+  return {data};
+}
+
+export const fetchGraphQL = async graphParams => {
+  const authToken = localStorage.getItem(socketOptions.authTokenName);
+  const res = await fetch('http://localhost:3000/graphql', {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
+    body: JSON.stringify(graphParams)
+  });
+  const resJSON = await res.json();
+  console.log('resJSON', resJSON)
+  return parseGraphQL(resJSON);
+}
+
 

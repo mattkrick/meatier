@@ -1,8 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import styles from './Landing.css';
 
-import Footer from '../../../../components/Footer/Footer';
-import Navigation from '../../../../components/Navigation/Navigation';
+import Footer from 'universal/components/Footer/Footer';
+import Navigation from 'universal/components/Navigation/Navigation';
 
 export default class Landing extends Component {
   static propTypes = {
@@ -11,10 +11,9 @@ export default class Landing extends Component {
   };
   render() {
     const {isAuthenticated, children} = this.props;
-    console.log(children);
     return (
-      <div className={styles.app}>
-        <Navigation className={styles.nav} isAuthenticated={isAuthenticated}/>
+      <div>
+        <Navigation isAuthenticated={isAuthenticated}/>
         <div className={styles.component}>
           {children}
         </div>
