@@ -17,7 +17,7 @@ export default store => next => action => {
   let transactionID = nextTransactionID++;
   next(Object.assign({}, action, {meta: {optimistic: {type: BEGIN, id: transactionID}}})); //execute optimistic update
   const socket = socketCluster.connect(socketOptions);
-  socket.emit(type, payload, error => {
+  socket.emit('graphql', payload, error => {
     next({
       type: type + (error ? _ERROR : _SUCCESS),
       error,

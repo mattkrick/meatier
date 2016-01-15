@@ -1,0 +1,46 @@
+import {
+  GraphQLBoolean,
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLInputObjectType,
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLList,
+  GraphQLInt
+} from 'graphql';
+import {GraphQLEmailType, GraphQLURLType, GraphQLTitleType} from '../types';
+import {makeRequired} from '../utils';
+
+export const Note =  new GraphQLObjectType({
+  name: 'Note',
+  description: 'A kanban note',
+  fields: () => ({
+    id: {type: new GraphQLNonNull(GraphQLID), description: 'The noteId'},
+    userId: {type: new GraphQLNonNull(GraphQLID), description: 'The userId that created the lane'},
+    laneId: {type: new GraphQLNonNull(GraphQLID), description: 'The laneId that the note belongs to'},
+    title: {type: new GraphQLNonNull(GraphQLTitleType), description: 'The lane title'},
+    index: {type: new GraphQLNonNull(GraphQLInt), description: 'The index of the note in its lane'},
+    createdAt: {type: GraphQLString, description: 'The datetime the lane was created'},
+    updatedAt: {type: GraphQLString, description: 'The datetime the lane was last updated'},
+  })
+});
+
+const inputFields = {
+  id: {type: GraphQLID, description: 'The laneId'},
+  userId: {type: GraphQLID, description: 'The userId that created the lane'},
+  title: {type: GraphQLTitleType, description: 'The lane title'},
+  index: {type: GraphQLInt, description: 'The index of the note in its lane'},
+}
+
+
+export const UpdatedNote =  new GraphQLInputObjectType({
+  name: 'UpdatedNote',
+  description: 'Args to update a note in a kanban lane',
+  fields: () => makeRequired(inputFields, ['id'])
+});
+
+export const NewNote =  new GraphQLInputObjectType({
+  name: 'NewNote',
+  description: 'Args to add a note in kanban lane',
+  fields: () => makeRequired(inputFields, ['userId', 'title', 'index'])
+});

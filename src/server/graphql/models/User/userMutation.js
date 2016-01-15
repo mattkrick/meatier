@@ -95,7 +95,7 @@ export default {
         throw errorObj({_error: 'Could not find or update user'});
       }
       console.log('Reset url:', `http://localhost:3000/login/reset-password/${resetToken}`);
-      return false;
+      return true;
     }
   },
   resetPassword: {

@@ -80,8 +80,10 @@ export function run(worker) {
     socket.on('graphql', async (body, cb) => {
       const {query, variables, ...rootVals} = body;
       const authToken = socket.getAuthToken();
+      console.log('got BODY', body);
       const result = await graphql(Schema, query, {authToken, ...rootVals}, variables);
       const {error, data} = prepareClientError(result);
+      console.log('WS', error, data);
       cb(error, data);
     })
     socket.on('subscribe', subscribeHandler);
