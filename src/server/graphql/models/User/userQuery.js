@@ -1,5 +1,5 @@
 import r from '../../../database/rethinkdriver';
-import {GraphQLString, GraphQLNonNull} from 'graphql';
+import {GraphQLString, GraphQLNonNull, GraphQLID} from 'graphql';
 import {User, UserWithAuthToken} from './userSchema';
 import {GraphQLError, locatedError} from 'graphql/error';
 import {errorObj} from '../utils';
@@ -16,10 +16,9 @@ export default {
   getUserById: {
     type: User,
     args: {
-      id: {type: new GraphQLNonNull(GraphQLString)}
+      id: {type: new GraphQLNonNull(GraphQLID)}
     },
     resolve: (rootValue, args, info) => {
-      console.log(rootValue, args, info);
       const {authToken: {id: verifiedId, isAdmin}} = info.rootValue;
       if (verifiedId !== args.id && !isAdmin) {
         throw errorObj({_error: 'Unauthorized'});

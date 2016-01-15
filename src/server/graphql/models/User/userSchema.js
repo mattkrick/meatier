@@ -1,5 +1,3 @@
-import r from '../../../database/rethinkdriver';
-
 import {
   GraphQLInt,
   GraphQLBoolean,
@@ -10,6 +8,7 @@ import {
   GraphQLEnumType,
   GraphQLNonNull,
   GraphQLSchema,
+  GraphQLID,
   graphql
 } from 'graphql';
 import {GraphQLEmailType, GraphQLDateType, GraphQLURLType} from '../types';
@@ -26,7 +25,7 @@ const GoogleStrategy = new GraphQLObjectType({
   name: 'GoogleStrategy',
   description: 'The google strategy for a user account',
   fields: () => ({
-    id: {type: GraphQLString, description: 'Google userId'},
+    id: {type: GraphQLID, description: 'Google userId'},
     email: {type: GraphQLEmailType, description: 'Email registered with google'},
     isVerified: {type: GraphQLBoolean, description: 'Google email state of email verification'},
     name: {type: GraphQLString, description: 'Name associated with Google account'},
@@ -73,7 +72,7 @@ export const User =  new GraphQLObjectType({
   name: 'User',
   description: 'The user account',
   fields: () => ({
-    id: {type: new GraphQLNonNull(GraphQLString), description: 'The userId'},
+    id: {type: new GraphQLNonNull(GraphQLID), description: 'The userId'},
     email: {type: new GraphQLNonNull(GraphQLEmailType), description: 'The user email'},
     createdAt: {type: GraphQLString, description: 'The datetime the user was created'},
     updatedAt: {type: GraphQLString, description: 'The datetime the user was last updated'},

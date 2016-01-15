@@ -16,3 +16,9 @@ export const GraphQLPasswordType = GraphQLStringFactory({
   min: 6,
   max: 30
 })
+
+export const GraphQLTitleType = GraphQLStringFactory({
+  name: 'title',
+  min: 1,
+  max: 30
+})

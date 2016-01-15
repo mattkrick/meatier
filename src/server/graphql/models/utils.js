@@ -4,6 +4,7 @@ export const defaultResolveFn = (source, args, { fieldName }) => {
 };
 
 export function resolveForAdmin(source, args, info) {
+  console.log('SAI', source, args, info);
   return info.rootValue.authToken.isAdmin ? defaultResolveFn.apply(this, arguments) : null;
 }
 
@@ -20,6 +21,7 @@ export const prepareClientError = res => {
     return res;
   }
   const error = errors[0].message;
-  const clientError = (error.indexOf('{_error') === -1) ? JSON.stringify({_error: 'Server error while fetching data'}) : error;
+  console.log('FIRST ER', error)
+  const clientError = (error.indexOf('{"_error"') === -1) ? JSON.stringify({_error: 'Server error while fetching data'}) : error;
   return {data, error: clientError};
 }
