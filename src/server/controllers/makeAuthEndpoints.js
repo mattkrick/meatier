@@ -1,6 +1,5 @@
 import express from 'express';
-import {login, signup, loginToken, emailPasswordReset, resetPassword, verifyEmail} from './auth';
-import {googleAuthUrl, googleAuthCallback} from './oauthGoogle';
+import {googleAuthUrl, googleAuthCallback} from './../graphql/models/User/oauthGoogle';
 const authRouter = express.Router();
 
 export default function makeAuthEndpoints(app) {

@@ -7,10 +7,12 @@ import config from '../../webpack/webpack.config.dev';
 import createSSR from './createSSR';
 import makeAuthEndpoints from './controllers/makeAuthEndpoints';
 import {graphql} from 'graphql';
-import Schema from './graphql/rootSchema';
 import jwt from 'express-jwt';
 import {jwtSecret} from './secrets';
 import {prepareClientError} from './graphql/models/utils';
+//import socketHandler from './graphql/socketHandler';
+import httpGraphQLHandler from './graphql/httpGraphQLHandler';
+import Schema from './graphql/rootSchema';
 
 // "live query"
 import subscribeMiddleware from './publish/subscribeMiddleware';
@@ -48,28 +50,24 @@ export function run(worker) {
     app.use('/static', express.static('build'));
   }
 
-  // HTTP GraphQL endpoint
-  app.post('/graphql', jwt({secret: jwtSecret, credentialsRequired: false}), async (req, res) => {
-    // Check for admin privileges
-    const {query, variables, ...rootVals} = req.body;
-    const authToken = req.user || {};
-    console.log('RV', rootVals)
-    const result = await graphql(Schema, query, {authToken, ...rootVals}, variables);
-    res.send(result);
-  })
+  //Oauth
+  makeAuthEndpoints(app);
 
-// server-side rendering
+  // HTTP GraphQL endpoint
+  app.post('/graphql', jwt({secret: jwtSecret, credentialsRequired: false}), httpGraphQLHandler);
+
+  // server-side rendering
   app.get('*', createSSR);
 
-// startup
+  // startup
   httpServer.on('request', app);
 
-// handle sockets
+  // handle sockets
   scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, subscribeMiddleware);
   scServer.on('connection', socket => {
+    console.log('Client connected:', socket.id);
     // hold the client-submitted docs in a queue while they get validated & handled in the DB
     // then, when the DB emits a change, we know if the client caused it or not
-    console.log('Client connected:', socket.id);
     socket.docQueue = new Set();
     socket.on('graphql', async (body, cb) => {
       const {query, variables, ...rootVals} = body;
@@ -85,7 +83,7 @@ export function run(worker) {
         socket.docQueue.delete(docId);
       }
       cb(error, data);
-    })
+    });
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
   });

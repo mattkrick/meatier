@@ -188,7 +188,7 @@ export default {
       profile: {type: GoogleProfile, description: 'The profile received from google'}
     },
     async resolve(source, {profile}, {rootValue}) {
-      const user = await getUserByEmail(email);
+      const user = await getUserByEmail(profile.email);
       if (!user) {
         //create new user
         const userDoc = {

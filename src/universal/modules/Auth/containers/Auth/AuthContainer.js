@@ -39,7 +39,7 @@ function mapStateToProps(state) {
   return {
     isAuthenticated: auth.get('isAuthenticated'),
     isAuthenticating: auth.get('isAuthenticating'),
-    authError: auth.get('error'),
+    authError: auth.get('error').toJS(),
     path: state.get('routing').path
   }
 }

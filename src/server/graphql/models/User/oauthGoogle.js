@@ -1,8 +1,8 @@
-import {googleClientID, googleClientSecret, googleCallbackURL} from '../secrets';
+import {googleClientID, googleClientSecret, googleCallbackURL} from '../../../secrets';
 import promisify from 'es6-promisify';
 import google from 'googleapis';
-import {loginWithGoogleDB} from '../database/models/googleStrategy';
-import {signJwt} from './auth';
+import Schema from '../../rootSchema';
+import {graphql} from 'graphql';
 
 const OAuth2 = google.auth.OAuth2;
 const oauth = google.oauth2('v2'); //v3 should come out soonish
@@ -21,8 +21,38 @@ export const googleAuthUrl = oauth2Client.generateAuthUrl({
   scope: scopes // If you only need one scope you can pass it as string
 });
 
+const userWithAuthToken = `
+{
+  user {
+    id,
+    email,
+    strategies {
+      local {
+        isVerified
+      },
+      google {
+        id,
+        email,
+        isVerified,
+        name,
+        firstName,
+        lastName,
+        picture,
+        gender,
+        locale
+      }
+    }
+  },
+  authToken
+}`
+
 export async function googleAuthCallback(req, res) {
-  let googleTokens, googleProfile, user;
+  const query = `
+  mutation($profile: GoogleProfile!){
+     payload: loginWithGoogle(profile: $profile)
+     ${userWithAuthToken}
+  }`
+  let googleTokens, profile;
   try {
     [googleTokens] = await getToken(req.query.code); //ignore response
   } catch (e) {
@@ -30,19 +60,14 @@ export async function googleAuthCallback(req, res) {
   }
   oauth2Client.setCredentials(googleTokens);
   try {
-    [googleProfile] = await getUserInfo({auth: oauth2Client})
+    [profile] = await getUserInfo({auth: oauth2Client})
   } catch (e) {
     return res.status(401).json({error: {_error: e.message}})
   }
-  try {
-    user = await loginWithGoogleDB(googleProfile)
-  } catch (e) {
-    return res.status(401).json({error: {_error: e.message}})
-  }
-  const authToken = signJwt(user);
+  const result = await graphql(Schema, query, null, {profile});
 
   //ugly way to work around fetch being lame
-  const objToSend = JSON.stringify({authToken, user});
+  const objToSend = JSON.stringify(result);
   res.writeHead(200, {
     'Content-Type': 'application/json',
     'Content-Length': Buffer.byteLength(objToSend)
