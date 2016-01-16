@@ -1,10 +1,10 @@
 import jwtDecode from 'jwt-decode';
 import fetch from 'isomorphic-fetch';
 import {pushPath, replacePath} from 'redux-simple-router';
-import {postJSON, parseJSON, getJSON, hostUrl, fetchGraphQL, getGraphQLError} from '../../../utils/fetching';
+import {parseJSON, hostUrl, fetchGraphQL} from '../../../utils/fetching';
 import socketOptions from '../../../utils/socketOptions';
 import validateSecretToken from '../../../utils/validateSecretToken';
-import Immutable from 'immutable';
+import {fromJS, Map, List} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
 
@@ -20,16 +20,16 @@ export const LOGOUT_USER = 'LOGOUT_USER';
 export const VERIFY_EMAIL_ERROR = 'VERIFY_EMAIL_ERROR';
 export const VERIFY_EMAIL_SUCCESS = 'VERIFY_EMAIL_SUCCESS';
 
-const initialState = Immutable.fromJS({
-  error: {},
+const initialState = Map({
+  error: Map(),
   isAuthenticated: false,
   isAuthenticating: false,
   authToken: null,
-  user: {
+  user: Map({
     id: null,
     email: null,
-    strategies: {}
-  }
+    strategies: Map()
+  })
 });
 
 export default function reducer(state = initialState, action = {}) {
@@ -37,43 +37,40 @@ export default function reducer(state = initialState, action = {}) {
     case LOGIN_USER_REQUEST:
     case SIGNUP_USER_REQUEST:
       return state.merge({
-        error: {},
+        error: Map(),
         isAuthenticating: true
       });
     case LOGIN_USER_SUCCESS:
     case SIGNUP_USER_SUCCESS:
-      const {authToken, user} = action.payload;
       return state.merge({
-        error: {},
+        error: Map(),
         isAuthenticating: false,
         isAuthenticated: true,
-        authToken,
-        user
+        authToken: action.payload.authToken,
+        user: fromJS(action.payload.user)
       });
     case LOGIN_USER_ERROR:
     case SIGNUP_USER_ERROR:
       return state.merge({
-        error: action.error,
+        error: fromJS(action.error),
         isAuthenticating: false,
         isAuthenticated: false,
         authToken: null,
-        user: {}
+        user: Map()
       });
     case LOGOUT_USER:
       return initialState;
     case VERIFY_EMAIL_ERROR:
       return state.merge({
-        error: action.error
+        error: fromJS(action.error)
       });
     case VERIFY_EMAIL_SUCCESS:
       return state.merge({
-        user: {
-          strategies: {
-            local: {
-              isVerified: true
-            }
-          }
-        }
+        error: Map(),
+        isAuthenticating: false,
+        isAuthenticated: true,
+        authToken: action.payload.authToken,
+        user: fromJS(action.payload.user)
       });
     default:
       return state;
@@ -230,21 +227,28 @@ export function resetPassword({resetToken, password}, dispatch) {
 
 export function verifyEmail(verifiedEmailToken) {
   return async function (dispatch) {
-    let res = await postJSON('/auth/verify-email', {verifiedEmailToken});
-    if (res.status === 200) {
-      return dispatch({type: VERIFY_EMAIL_SUCCESS});
+    const query = `
+    mutation {
+       payload: verifyEmail
+       ${userWithAuthToken}
+    }`
+    console.log('fetching verif')
+    const {error, data} = await fetchGraphQL({query, verifiedEmailToken});
+    if (error) {
+      return dispatch({type: VERIFY_EMAIL_ERROR, error});
     }
-    let parsedRes = await parseJSON(res);
-    return dispatch({
-      type: VERIFY_EMAIL_ERROR,
-      error: parsedRes.error
-    });
+    const {payload} = data;
+    console.log('GOT PAY', payload, data);
+    return dispatch({type: VERIFY_EMAIL_SUCCESS, payload});
   }
 }
 
+//FIXME when i get internet again
 export function oauthLogin(providerEndpoint, redirect) {
+  console.log('in oauthlogin');
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
+    console.log('fetching goog');
     let res = await fetch(hostUrl() + providerEndpoint, {
       //fetch is currently a shitshow, this is just guess & check
       method: 'get',
@@ -254,7 +258,9 @@ export function oauthLogin(providerEndpoint, redirect) {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
       }
     })
+    console.log('in oauthlogin2', res);
     let parsedRes = await parseJSON(res);
+    console.log('in oauthlogin3');
     const {error, ...payload} = parsedRes;
     if (payload.authToken) {
       localStorage.setItem(authTokenName, payload.authToken);
