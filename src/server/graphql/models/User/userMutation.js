@@ -1,16 +1,15 @@
-import {User, UserWithAuthToken} from './userSchema';
+import r from '../../../database/rethinkdriver';
+import {User, UserWithAuthToken, GoogleProfile} from './userSchema';
 import {GraphQLEmailType, GraphQLURLType, GraphQLPasswordType} from '../types';
-import {getUserByEmail, signJwt} from './helpers';
+import {getUserByEmail, signJwt, getAltLoginMessage, makeSecretToken} from './helpers';
 import {errorObj} from '../utils';
 import {GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean} from 'graphql';
-import r from '../../../database/rethinkdriver';
-import {getAltLoginMessage, makeSecretToken} from './helpers';
 import {jwtSecret} from '../../../secrets';
 import validateSecretToken from '../../../../universal/utils/validateSecretToken';
+import {isLoggedIn} from '../authorization';
 import promisify from 'es6-promisify';
 import bcrypt from 'bcrypt';
 import uuid from 'node-uuid';
-import jwt from 'jsonwebtoken';
 
 const compare = promisify(bcrypt.compare);
 const hash = promisify(bcrypt.hash);
@@ -23,28 +22,24 @@ export default {
       password: {type: new GraphQLNonNull(GraphQLPasswordType)}
     },
     async resolve(source, {email, password}) {
-      let user;
-      try {
-        user = await getUserByEmail(email);
-      } catch (e) {
-        throw e
-      }
+      console.log('in createUser');
+      const user = await getUserByEmail(email);
       if (user) {
         const {strategies} = user;
-        const localPassword = strategies && strategies.local && strategies.local.password;
-        if (!localPassword) {
+        const hashedPassword = strategies && strategies.local && strategies.local.password;
+        if (!hashedPassword) {
           throw errorObj({_error: getAltLoginMessage(strategies)});
         }
-        const isCorrectPass = await compare(password, localPassword);
+        const isCorrectPass = await compare(password, hashedPassword);
         if (isCorrectPass) {
-          const authToken = signJwt({id:user.id});
+          const authToken = signJwt({id: user.id});
           return {authToken, user};
         } else {
           throw errorObj({_error: 'Cannot create account', email: 'Email already exists'})
         }
       } else {
         //production should use 12+, but it's slow for dev
-        const hashedPass = await hash(password, 10);
+        const newHashedPassword = await hash(password, 10);
         const id = uuid.v4();
         //must verify email within 1 day
         const verifiedEmailToken = makeSecretToken(id, 60 * 24);
@@ -55,20 +50,18 @@ export default {
           strategies: {
             local: {
               isVerified: false,
-              password: hashedPass,
+              password: newHashedPassword,
               verifiedEmailToken
             }
           }
         }
-        let newUser;
-        try {
-          newUser = await r.table('users').insert(userDoc);
-        } catch (e) {
-          throw errorObj({_error: 'Cannot create new user, please try again'});
+        const newUser = await r.table('users').insert(userDoc);
+        if (!newUser.inserted) {
+          throw errorObj({_error: 'Could not create account, please try again'});
         }
         //TODO send email with verifiedEmailToken via mailgun or whatever
         console.log('Verify url:', `http://localhost:3000/verify-email/${verifiedEmailToken}`);
-        const authToken = signJwt({id: userDoc.id});
+        const authToken = signJwt({id});
         return {user: userDoc, authToken};
       }
     }
@@ -79,19 +72,13 @@ export default {
       email: {type: new GraphQLNonNull(GraphQLEmailType)}
     },
     async resolve(source, {email}) {
-      let user;
-      try {
-        user = await getUserByEmail(email);
-      } catch (e) {
-        throw e
-      }
+      const user = await getUserByEmail(email);
       if (!user) {
         throw errorObj({_error: 'User not found'});
       }
-      const resetToken = makeSecretToken(user.id, 60 * 24)
-      try {
-        await r.table('users').get(user.id).update({strategies: {local: {resetToken}}}).run();
-      } catch (e) {
+      const resetToken = makeSecretToken(user.id, 60 * 24);
+      const result = await r.table('users').get(user.id).update({strategies: {local: {resetToken}}});
+      if (!result.replaced) {
         throw errorObj({_error: 'Could not find or update user'});
       }
       console.log('Reset url:', `http://localhost:3000/login/reset-password/${resetToken}`);
@@ -109,80 +96,72 @@ export default {
       if (resetTokenObject._error) {
         throw errorObj(resetTokenObject);
       }
-      let user;
-      try {
-        user = await r.table('users').get(resetTokenObject.id).run();
-      } catch (e) {
+      const user = await r.table('users').get(resetTokenObject.id);
+      if (!user) {
         throw errorObj({_error: 'User not found'});
       }
       const userResetToken = user.strategies && user.strategies.local && user.strategies.local.resetToken;
       if (!userResetToken || userResetToken !== resetToken) {
         throw new errorObj({_error: 'Unauthorized'});
       }
-      const hashedPass = await hash(password, 10);
+      const newHashedPassword = await hash(password, 10);
       const updates = {
         strategies: {
           local: {
-            password: hashedPass,
+            password: newHashedPassword,
             resetToken: null
           }
         }
       }
-      try {
-        user = await r.table('users').get(user.id).update(updates, {returnChanges: true}).run()
-      } catch (e) {
+      const result = await r.table('users').get(user.id).update(updates, {returnChanges: true})
+      if (!result.replaced) {
         throw errorObj({_error: 'Could not find or update user'});
       }
-      user = user.changes[0].new_val;
-      const authToken = signJwt(user);
-      return {authToken, user};
+      const newUser = result.changes[0].new_val;
+      const authToken = signJwt(newUser);
+      return {authToken, user: newUser};
     }
   },
   resendVerificationEmail: {
-    type: User,
+    type: GraphQLBoolean,
     async resolve(source, args, {rootValue}) {
-      const {authToken} = rootValue;
-      if (!authToken.id) {
-        throw errorObj({_error: 'Invalid authentication token'});
-      }
-      let user;
-      try {
-        user = await r.table('users').get(id).run();
-      } catch (e) {
+      isLoggedIn(rootValue);
+      const {id} = rootValue.authToken;
+      const user = await r.table('users').get(id);
+      if (!user) {
         throw errorObj({_error: 'User not found'});
       }
       if (user.strategies && user.strategies.local && user.strategies.local.isVerified) {
         throw errorObj({_error: 'Email already verified'});
       }
       const verifiedEmailToken = makeSecretToken(id, 60 * 24);
-      try {
-        await r.table('users').get(user.id).update({strategies: {local: {verifiedEmailToken}}}).run()
-      } catch (e) {
+      const result = await r.table('users').get(id).update({strategies: {local: {verifiedEmailToken}}});
+      if (!result.replaced) {
         throw errorObj({_error: 'Could not find or update user'});
       }
       //TODO send email with new verifiedEmailToken via mailgun or whatever
       console.log('Verified url:', `http://localhost:3000/login/verify-email/${verifiedEmailToken}`);
-      return user;
+      return true;
     }
   },
-  verifyEmail :{
-    type: User,
+  verifyEmail: {
+    type: UserWithAuthToken,
     async resolve(source, args, {rootValue}) {
-      const {verifiedEmailToken} = rootValue;
+      console.log('VET', rootValue)
+      const {verifiedEmailToken, authToken} = rootValue;
       const verifiedEmailTokenObj = validateSecretToken(verifiedEmailToken);
       if (verifiedEmailTokenObj._error) {
         throw errorObj(verifiedEmailTokenObj);
       }
-      let user;
-      try {
-        user = await r.table('users').get(verifiedEmailTokenObj.id).run();
-      } catch (e) {
+      const user = await r.table('users').get(verifiedEmailTokenObj.id);
+      if (!user) {
         throw errorObj({_error: 'User not found'});
       }
-      if (user.strategies && user.strategies.local && user.strategies.local.isVerified) {
+      const localStrategy = user.strategies && user.strategies.local || {};
+      if (localStrategy && localStrategy.isVerified) {
         throw errorObj({_error: 'Email already verified'});
       }
-      if (user.strategies && user.strategies.local && user.strategies.local.verifiedEmailToken !== verifiedEmailToken) {
+      if (localStrategy && localStrategy.verifiedEmailToken !== verifiedEmailToken) {
         throw new errorObj({_error: 'Unauthorized'});
       }
       const updates = {
@@ -193,27 +172,23 @@ export default {
           }
         }
       }
-      let newUser;
-      try {
-        newUser = await r.table('users').get(user.id).update(updates, {returnChanges: true}).run();
-      } catch (e) {
+      const result = await r.table('users').get(verifiedEmailTokenObj.id).update(updates, {returnChanges: true});
+      if (!result.replaced) {
         throw errorObj({_error: 'Could not find or update user'});
       }
-      return newUser.changes[0].new_val;
+      return {
+        user: result.changes[0].new_val,
+        authToken: signJwt(verifiedEmailTokenObj)
+      }
     }
   },
   loginWithGoogle: {
-    type: User,
+    type: UserWithAuthToken,
     arguments: {
-      profile: {type: GraphQLInputObjectType, description: 'The profile received from google'}
+      profile: {type: GoogleProfile, description: 'The profile received from google'}
     },
-    async resolve(source, args, {rootValue}) {
-      let user
-      try {
-        user = await getUserByEmail(profile.email);
-      } catch (e) {
-        throw e
-      }
+    async resolve(source, {profile}, {rootValue}) {
+      const user = await getUserByEmail(email);
       if (!user) {
         //create new user
         const userDoc = {
@@ -233,20 +208,20 @@ export default {
             }
           }
         }
-        let newUser;
-        try {
-          newUser = await r.table('users').insert(userDoc, {returnChanges: true});
-        } catch (e) {
-          throw e
+        const result = await r.table('users').insert(userDoc, {returnChanges: true});
+        if (!result.inserted) {
+          throw errorObj({_error: 'Could not find or update user'});
         }
-        return newUser.changes[0].new_val;
+        const authToken = signJwt({id: user.id});
+        return {authToken, user: result.changes[0].new_val};
       }
       //if the user already exists && they have a google strategy
-      if (user.strategies.google) {
+      if (user.strategies && user.strategies.google) {
         if (user.strategies.google.id !== profile.id) {
           throw errorObj({_error: 'Unauthorized'});
         }
-        return user;
+        const authToken = signJwt({id: user.id});
+        return {authToken, user};
       }
       //if the user already exists && they don't have a google strategy
       throw errorObj(getAltLoginMessage(user.strategies));

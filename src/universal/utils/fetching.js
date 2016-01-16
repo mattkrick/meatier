@@ -37,25 +37,14 @@ export function getJSON(route) {
 //export function pick(o, ...fields) {
 //  return Object.assign({}, ...(for (p of fields) {[p]: o[p]}));
 //}
-export const getGraphQLError = errors => {
+
+export const getClientError = errors => {
+  if (!errors) return;
   const error = errors[0].message;
-  if (error.indexOf('{_error') === -1) {
-    return error;
-  }
-  return JSON.parse(error);
+  return (error.indexOf('{"_error"') === -1) ? {_error: 'Server query error'} : JSON.parse(error);
 }
 
-export const parseGraphQL = res => {
-  const {data, errors} = res;
-  if (errors) {
-    const error = getGraphQLError(errors)
-    console.log('sending err data', data, error)
-    return {data, error}
-  }
-  return {data};
-}
-
-export const fetchGraphQL = async graphParams => {
+export const fetchGraphQL = async (graphParams) => {
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   const res = await fetch('http://localhost:3000/graphql', {
     method: 'post',
@@ -66,8 +55,8 @@ export const fetchGraphQL = async graphParams => {
     body: JSON.stringify(graphParams)
   });
   const resJSON = await res.json();
-  console.log('resJSON', resJSON)
-  return parseGraphQL(resJSON);
+  const {data, errors} = resJSON;
+  return {data, error: getClientError(errors)}
 }
 
 

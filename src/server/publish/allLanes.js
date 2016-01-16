@@ -1,6 +1,8 @@
 import changeHandler from './changeHandler';
-import thinky from '../database/models/thinky'
-const {r} = thinky;
+import r from '../database/rethinkdriver';
+
+//import thinky from '../database/models/thinky'
+//const {r} = thinky;
 
 export default function allLanes(channel, query) {
   r.table('lanes')

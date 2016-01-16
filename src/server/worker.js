@@ -7,7 +7,6 @@ import config from '../../webpack/webpack.config.dev';
 import createSSR from './createSSR';
 import makeAuthEndpoints from './controllers/makeAuthEndpoints';
 import {graphql} from 'graphql';
-import graphqlHTTP from 'express-graphql';
 import Schema from './graphql/rootSchema';
 import jwt from 'express-jwt';
 import {jwtSecret} from './secrets';
@@ -16,10 +15,6 @@ import {prepareClientError} from './graphql/models/utils';
 // "live query"
 import subscribeMiddleware from './publish/subscribeMiddleware';
 import subscribeHandler from './publish/subscribeHandler';
-//import {ADD_LANE, UPDATE_LANE, DELETE_LANE} from '../universal/modules/kanban/ducks/lanes';
-//import {ADD_NOTE, UPDATE_NOTE, DELETE_NOTE} from '../universal/modules/kanban/ducks/notes';
-//import {addLane, deleteLane, updateLane} from './controllers/lanes';
-//import {addNote, deleteNote, updateNote} from './controllers/notes';
 
 const PROD = process.env.NODE_ENV === 'production';
 
@@ -58,12 +53,11 @@ export function run(worker) {
     // Check for admin privileges
     const {query, variables, ...rootVals} = req.body;
     const authToken = req.user || {};
+    console.log('RV', rootVals)
     const result = await graphql(Schema, query, {authToken, ...rootVals}, variables);
-    const clientResult = prepareClientError(result);
-    res.send(clientResult);
+    res.send(result);
   })
 
-  //makeAuthEndpoints(app);
 // server-side rendering
   app.get('*', createSSR);
 
@@ -80,20 +74,20 @@ export function run(worker) {
     socket.on('graphql', async (body, cb) => {
       const {query, variables, ...rootVals} = body;
       const authToken = socket.getAuthToken();
-      console.log('got BODY', body);
+      const docId = variables.doc && variables.doc.id || variables.id;
+      if (!docId) {
+        console.warn('No documentId found for the doc submitted via websockets!');
+      }
+      socket.docQueue.add(docId);
       const result = await graphql(Schema, query, {authToken, ...rootVals}, variables);
       const {error, data} = prepareClientError(result);
-      console.log('WS', error, data);
+      if (error) {
+        socket.docQueue.delete(docId);
+      }
       cb(error, data);
     })
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
-    //socket.on(ADD_LANE, addLane);
-    //socket.on(DELETE_LANE, deleteLane);
-    //socket.on(UPDATE_LANE, updateLane);
-    //socket.on(ADD_NOTE, addNote);
-    //socket.on(DELETE_NOTE, deleteNote);
-    //socket.on(UPDATE_NOTE, updateNote);
   });
 }
 // TODO: dont let tokens expire while still connected, depends on PR to SC

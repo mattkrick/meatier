@@ -8,7 +8,6 @@ import styles from './graphiql.css';
 function graphQLFetcher({query, variables}) {
   if (!__CLIENT__) return;
   const authToken = localStorage.getItem(socketOptions.authTokenName);
-  console.log('var', variables);
 
   variables = variables ? JSON.parse(variables) : undefined;
   return fetch('http://localhost:3000/graphql', {

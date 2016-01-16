@@ -32,5 +32,5 @@ syncReduxAndRouter(browserHistory, store, state => ensureState(state).get('routi
 //}
 //const model = new Model();
 //render(<TodoApp model={model}/>, document.getElementById('root'));
-render(<Root store={store} history={browserHistory}/>, document.getElementById('root'));
+render(<Root store={store} browserHistory={browserHistory}/>, document.getElementById('root'));
 

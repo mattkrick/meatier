@@ -39,12 +39,12 @@ export async function updateLane(data, callback) {
 export async function deleteLane(payload, callback) {
   const {id} = payload;
   this.docQueue.add(id);
-  //try {
-  //  await deleteLaneDB(id);
-  //} catch (e) {
+  try {
+    await deleteLaneDB(id);
+  } catch (e) {
     this.docQueue.delete(id);
     return callback({_error: e.message})
-  //}
+  }
   callback();
 }
 

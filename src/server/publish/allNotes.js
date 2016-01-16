@@ -1,6 +1,5 @@
 import changeHandler from './changeHandler';
-import thinky from '../database/models/thinky'
-const {r} = thinky;
+import r from '../database/rethinkdriver';
 
 export default function allNotes(channel, query) {
   r.table('notes')

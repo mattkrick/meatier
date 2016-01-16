@@ -3,13 +3,14 @@ import {GraphQLString, GraphQLNonNull, GraphQLID} from 'graphql';
 import {User, UserWithAuthToken} from './userSchema';
 import {errorObj} from '../utils';
 import {GraphQLEmailType, GraphQLPasswordType} from '../types';
-import {getUserByEmail, signJwt} from './helpers';
+import {getUserByEmail, signJwt, getAltLoginMessage} from './helpers';
 import {jwtSecret} from '../../../secrets';
 import promisify from 'es6-promisify';
 import bcrypt from 'bcrypt';
+import {isAdminOrSelf} from '../authorization';
+
 
 const compare = promisify(bcrypt.compare);
-const hash = promisify(bcrypt.hash);
 
 export default {
   getUserById: {
@@ -17,12 +18,13 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    resolve: (source, args, {rootValue}) => {
-      const {authToken: {id: verifiedId, isAdmin}} = rootValue;
-      if (verifiedId !== args.id && !isAdmin) {
-        throw errorObj({_error: 'Unauthorized'});
+    async resolve(source, args, {rootValue}) {
+      isAdminOrSelf(rootValue, args);
+      const user = await r.table('users').get(args.id);
+      if (!user) {
+        throw errorObj({_error: 'User not found'});
       }
-      return r.table('users').get(args.id).run()
+      return user;
     }
   },
   login: {
@@ -33,21 +35,16 @@ export default {
     },
     async resolve(source, args) {
       const {email, password} = args;
-      let user;
-      try {
-        user = await getUserByEmail(email);
-      } catch (e) {
-        throw e;
-      }
+      const user = await getUserByEmail(email);
       if (!user) {
         throw errorObj({_error: 'User not found'});
       }
       const {strategies} = user;
-      const localPassword = strategies && strategies.local && strategies.local.password;
-      if (!localPassword) {
+      const hashedPassword = strategies && strategies.local && strategies.local.password;
+      if (!hashedPassword) {
         throw errorObj({_error: getAltLoginMessage(strategies)});
       }
-      let isCorrectPass = await compare(password, localPassword);
+      const isCorrectPass = await compare(password, hashedPassword);
       if (isCorrectPass) {
         const authToken = signJwt({id: user.id});
         return {authToken, user};
@@ -63,14 +60,12 @@ export default {
       if (!id) {
         throw errorObj({_error: 'Invalid authentication Token'});
       }
-      let user;
-      try {
-        user = await r.table('users').get(id).run()
-      } catch (e) {
+      const user = await r.table('users').get(id);
+      if (!user) {
         throw errorObj({_error: 'User not found'});
       }
       return user;
     }
-  },
+  }
 }
 

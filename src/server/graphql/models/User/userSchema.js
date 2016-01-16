@@ -1,17 +1,5 @@
-import {
-  GraphQLInt,
-  GraphQLBoolean,
-  GraphQLFloat,
-  GraphQLString,
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLEnumType,
-  GraphQLNonNull,
-  GraphQLSchema,
-  GraphQLID,
-  graphql
-} from 'graphql';
-import {GraphQLEmailType, GraphQLDateType, GraphQLURLType} from '../types';
+import {GraphQLBoolean,GraphQLString,GraphQLObjectType,GraphQLNonNull,GraphQLID, GraphQLInputObjectType} from 'graphql';
+import {GraphQLEmailType, GraphQLURLType} from '../types';
 import {resolveForAdmin} from '../utils';
 
 const GoogleStrategy = new GraphQLObjectType({
@@ -35,7 +23,7 @@ const GoogleStrategy = new GraphQLObjectType({
     gender: {type: GraphQLString, description: 'gender of google user'},
     locale: {type: GraphQLString, description: 'locale of user to help determine language'}
   })
-})
+});
 
 const LocalStrategy = new GraphQLObjectType({
   name: 'LocalStrategy',
@@ -68,7 +56,7 @@ const UserStrategies = new GraphQLObjectType({
   })
 });
 
-export const User =  new GraphQLObjectType({
+export const User = new GraphQLObjectType({
   name: 'User',
   description: 'The user account',
   fields: () => ({
@@ -86,5 +74,21 @@ export const UserWithAuthToken = new GraphQLObjectType({
   fields: () => ({
     user: {type: User, description: 'The user account'},
     authToken: {type: GraphQLString, description: 'The auth token to allow for quick login'}
+  })
+});
+
+export const GoogleProfile = new GraphQLInputObjectType({
+  name: 'GoogleProfile',
+  description: 'The profile received from the google oauth2 callback',
+  fields: () => ({
+    id: {type: GraphQLID, description: 'Google userId'},
+    email: {type: GraphQLEmailType, description: 'Email registered with google'},
+    isVerified: {type: GraphQLBoolean, description: 'Google email state of email verification'},
+    name: {type: GraphQLString, description: 'Name associated with Google account'},
+    firstName: {type: GraphQLString, description: 'First name associated with Google account'},
+    lastName: {type: GraphQLString, description: 'Last name associated with Google account'},
+    picture: {type: GraphQLURLType, description: 'url of google account profile picture'},
+    gender: {type: GraphQLString, description: 'gender of google user'},
+    locale: {type: GraphQLString, description: 'locale of user to help determine language'}
   })
 });

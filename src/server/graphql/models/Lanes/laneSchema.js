@@ -10,6 +10,7 @@ import {
 import {GraphQLEmailType, GraphQLURLType, GraphQLTitleType} from '../types';
 import {makeRequired} from '../utils';
 import {Note} from '../Notes/noteSchema';
+import r from '../../../database/rethinkdriver';
 
 
 export const Lane =  new GraphQLObjectType({

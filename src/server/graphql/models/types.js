@@ -1,8 +1,6 @@
 import {GraphQLStringFactory, GraphQLURLType as _GraphQLURLType} from 'graphql-type-factory';
-//import _GraphQLDateType from 'graphql-custom-datetype'; //no good
 
 export const GraphQLURLType = _GraphQLURLType;
-//export const GraphQLDateType = _GraphQLDateType;
 
 export const GraphQLEmailType = GraphQLStringFactory({
   name: 'email',

@@ -1,6 +1,8 @@
 import React, { Component,PropTypes } from 'react';
 import {pushPath, replacePath} from 'redux-simple-router';
 import socketOptions from 'universal/utils/socketOptions';
+import {ensureState} from 'redux-optimistic-ui';
+import {connect} from 'react-redux';
 
 export default ComposedComponent => {
   return class RequiredAuth extends Component {
@@ -16,9 +18,17 @@ export default ComposedComponent => {
       }
     }
 
+    componentWillReceiveProps (nextProps) {
+      const {dispatch, hasAuthError} = nextProps;
+      if (hasAuthError) {
+        //redux-simple-router goes into an infinite loop if path is anything but root
+        // will file an issue if it persists in v2
+        dispatch(replacePath('/'));
+      }
+    }
+
     render() {
       let {isAuthenticated} = this.props
-      console.log('isAUTH', isAuthenticated)
       if (isAuthenticated) {
         return <ComposedComponent {...this.props}/>
       }

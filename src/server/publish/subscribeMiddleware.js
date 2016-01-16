@@ -8,17 +8,20 @@ const subRequirements = {
 function checkUserId(socket,query) {
   const authToken = socket.getAuthToken();
   if (!authToken || !authToken.id) {
-    return 'Invalid userId';
+    return new Error('Invalid userId');
   }
 }
 
-export default function permissionChecker(socket, subscription, next) {
+export default function permissionChecker(req, next) {
+  const {socket, channel: subscription} = req;
   const parsedSub = parse(subscription, true); //turn query into obj
   const {pathname: channel, query} = parsedSub;
   if (!subRequirements[channel]) {
-    return next('Invalid subscription');
+    return next(new Error('Invalid subscription'));
   }
-
+  if (req.authTokenExpiredError) {
+    next(req.authTokenExpiredError);
+  }
   //handle subscription-specific authorization
   const reqs = subRequirements[channel];
   for (let i = 0; i < reqs.length; i++) {

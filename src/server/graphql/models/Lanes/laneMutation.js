@@ -1,7 +1,9 @@
 import {Lane, NewLane, UpdatedLane} from './laneSchema';
 import {errorObj} from '../utils';
-import {GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean, GraphQLID} from 'graphql';
+import {isLoggedIn} from '../authorization';
+import {GraphQLNonNull, GraphQLBoolean, GraphQLID} from 'graphql';
 import r from '../../../database/rethinkdriver';
+
 
 export default {
   addLane: {
@@ -10,16 +12,11 @@ export default {
       lane: {type: new GraphQLNonNull(NewLane)}
     },
     async resolve(source, {lane}, {rootValue}) {
-      const {authToken: {id: verifiedId}} = rootValue;
-      if (!verifiedId) {
-        throw errorObj({_error: 'Unauthorized'});
-      }
+      isLoggedIn(rootValue);
       lane.createdAt = new Date();
-      let newLane;
-      try {
-        newLane = await r.table('lanes').insert(lane, {returnChanges: true});
-      } catch (e) {
-        throw errorObj({_error: 'Add lane failed'});
+      const newLane = await r.table('lanes').insert(lane, {returnChanges: true});
+      if (newLane.errors) {
+        throw errorObj({_error: 'Could not add lane'});
       }
       return newLane.changes[0].new_val;
     }
@@ -30,17 +27,12 @@ export default {
       lane: {type: new GraphQLNonNull(UpdatedLane)}
     },
     async resolve(source, {lane}, {rootValue}) {
-      const {authToken: {id: verifiedId, isAdmin}} = rootValue;
-      if (lane.userId !== verifiedId && !isAdmin) {
-        throw errorObj({_error: 'Unauthorized'});
-      }
-
+      isLoggedIn(rootValue);
       lane.updatedAt = new Date();
-      let updatedLane;
-      try {
-        updatedLane = await r.table('lanes').update(lane, {returnChanges: true});
-      } catch (e) {
-        throw errorObj({_error: 'Update lane failed'});
+      const {id, ...updates} = lane;
+      const updatedLane = await r.table('lanes').get(id).update(updates, {returnChanges: true});
+      if (updatedLane.errors) {
+        throw errorObj({_error: 'Could not update lane'});
       }
       return updatedLane.changes[0].new_val;
     }
@@ -51,16 +43,20 @@ export default {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
     async resolve(source, {id}, {rootValue}) {
+      isLoggedIn(rootValue);
       const {authToken: {id: verifiedId, isAdmin}} = rootValue;
-      if (lane.userId !== verifiedId && !isAdmin) {
-        throw errorObj({_error: 'Unauthorized'});
+      if (!isAdmin) {
+        const laneToDelete = await r.table('lanes').get(id);
+        if (!laneToDelete) {
+          return false;
+        }
+        if (laneToDelete.userId !== verifiedId) {
+          throw errorObj({_error: 'Unauthorized'});
+        }
       }
-      try {
-        await r.tables('lanes').delete(id);
-      } catch(e) {
-        throw errorObj({_error: 'Delete lane failed'});
-      }
-      return true;
+      const result = await r.table('lanes').get(id).delete();
+      //return true is delete succeeded, false if doc wasn't found
+      return !!result.deleted;
     }
   }
 };

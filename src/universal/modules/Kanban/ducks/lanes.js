@@ -2,7 +2,7 @@ import uuid from 'node-uuid';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../../utils/socketOptions';
 import {deleteNote} from './notes';
-import {fromJS} from 'immutable';
+import {fromJS, Map, List} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
 /*
@@ -27,29 +27,34 @@ const DELETE_LANE_ERROR = 'DELETE_LANE_ERROR';
  * If synced is false, it means what you see is optimistic, not from the db
  * If there is an error, then you can use that in the UI somewhere
  */
-const initialState = fromJS({
+const initialState = Map({
   synced: false,
   error: null,
-  data: []
+  data: List()
 });
 
-export function reducer(state = initialState, action = {}) {
+export function reducer(state = initialState, action) {
+  let doc;
+  let id;
   switch (action.type) {
     case ADD_LANE:
+      ({doc} = action.payload.variables);
       return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: state.get('data').push(fromJS(action.payload))
+        data: state.get('data').push(fromJS(doc))
       });
     case UPDATE_LANE:
+      ({doc} = action.payload.variables);
       return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: state.get('data').map(item => item.get('id') === action.payload.id ? item.merge(action.payload) : item)
+        data: state.get('data').map(item => item.get('id') === doc.id ? item.merge(doc) : item)
       });
 
     case DELETE_LANE:
+      ({id} = action.payload.variables);
       return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: state.get('data').filter(item => item.get('id') !== action.payload.id)
+        data: state.get('data').filter(item => item.get('id') !== id)
       });
     case CLEAR_LANES:
       return initialState
@@ -82,7 +87,8 @@ export function reducer(state = initialState, action = {}) {
 const baseMeta = {
   table: LANES,
   isOptimistic: true,
-  synced: false
+  synced: false,
+  isChild: false
 };
 
 export function loadLanes() {
@@ -109,23 +115,45 @@ export function loadLanes() {
   }
 }
 
-export function addLane(payload, meta) {
+export function addLane(doc, meta) {
+  const query = `
+  mutation($doc: NewLane!){
+     payload: addLane(lane: $doc) {
+      id
+    }
+  }`
   return {
     type: ADD_LANE,
-    payload,
-    meta: Object.assign({},baseMeta, meta)
+    payload: {
+      query,
+      variables: {doc}
+    },
+    meta: Object.assign({}, baseMeta, meta)
   }
 }
 
-export function updateLane(payload, meta) {
+export function updateLane(doc, meta) {
+  const query = `
+  mutation($doc: UpdatedLane!){
+     payload: updateLane(lane: $doc) {
+      id
+    }
+  }`
   return {
     type: UPDATE_LANE,
-    payload,
-    meta: Object.assign({},baseMeta, meta)
+    payload: {
+      query,
+      variables: {doc}
+    },
+    meta: Object.assign({}, baseMeta, meta)
   };
 }
 
 export function deleteLane(id, meta) {
+  const query = `
+  mutation($id: ID!) {
+     payload: deleteLane(id: $id)
+  }`
   return (dispatch, getState) => {
     const noteState = ensureState(getState()).get('notes').toJS();
     if (noteState && noteState.data) {
@@ -137,8 +165,11 @@ export function deleteLane(id, meta) {
     }
     dispatch({
       type: DELETE_LANE,
-      payload: {id},
-      meta: Object.assign({},baseMeta, meta)
+      payload: {
+        query,
+        variables: {id}
+      },
+      meta: Object.assign({}, baseMeta, meta)
     });
   }
 }

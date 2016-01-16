@@ -7,11 +7,11 @@ import routes from '../universal/routes/index';
 
 export default class Root extends Component {
   render() {
-    const {history, store} = this.props;
+    const {browserHistory, store} = this.props;
     return (
       <Provider store={store}>
         <div>
-          <Router history={history} routes={routes(store)}/>
+          <Router history={browserHistory} routes={routes(store)}/>
         </div>
       </Provider>
     );

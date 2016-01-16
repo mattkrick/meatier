@@ -1,7 +1,8 @@
 import r from '../../../database/rethinkdriver';
-import {GraphQLString, GraphQLNonNull, GraphQLID} from 'graphql';
+import {GraphQLNonNull, GraphQLID} from 'graphql';
 import {Note} from './noteSchema';
 import {errorObj} from '../utils';
+import {isLoggedIn} from '../authorization';
 
 export default {
   getNoteById: {
@@ -9,21 +10,13 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-     resolve: async (source, {id}, {rootValue}) => {
-      const {authToken: {id: verifiedId, isAdmin}} = rootValue;
-       if (!verifiedId) {
-         throw errorObj({_error: 'Unauthorized'});
-       }
-      let note;
-      try {
-        note = await r.table('notes').get(id).run()
-      } catch(e) {
-        throw e;
+    async resolve(source, {id}, {rootValue}) {
+      isLoggedIn(rootValue);
+      const note = await r.table('notes').get(id);
+      if (!note) {
+        throw errorObj({_error: 'Note not found'});
       }
-       if (note.isPrivate && (note.userId !== verifiedId || !isAdmin)) {
-         throw errorObj({_error: 'Unauthorized'});
-       }
-       return note;
+      return note;
     }
   }
 }

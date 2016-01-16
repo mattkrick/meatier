@@ -4,23 +4,18 @@ import jwt from 'jsonwebtoken';
 import {jwtSecret} from '../../../secrets';
 import crypto from 'crypto';
 
-export async function getUserByEmail(email) {
-  let users;
-  try {
-    users = await r.table('users').getAll(email, {index: 'email'}).limit(1).run();
-  } catch (e) {
-    throw errorObj({_error: 'Database access error. Please try again'});
-  }
+export const getUserByEmail = async(email) => {
+  const users = await r.table('users').getAll(email, {index: 'email'}).limit(1).run();
   return users[0];
 }
 
-export function signJwt({id}) {
+export const signJwt = ({id}) => {
   //sync https://github.com/auth0/node-jsonwebtoken/issues/111
   return jwt.sign({id}, jwtSecret, {expiresIn: '7d'});
 }
 
 /*if login fails with 1 strategy, suggest another*/
-export function getAltLoginMessage(userStrategies = {}) {
+export const getAltLoginMessage = (userStrategies = {}) => {
   const authTypes = Object.keys(userStrategies);
   let authStr = authTypes.reduce((reduction, type) => reduction + `${type}, or `, 'Try logging in with ');
   authStr = authStr.slice(0, -5).replace('local', 'your password');
@@ -32,7 +27,7 @@ export function getAltLoginMessage(userStrategies = {}) {
  the user id allows for a quick db lookup in case you don't want to index on email (also eliminates pii)
  the secret keeps out attackers (proxy for rate limiting, IP blocking, still encouraged)
  storing it in the DB means there exists only 1, one-time use key, unlike a JWT, which has many, multi-use keys*/
-export function makeSecretToken(userId, minutesToExpire) {
+export const makeSecretToken = (userId, minutesToExpire) => {
   return new Buffer(JSON.stringify({
     id: userId,
     sec: crypto.randomBytes(8).toString('base64'),

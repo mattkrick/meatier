@@ -33,21 +33,26 @@ const initialState = Map({
 });
 
 export function reducer(state = initialState, action) {
+  let doc;
+  let id;
   switch (action.type) {
     case ADD_NOTE:
+      ({doc} = action.payload.variables);
       return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: state.get('data').push(fromJS(action.payload))
+        data: state.get('data').push(fromJS(doc))
       });
     case UPDATE_NOTE:
+      ({doc} = action.payload.variables);
       return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: state.get('data').map(item => item.get('id') === action.payload.id ? item.merge(action.payload) : item)
+        data: state.get('data').map(item => item.get('id') === doc.id ? item.merge(doc) : item)
       });
     case DELETE_NOTE:
+      ({id} = action.payload.variables);
       return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: state.get('data').filter(item => item.get('id') !== action.payload.id)
+        data: state.get('data').filter(item => item.get('id') !== id)
       });
     case CLEAR_NOTES:
       return initialState;
@@ -125,26 +130,51 @@ export function loadNotes() {
   }
 }
 
-export function addNote(payload, meta) {
+export function addNote(doc, meta) {
+  const query = `
+  mutation($doc: NewNote!){
+     payload: addNote(note: $doc) {
+      id
+    }
+  }`
   return {
     type: ADD_NOTE,
-    payload,
+    payload: {
+      query,
+      variables: {doc}
+    },
     meta: Object.assign({}, baseMeta, meta)
   }
 }
 
-export function updateNote(payload, meta) {
+export function updateNote(doc, meta) {
+  const query = `
+  mutation($doc: UpdatedNote!){
+     payload: updateNote(note: $doc) {
+      id
+    }
+  }`
   return {
     type: UPDATE_NOTE,
-    payload,
+    payload: {
+      query,
+      variables: {doc}
+    },
     meta: Object.assign({}, baseMeta, meta)
   };
 }
 
 export function deleteNote(id, meta) {
+  const query = `
+  mutation($id: ID!) {
+     payload: deleteNote(id: $id)
+  }`
   return {
     type: DELETE_NOTE,
-    payload: {id},
+    payload: {
+      query,
+      variables: {id}
+    },
     meta: Object.assign({}, baseMeta, meta)
   };
 }

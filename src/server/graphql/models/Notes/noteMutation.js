@@ -1,6 +1,7 @@
 import {Note, NewNote, UpdatedNote} from './noteSchema';
 import {errorObj} from '../utils';
-import {GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean, GraphQLID} from 'graphql';
+import {isLoggedIn} from '../authorization';
+import {GraphQLNonNull, GraphQLBoolean, GraphQLID} from 'graphql';
 import r from '../../../database/rethinkdriver';
 
 export default {
@@ -10,16 +11,11 @@ export default {
       note: {type: new GraphQLNonNull(NewNote)}
     },
     async resolve(source, {note}, {rootValue}) {
-      const {authToken: {id: verifiedId}} = rootValue;
-      if (!verifiedId) {
-        throw errorObj({_error: 'Unauthorized'});
-      }
+      isLoggedIn(rootValue);
       note.createdAt = new Date();
-      let newNote;
-      try {
-        newNote = await r.table('notes').insert(note, {returnChanges: true});
-      } catch (e) {
-        throw errorObj({_error: 'Add note failed'});
+      const newNote = await r.table('notes').insert(note, {returnChanges: true});
+      if (newNote.errors) {
+        throw errorObj({_error: 'Could not add note'});
       }
       return newNote.changes[0].new_val;
     }
@@ -30,17 +26,12 @@ export default {
       note: {type: new GraphQLNonNull(UpdatedNote)}
     },
     async resolve(source, {note}, {rootValue}) {
-      const {authToken: {id: verifiedId, isAdmin}} = rootValue;
-      if (note.userId !== verifiedId && !isAdmin) {
-        throw errorObj({_error: 'Unauthorized'});
-      }
-
+      isLoggedIn(rootValue);
       note.updatedAt = new Date();
-      let updatedNote;
-      try {
-        updatedNote = await r.table('notes').update(note, {returnChanges: true});
-      } catch (e) {
-        throw errorObj({_error: 'Update note failed'});
+      const {id, ...updates} = note;
+      const updatedNote = await r.table('notes').get(id).update(updates, {returnChanges: true});
+      if (updatedNote.errors) {
+        throw errorObj({_error: 'Could not update note'});
       }
       return updatedNote.changes[0].new_val;
     }
@@ -51,16 +42,10 @@ export default {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
     async resolve(source, {id}, {rootValue}) {
-      const {authToken: {id: verifiedId, isAdmin}} = rootValue;
-      if (note.userId !== verifiedId && !isAdmin) {
-        throw errorObj({_error: 'Unauthorized'});
-      }
-      try {
-        await r.tables('notes').delete(id);
-      } catch(e) {
-        throw errorObj({_error: 'Delete note failed'});
-      }
-      return true;
+      isLoggedIn(rootValue);
+      const result = await r.table('notes').get(id).delete();
+      //return true is delete succeeded, false if doc wasn't found
+      return !!result.deleted;
     }
   }
 };

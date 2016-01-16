@@ -1,14 +1,12 @@
 import {
-  GraphQLBoolean,
   GraphQLString,
   GraphQLObjectType,
   GraphQLInputObjectType,
   GraphQLNonNull,
   GraphQLID,
-  GraphQLList,
   GraphQLInt
 } from 'graphql';
-import {GraphQLEmailType, GraphQLURLType, GraphQLTitleType} from '../types';
+import {GraphQLTitleType} from '../types';
 import {makeRequired} from '../utils';
 
 export const Note =  new GraphQLObjectType({
@@ -30,6 +28,7 @@ const inputFields = {
   userId: {type: GraphQLID, description: 'The userId that created the lane'},
   title: {type: GraphQLTitleType, description: 'The lane title'},
   index: {type: GraphQLInt, description: 'The index of the note in its lane'},
+  laneId: {type: GraphQLID, description: 'The laneId that the note belongs to'},
 }
 
 
@@ -42,5 +41,5 @@ export const UpdatedNote =  new GraphQLInputObjectType({
 export const NewNote =  new GraphQLInputObjectType({
   name: 'NewNote',
   description: 'Args to add a note in kanban lane',
-  fields: () => makeRequired(inputFields, ['userId', 'title', 'index'])
+  fields: () => makeRequired(inputFields, ['userId', 'title', 'index', 'laneId'])
 });
