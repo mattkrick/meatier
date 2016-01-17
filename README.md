@@ -9,28 +9,27 @@ It trades a little simplicity for a lot of flexibility.
 Some of my chief complaints with Meteor
  - Built on Node 0.10, and that ain't changing anytime soon
  - Build system doesn't allow for code splitting (the opposite, in fact)
- - Locks you in to a walled garden (npm require only gets you so far)
  - Global scope (namespacing doesn't count)
  - Goes Oprah-Christmas-special with websockets (not every person/page needs one)
  - Can't handle css-modules (CSS is all handled behind the scenes)
- - Dependent on MDG to release Meteor-specific package updates like react
  - Tied to MongoDB for official support
  
 | Problem           | Meteor's solution                                               | My solution                                                         | Result                                                              |
 |-------------------|-----------------------------------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------|
 | Database          | [MongoDB](https://www.mongodb.org/)                             | [RethinkDB](https://www.rethinkdb.com/)                             | Built in reactivity, but you can use any DB you like                |
-| Database schema   | [Simple Schema](https://github.com/aldeed/meteor-simple-schema) | [Joi](https://github.com/hapijs/joi)                                | Thinky works too, but Joi has nicer error handling                  |
-| Database hooks    | [Collections2](https://github.com/aldeed/meteor-collection2)    | [Thinky](https://github.com/neumino/thinky)                         | I don't use thinky as an ORM, more like a wrapper for rethinkdbdash |
+| Database schema   | [Simple Schema](https://github.com/aldeed/meteor-simple-schema) | [GraphQL](https://github.com/graphql/graphql-js)                    | Can't have a hipster webapp without GraphQL!                        |
+| Client validation | [Simple Schema](https://github.com/aldeed/meteor-simple-schema) | [Joi](https://github.com/hapijs/joi)                                | Clean API for client validation, although the package is HUGE       |
+| Database hooks    | [Collections2](https://github.com/aldeed/meteor-collection2)    | [GraphQL](https://github.com/graphql/graphql-js)                    | GraphQL is overkill for small apps (then again, so is meatier)      |
 | Forms             | [AutoForm](https://github.com/aldeed/meteor-autoform)           | [redux-form](https://github.com/erikras/redux-form)                 | state tracking awesomeness that works beautifully with react        |
 | Client-side cache | [Minimongo](https://www.meteor.com/mini-databases)              | [redux](http://redux.js.org/)                                       | Bonus logging, time traveling, and undo functionality               |
-| socket server     | [DDP-server](https://www.meteor.com/ddp)                        | [socketcluster](http://socketcluster.io/#!/)                        | super easy scaling, pubsub, and auth                                |
+| Socket server     | [DDP-server](https://www.meteor.com/ddp)                        | [socketcluster](http://socketcluster.io/#!/)                        | super easy scaling, pubsub, auth, middleware                        |
 | Authentication    | Meteor accounts                                                 | [JWTs](https://jwt.io)                                              | JWTs can also serve to authorize actions, too                       |
-| Auth-transport    | [DDP](https://www.meteor.com/ddp)                               | HTTP                                                                | Don't use sockets until you need to                                 |
-| Front-end         | [Blaze](https://www.meteor.com/blaze)                           | [React](https://facebook.github.io/react/)                          | Not dependent on MDG releases                                       |
+| Auth-transport    | [DDP](https://www.meteor.com/ddp)                               | GraphQL (via HTTP)                                                  | Don't use sockets until you need to                                 |
+| Front-end         | [Blaze](https://www.meteor.com/blaze)                           | [React](https://facebook.github.io/react/)                          | Vdom, server-side rendering, async router, etc.                     |
 | Build system      | meteor                                                          | [webpack](https://webpack.github.io/)                               | using webpack inside meteor is very limited                         |
 | CSS               | magically bundle & serve                                        | [css-modules](https://github.com/css-modules/css-modules)           | component-scoped css with variables available in a file or embedded |
-| Optimistic UI     | latency compensation                                            | [redux-optimistic-ui](https://github.com/mattkrick/redux-optimistic-ui)  | written by yours truly                                                     |
-| Testing           | Velocity (or nothing at all)                                    | [Ava](https://github.com/sindresorhus/ava)                          | awesome es2016 testing                                              |
+| Optimistic UI     | latency compensation                                            | [redux-optimistic-ui](https://github.com/mattkrick/redux-optimistic-ui)  | written by yours truly                                         |
+| Testing           | Velocity (or nothing at all)                                    | [AVA](https://github.com/sindresorhus/ava)                          | awesome es2016 concurrent testing                                   |
 | Linting           | Your choice                                                     | [xo](https://www.npmjs.com/package/xo)                              | no dotfiles, fixes errors                                           |
 | Routing           | [FlowRouter](https://github.com/kadirahq/flow-router)           | [redux-simple-router](https://github.com/rackt/redux-simple-router) | stick the route in the state, react-router SSR, async routes        |
 | Server            | Node 0.10.41                                                    | Node 5                                                              | Faster, maintained, not a dinosaur...                               |                             |
@@ -40,7 +39,7 @@ Some of my chief complaints with Meteor
 - `git clone` this repo
 - `cd meatier`
 - `npm install`
-- `npm run build`
+- `npm run quickstart`
 - `npm i -g webpack@2.0.2-beta` (optional, but recommended)
 - `rethinkdb`
 
@@ -59,6 +58,12 @@ On my 2013 MBA an initial build takes about 8 seconds and updates usually take 8
 This mode is great because you can make changes to the server ***without having to recompile the client code***
 That means you only wait for the server to restart! GAME CHANGER!
 
+##Database development
+- http://localhost:8080 for RethinkDB
+- All tables are managed in `./src/server/setupDB.js`. Just add your tables & indices to that file and rerun
+- A standard ORM would check for tables & ensure indices at least once per build, doing it this way keeps your build times down
+- http://localhost:3000/graphql for testing out new queries/mutations
+
 ##Webpack configs
 ####Development config
 When the page is opened, a basic HTML layout is sent to the client along with a stringified redux store and a request for the common chunk of the JS.
@@ -74,7 +79,7 @@ Separates the `vendor` packages and the `app` packages for a super quick, cachab
 Creates a webpack manifest to enable longterm caching (eg can push new vendor.js without pushing a new app.js)
 Optimizes the number of chunks, sometimes it's better to have the modules of 2 routes in the same chunk if they're small
 
-####server config
+####Server config
 A webpack config builds the entire contents of the routes on the server side.
 This is required because node doesn't know how to require `.css`.
 When a request is sent to the server, react-router matches the url to the correct route & sends it to the client.
@@ -121,13 +126,9 @@ I don't know of any place that hosts RethinkDB for free...so here's a gif.
 ##Changelog
  - 0.8
   - Move auth & mutations to GraphQL (changefeeds still go through WS subs)
-  - Make the rest of the state.auth immutable
-  - Add graphiql as a component & pattern to create an admin site
+  - Make the rest of the `state.auth` immutable
+  - Add graphiql (http://localhost:3000/graphql) as a component & pattern to create an admin site
   - Break out auth, landing page, kanban page, and admin into 4 separate modules in the folder hierarchy
   
 ##License
 MIT
-
-
-
-
