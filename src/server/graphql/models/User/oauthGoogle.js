@@ -52,22 +52,14 @@ export async function googleAuthCallback(req, res) {
      payload: loginWithGoogle(profile: $profile)
      ${userWithAuthToken}
   }`
-  let googleTokens, profile;
-  try {
-    [googleTokens] = await getToken(req.query.code); //ignore response
-  } catch (e) {
-    return res.status(401).json({error: {_error: e.message}})
-  }
+  const [googleTokens] = await getToken(req.query.code); //ignore response
   oauth2Client.setCredentials(googleTokens);
-  try {
-    [profile] = await getUserInfo({auth: oauth2Client})
-  } catch (e) {
-    return res.status(401).json({error: {_error: e.message}})
-  }
+  const [profile] = await getUserInfo({auth: oauth2Client});
   const result = await graphql(Schema, query, null, {profile});
 
   //ugly way to work around fetch being lame
   const objToSend = JSON.stringify(result);
+  //res.send(objToSend);
   res.writeHead(200, {
     'Content-Type': 'application/json',
     'Content-Length': Buffer.byteLength(objToSend)

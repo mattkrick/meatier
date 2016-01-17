@@ -10,7 +10,7 @@ import {graphql} from 'graphql';
 import jwt from 'express-jwt';
 import {jwtSecret} from './secrets';
 import {prepareClientError} from './graphql/models/utils';
-//import socketHandler from './graphql/socketHandler';
+import wsGraphQLHandler from './graphql/wsGraphQLHandler';
 import httpGraphQLHandler from './graphql/httpGraphQLHandler';
 import Schema from './graphql/rootSchema';
 
@@ -69,21 +69,7 @@ export function run(worker) {
     // hold the client-submitted docs in a queue while they get validated & handled in the DB
     // then, when the DB emits a change, we know if the client caused it or not
     socket.docQueue = new Set();
-    socket.on('graphql', async (body, cb) => {
-      const {query, variables, ...rootVals} = body;
-      const authToken = socket.getAuthToken();
-      const docId = variables.doc && variables.doc.id || variables.id;
-      if (!docId) {
-        console.warn('No documentId found for the doc submitted via websockets!');
-      }
-      socket.docQueue.add(docId);
-      const result = await graphql(Schema, query, {authToken, ...rootVals}, variables);
-      const {error, data} = prepareClientError(result);
-      if (error) {
-        socket.docQueue.delete(docId);
-      }
-      cb(error, data);
-    });
+    socket.on('graphql', wsGraphQLHandler);
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
   });

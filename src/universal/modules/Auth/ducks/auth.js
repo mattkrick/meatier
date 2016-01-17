@@ -232,23 +232,19 @@ export function verifyEmail(verifiedEmailToken) {
        payload: verifyEmail
        ${userWithAuthToken}
     }`
-    console.log('fetching verif')
     const {error, data} = await fetchGraphQL({query, verifiedEmailToken});
     if (error) {
       return dispatch({type: VERIFY_EMAIL_ERROR, error});
     }
     const {payload} = data;
-    console.log('GOT PAY', payload, data);
     return dispatch({type: VERIFY_EMAIL_SUCCESS, payload});
   }
 }
 
 //FIXME when i get internet again
 export function oauthLogin(providerEndpoint, redirect) {
-  console.log('in oauthlogin');
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
-    console.log('fetching goog');
     let res = await fetch(hostUrl() + providerEndpoint, {
       //fetch is currently a shitshow, this is just guess & check
       method: 'get',
@@ -258,9 +254,7 @@ export function oauthLogin(providerEndpoint, redirect) {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
       }
     })
-    console.log('in oauthlogin2', res);
     let parsedRes = await parseJSON(res);
-    console.log('in oauthlogin3');
     const {error, ...payload} = parsedRes;
     if (payload.authToken) {
       localStorage.setItem(authTokenName, payload.authToken);

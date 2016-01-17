@@ -22,7 +22,6 @@ export default {
       password: {type: new GraphQLNonNull(GraphQLPasswordType)}
     },
     async resolve(source, {email, password}) {
-      console.log('in createUser');
       const user = await getUserByEmail(email);
       if (user) {
         const {strategies} = user;
@@ -147,7 +146,6 @@ export default {
   verifyEmail: {
     type: UserWithAuthToken,
     async resolve(source, args, {rootValue}) {
-      console.log('VET', rootValue)
       const {verifiedEmailToken, authToken} = rootValue;
       const verifiedEmailTokenObj = validateSecretToken(verifiedEmailToken);
       if (verifiedEmailTokenObj._error) {

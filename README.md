@@ -118,6 +118,12 @@ I don't know of any place that hosts RethinkDB for free...so here's a gif.
  - Use the gitter for any questions
  - No donations necessary (but if you know of any jobs that'll let me move back to San Diego, let me know :wink:)
 
+##Changelog
+ - 0.8
+  - Move auth & mutations to GraphQL (changefeeds still go through WS subs)
+  - Make the rest of the state.auth immutable
+  - Add graphiql as a component & pattern to create an admin site
+  - Break out auth, landing page, kanban page, and admin into 4 separate modules in the folder hierarchy
 ##License
 MIT
 
