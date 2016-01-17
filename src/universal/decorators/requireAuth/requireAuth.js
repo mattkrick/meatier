@@ -1,30 +1,24 @@
 import React, { Component,PropTypes } from 'react';
-import {pushPath, replacePath} from 'redux-simple-router';
+import {routeActions} from 'redux-simple-router';
 import socketOptions from 'universal/utils/socketOptions';
 import {ensureState} from 'redux-optimistic-ui';
 import {connect} from 'react-redux';
 
+const {replace} = routeActions;
+//TODO
+/* Currently, we allow server-rendered requests to pass on through
+* This is because we don't have an auth token to know whether or not the user is legit
+* A better solution might be to send them home with a query & then the loginWithAuth would pick up that param
+* and redirect them to where they wanted to be*/
 export default ComposedComponent => {
   return class RequiredAuth extends Component {
 
     componentWillMount() {
-      const {dispatch, hasAuthError} = this.props;
-      if (!__CLIENT__) {
-        dispatch(replacePath('/login?next=%2Fkanban'));
-      }
-      const authToken = localStorage.getItem(socketOptions.authTokenName);
-      if (hasAuthError || !authToken) {
-        dispatch(replacePath('/login?next=%2Fkanban'));
-      }
+      this.checkForAuth(this.props);
     }
 
-    componentWillReceiveProps (nextProps) {
-      const {dispatch, hasAuthError} = nextProps;
-      if (hasAuthError) {
-        //redux-simple-router goes into an infinite loop if path is anything but root
-        // will file an issue if it persists in v2
-        dispatch(replacePath('/'));
-      }
+    componentWillReceiveProps(nextProps) {
+      this.checkForAuth(nextProps);
     }
 
     render() {
@@ -33,6 +27,16 @@ export default ComposedComponent => {
         return <ComposedComponent {...this.props}/>
       }
       return <div>Logging in...</div>
+    }
+
+    checkForAuth(props) {
+      if (__CLIENT__) {
+        const {dispatch, hasAuthError} = props;
+        const authToken = localStorage.getItem(socketOptions.authTokenName);
+        if (hasAuthError || !authToken) {
+          dispatch(replace('/'));
+        }
+      }
     }
   }
 }

@@ -28,7 +28,7 @@ export default class AuthContainer extends Component {
   };
 
   render() {
-    const isLogin = this.props.path && this.props.path.indexOf('/login') !== -1;
+    const isLogin = this.props.pathname && this.props.pathname.indexOf('/login') !== -1;
     return <Auth isLogin={isLogin} {...this.props}/>
   }
 }
@@ -40,7 +40,7 @@ function mapStateToProps(state) {
     isAuthenticated: auth.get('isAuthenticated'),
     isAuthenticating: auth.get('isAuthenticating'),
     authError: auth.get('error').toJS(),
-    path: state.get('routing').path
+    pathname: state.get('routing').location.pathname
   }
 }
 

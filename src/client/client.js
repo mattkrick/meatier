@@ -1,12 +1,10 @@
 import {render} from 'react-dom';
 import React from 'react';
-import {syncReduxAndRouter} from 'redux-simple-router';
-import makeReducer from '../universal/redux/makeReducer';
-import {browserHistory} from 'react-router';
+import {syncHistory, routeReducer} from 'redux-simple-router'
 import im, {Map, fromJS} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
-const createStore = __PRODUCTION__ ? require('./createStore.prod.js') : require('./createStore.dev.js');
+const makeStore = __PRODUCTION__ ? require('./makeStore.prod.js') : require('./makeStore.dev.js');
 const Root = __PRODUCTION__ ? require('./Root.prod.js') : require('./Root.dev.js');
 const {auth, routing, form} = window.__INITIAL_STATE__;
 
@@ -18,9 +16,9 @@ let initialState = Map([
   ['routing', routing],
   ['form', form]
 ]);
-window.im = im;
-const store = createStore(makeReducer(), initialState);
-syncReduxAndRouter(browserHistory, store, state => ensureState(state).get('routing'));
+
+const store = makeStore(initialState);
+render(<Root store={store}/>, document.getElementById('root'));
 
 // Will implement when react-router supports HMR
 //if (module.hot) {
@@ -32,5 +30,4 @@ syncReduxAndRouter(browserHistory, store, state => ensureState(state).get('routi
 //}
 //const model = new Model();
 //render(<TodoApp model={model}/>, document.getElementById('root'));
-render(<Root store={store} browserHistory={browserHistory}/>, document.getElementById('root'));
 

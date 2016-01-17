@@ -18,11 +18,11 @@ const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 
 const vendor = [
   'react',
   'react-dom',
-  'react-router',
-  'react-redux',
-  'redux',
-  'redux-thunk',
-  'redux-form',
+  //'react-router',
+  //'react-redux',
+  //'redux',
+  //'redux-thunk',
+  //'redux-form',
   'joi'
 ];
 
