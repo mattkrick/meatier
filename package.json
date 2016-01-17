@@ -113,6 +113,6 @@
     "rethinkdbdash": "^2.2.16",
     "socketcluster": "^4.1.0",
     "socketcluster-client": "4.1.2",
-    "url": "^0.11.0",
+    "url": "^0.11.0"
   }
 }
