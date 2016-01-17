@@ -124,11 +124,15 @@ I don't know of any place that hosts RethinkDB for free...so here's a gif.
  - No donations necessary (but if you know of any jobs that'll let me move back to San Diego, let me know :wink:)
 
 ##Changelog
- - 0.8
-  - Move auth & mutations to GraphQL (changefeeds still go through WS subs)
-  - Make the rest of the `state.auth` immutable
-  - Add graphiql (http://localhost:3000/graphql) as a component & pattern to create an admin site
-  - Break out auth, landing page, kanban page, and admin into 4 separate modules in the folder hierarchy
+- 0.9
+ - Upgraded to `redux-simple-router@2.0.3`
+ - Now you can do cool things like time travel through routes!
+ 
+- 0.8
+ - Move auth & mutations to GraphQL (changefeeds still go through WS subs)
+ - Make the rest of the `state.auth` immutable
+ - Add graphiql (http://localhost:3000/graphql) as a component & pattern to create an admin site
+ - Break out auth, landing page, kanban page, and admin into 4 separate modules in the folder hierarchy
   
 ##License
 MIT
