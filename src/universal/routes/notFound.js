@@ -1,7 +1,10 @@
+import LandingContainer from 'universal/modules/landing/containers/Landing/LandingContainer';
+
 export default {
   path: '*',
-  getComponent: async (location, cb) => {
-    let component = await System.import('universal/components/NotFound/NotFound');
-    cb(null, component)
+  component: LandingContainer,
+  getIndexRoute: async (location, cb) => {
+    const component = await System.import('universal/components/NotFound/NotFound');
+    cb(null, {component});
   }
 }
