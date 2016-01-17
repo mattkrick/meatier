@@ -19,7 +19,6 @@
     "build:client": "NODE_ENV=production webpack --colors --config ./webpack/prod.babel.js",
     "build:server": "NODE_ENV=production webpack --colors --config ./webpack/server.babel.js",
     "build:db": "node ./src/server/database/setupDB.babel.js",
-    "pretest": "NODE_ENV=testing node ./tests/pretest.babel.js",
     "test": "NODE_ENV=testing ava ./src/**/__tests__/**/*.js --verbose",
     "lint": "xo src/**/*.js --plugin=react --env node --env browser --esnext --space --fix",
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
@@ -61,7 +60,7 @@
     "stats-webpack-plugin": "^0.2.2",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
-    "webpack": "^2.0.1-beta",
+    "webpack": "^2.0.2-beta",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0",
     "xo": "^0.12.1"
@@ -113,7 +112,7 @@
     "reselect": "^2.0.1",
     "rethinkdbdash": "^2.2.16",
     "socketcluster": "^4.1.0",
-    "socketcluster-client": "^4.1.0",
-    "url": "^0.11.0"
+    "socketcluster-client": "4.1.2",
+    "url": "^0.11.0",
   }
 }

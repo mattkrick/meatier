@@ -1,5 +1,4 @@
-import thinky from '../src/server/database/models/thinky';
-const {r} = thinky;
+import r from '../src/server/database/rethinkdriver';
 
 export default async function pretest() {
   const tables = await r.tableList();

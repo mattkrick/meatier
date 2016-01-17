@@ -1,13 +1,13 @@
 import test from 'ava';
-import promisify from 'es6-promisify';
-import 'babel-register';
-import 'babel-polyfill';
-import validateSecretToken from '../../../../../universal/utils/validateSecretToken'
-import bcrypt from 'bcrypt';
-import {graphql} from 'graphql';
-import Schema from '../../../rootSchema';
+//import promisify from 'es6-promisify';
+//import 'babel-register';
+//import 'babel-polyfill';
+//import validateSecretToken from '../../../../../universal/utils/validateSecretToken'
+//import bcrypt from 'bcrypt';
+//import {graphql} from 'graphql';
+//import Schema from '../../../rootSchema';
 
-test('createUser:success', async t => {
+test('createUser:success', t => {
   const query = `
     mutation {
      newUser: createUser(
