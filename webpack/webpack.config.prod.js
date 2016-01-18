@@ -6,6 +6,7 @@ import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
+const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
 
 /*code can be: vendor-common, vendor-page-specific, meatier-common, meatier-page-specific
  * a small, fast landing page means only include the common from vendor + meatier
@@ -83,12 +84,12 @@ export default {
         test: /\.css$/,
         loader: 'fake-style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
         include: clientInclude,
-        exclude: /graphiql.css/
+        exclude: globalCSS
       },
       {
         test: /\.css$/,
         loader: 'fake-style!css',
-        include: /graphiql.css/
+        include: globalCSS
       },
       {
         test: /\.js$/,

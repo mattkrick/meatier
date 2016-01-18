@@ -5,6 +5,7 @@ import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal')];
+const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
 
 const prefetches = [
   'react-dnd-html5-backend/lib/index.js',
@@ -55,12 +56,12 @@ export default {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('fake-style', 'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'),
         include: serverInclude,
-        exclude: /graphiql.css/
+        exclude: globalCSS
       },
       {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('fake-style', 'css'),
-        include: /graphiql.css/
+        include: globalCSS
       },
       {
         test: /\.js$/,

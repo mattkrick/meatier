@@ -31,9 +31,12 @@ export default ComposedComponent => {
       if (__CLIENT__) {
         const {dispatch, hasAuthError, location} = props;
         let newKey = location && location.key || 'none';
+        if (newKey === key) {
+          return
+        }
+        key = newKey;
         const authToken = localStorage.getItem(socketOptions.authTokenName);
-        if (hasAuthError || !authToken && newKey !== key) {
-          key = newKey;
+        if (hasAuthError || !authToken) {
           dispatch(push('/login?next=%2Fkanban'));
         }
       }

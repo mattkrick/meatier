@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import GraphiQL from 'graphiql';
 import fetch from 'isomorphic-fetch';
 import socketOptions from 'universal/utils/socketOptions';
-import styles from './graphiql.css';
+import 'universal/styles/global/graphiql.css';
 
 
 const graphQLFetcher = async ({query, variables}) => {
@@ -17,7 +17,7 @@ const graphQLFetcher = async ({query, variables}) => {
     },
     body: JSON.stringify({query, variables}),
   })
-  return res.json();
+  return res.json()
 }
 
 export default class Graphiql extends Component {

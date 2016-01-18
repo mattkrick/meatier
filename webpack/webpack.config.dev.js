@@ -4,6 +4,7 @@ import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')];
+const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
 
 const prefetches = [
   'react-dnd/lib/index.js',
@@ -15,6 +16,8 @@ const prefetches = [
   'redux-devtools-log-monitor/lib/index.js'
 ]
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
+
+
 
 const babelQuery = {
   "plugins": [
@@ -74,15 +77,16 @@ export default {
       {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
       {
         test: /\.css$/,
-        loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
-        exclude: /graphiql.css/,
-        include: clientInclude
+        loader: 'style!css',
+        include: globalCSS
       },
       {
         test: /\.css$/,
-        loader: 'style!css',
-        include: /graphiql.css/,
+        loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
+        exclude: globalCSS,
+        include: clientInclude
       },
+
       {
         test: /\.js$/,
         loader: 'babel',
