@@ -52,7 +52,7 @@ export default function reducer(state = initialState, action = {}) {
     case LOGIN_USER_ERROR:
     case SIGNUP_USER_ERROR:
       return state.merge({
-        error: fromJS(action.error),
+        error: fromJS(action.error) || Map(),
         isAuthenticating: false,
         isAuthenticated: false,
         authToken: null,
@@ -62,7 +62,7 @@ export default function reducer(state = initialState, action = {}) {
       return initialState;
     case VERIFY_EMAIL_ERROR:
       return state.merge({
-        error: fromJS(action.error)
+        error: fromJS(action.error) || Map()
       });
     case VERIFY_EMAIL_SUCCESS:
       return state.merge({
@@ -224,7 +224,6 @@ export function resetPassword({resetToken, password}, dispatch) {
 }
 
 
-
 export function verifyEmail(verifiedEmailToken) {
   return async function (dispatch) {
     const query = `
@@ -243,6 +242,7 @@ export function verifyEmail(verifiedEmailToken) {
 
 //FIXME when i get internet again
 export function oauthLogin(providerEndpoint, redirect) {
+  redirect = redirect || '/';
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
     let res = await fetch(hostUrl() + providerEndpoint, {
@@ -253,15 +253,19 @@ export function oauthLogin(providerEndpoint, redirect) {
       headers: {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
       }
-    })
+    });
     let parsedRes = await parseJSON(res);
-    const {error, ...payload} = parsedRes;
-    if (payload.authToken) {
-      localStorage.setItem(authTokenName, payload.authToken);
-      dispatch({type: LOGIN_USER_SUCCESS, payload});
-      dispatch(replace(redirect));
-    } else {
+    console.log('1', parsedRes);
+    const {error, data} = parsedRes;
+    if (error) {
       dispatch({type: LOGIN_USER_ERROR, error});
+    } else {
+      const {payload} = data;
+      if (payload.authToken) {
+        localStorage.setItem(authTokenName, payload.authToken);
+        dispatch({type: LOGIN_USER_SUCCESS, payload});
+        dispatch(replace(redirect));
+      }
     }
   }
 }

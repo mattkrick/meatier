@@ -55,6 +55,7 @@ export async function googleAuthCallback(req, res) {
   const [googleTokens] = await getToken(req.query.code); //ignore response
   oauth2Client.setCredentials(googleTokens);
   const [profile] = await getUserInfo({auth: oauth2Client});
+  console.log('prof from goog', profile)
   const result = await graphql(Schema, query, null, {profile});
 
   //ugly way to work around fetch being lame

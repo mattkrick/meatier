@@ -2,7 +2,7 @@ import {reducer as form} from 'redux-form';
 import {routeReducer as routing} from 'redux-simple-router';
 import {compose} from 'redux';
 import {combineReducers} from 'redux-immutablejs';
-import auth from '../modules/Auth2/ducks/auth';
+import auth from '../modules/auth/ducks/auth';
 import {optimistic} from 'redux-optimistic-ui';
 
 let currentReducers = {

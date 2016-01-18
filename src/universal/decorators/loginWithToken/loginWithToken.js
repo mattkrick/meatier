@@ -1,5 +1,5 @@
 import React, { Component,PropTypes } from 'react';
-import {loginToken} from '../../modules/Auth2/ducks/auth';
+import {loginToken} from '../../modules/auth/ducks/auth';
 
 export default authTokenName => ComposedComponent => {
   return class TokenizedComp extends Component {

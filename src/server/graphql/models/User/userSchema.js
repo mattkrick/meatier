@@ -83,10 +83,11 @@ export const GoogleProfile = new GraphQLInputObjectType({
   fields: () => ({
     id: {type: GraphQLID, description: 'Google userId'},
     email: {type: GraphQLEmailType, description: 'Email registered with google'},
-    isVerified: {type: GraphQLBoolean, description: 'Google email state of email verification'},
+    verified_email: {type: GraphQLBoolean, description: 'Google email state of email verification'},
     name: {type: GraphQLString, description: 'Name associated with Google account'},
-    firstName: {type: GraphQLString, description: 'First name associated with Google account'},
-    lastName: {type: GraphQLString, description: 'Last name associated with Google account'},
+    given_name: {type: GraphQLString, description: 'First name associated with Google account'},
+    family_name: {type: GraphQLString, description: 'Last name associated with Google account'},
+    link: {type: GraphQLURLType, description: 'Google+ Account url'},
     picture: {type: GraphQLURLType, description: 'url of google account profile picture'},
     gender: {type: GraphQLString, description: 'gender of google user'},
     locale: {type: GraphQLString, description: 'locale of user to help determine language'}

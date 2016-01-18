@@ -182,10 +182,11 @@ export default {
   },
   loginWithGoogle: {
     type: UserWithAuthToken,
-    arguments: {
-      profile: {type: GoogleProfile, description: 'The profile received from google'}
+    args: {
+      profile: {type: new GraphQLNonNull(GoogleProfile)}
     },
     async resolve(source, {profile}, {rootValue}) {
+      console.log('resolvin', profile)
       const user = await getUserByEmail(profile.email);
       if (!user) {
         //create new user
@@ -200,6 +201,7 @@ export default {
               name: profile.name,
               firstName: profile.given_name,
               lastName: profile.family_name,
+              //link: profile.link, //who cares, it's google+
               picture: profile.picture,
               gender: profile.gender,
               locale: profile.locale
