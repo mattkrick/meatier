@@ -85,10 +85,8 @@ test('createUser:success', async t => {
     ${userWithAuthToken}
   }`
   t.plan(4);
-  //t.pass();
   const actual = await graphql(Schema, query);
   const {user:{id, createdAt}, authToken} = actual.data.newUser;
-  console.log(actual.errors, actual.data.newUser.user)
   const expected = {
     "data": {
       "newUser": {
@@ -117,44 +115,71 @@ test('createUser:success', async t => {
   t.same(actual, expected)
 });
 
-//test('createUser:alreadyexists', async t => {
-//  const query = `
-//  mutation {
-//    newUser: createUser(
-//      email: "createUser:alreadyexists@createUser:alreadyexists",
-//      password: "a123123"
-//    )
-//    ${userWithAuthToken}
-//  }`
-//  t.plan(4);
-//  //t.pass();
-//  const actual = await graphql(Schema, query);
-//  const {user:{id, createdAt}, authToken} = actual.data.newUser;
-//  console.log(actual.data.newUser.user)
-//  const expected = {
-//    "data": {
-//      "newUser": {
-//        "user": {
-//          "id": id,
-//          "email": "createuser:alreadyexists@createuser:alreadyexists",
-//          "createdAt": createdAt,
-//          "updatedAt": null,
-//          "strategies": {
-//            "local": {
-//              "isVerified": false,
-//              "password": null,
-//              "verifiedEmailToken": null,
-//              "resetToken": null
-//            },
-//            "google": null
-//          }
-//        },
-//        "authToken": authToken
-//      }
-//    }
-//  }
-//  t.true(new Date(createdAt) <= new Date());
-//  t.true(typeof id === 'string');
-//  t.ok(authToken);
-//  t.same(actual, expected)
-//});
+test('createUser:alreadyexists', async t => {
+  //treat it like a login
+  const query = `
+  mutation {
+    newUser: createUser(
+      email: "createUser:alreadyexists@createUser:alreadyexists",
+      password: "a123123"
+    )
+    ${userWithAuthToken}
+  }`
+  t.plan(4);
+  const user1 = await graphql(Schema, query);
+  const actual = await graphql(Schema, query);
+  const {user:{id, createdAt}, authToken} = actual.data.newUser;
+  const expected = {
+    "data": {
+      "newUser": {
+        "user": {
+          "id": id,
+          "email": "createuser:alreadyexists@createuser:alreadyexists",
+          "createdAt": createdAt,
+          "updatedAt": null,
+          "strategies": {
+            "local": {
+              "isVerified": false,
+              "password": null,
+              "verifiedEmailToken": null,
+              "resetToken": null
+            },
+            "google": null
+          }
+        },
+        "authToken": authToken
+      }
+    }
+  }
+  t.true(new Date(createdAt) <= new Date());
+  t.true(typeof id === 'string');
+  t.ok(authToken);
+  t.same(actual, expected)
+});
+
+test('createUser:emailexistsdifferentpass', async t => {
+  //treat it like a login
+  const query = `
+  mutation {
+    newUser: createUser(
+      email: "createUser:emailexistsdifferentpass@createUser:emailexistsdifferentpass",
+      password: "a123123"
+    )
+    ${userWithAuthToken}
+  }`
+  t.plan(1);
+  const user1 = await graphql(Schema, query);
+  const actual = await graphql(Schema, query.replace('a123123', 'b123123'));
+  const expected = {
+    "data": {
+      "newUser": null
+    },
+    "errors": [
+      {
+        "message": "{\"_error\":\"Cannot create account\",\"email\":\"Email already exists\"}",
+        "originalError": {}
+      }
+    ]
+  }
+  t.is(actual.errors[0].message, expected.errors[0].message)
+});

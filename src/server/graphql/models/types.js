@@ -32,7 +32,6 @@ export const GraphQLPasswordType = new GraphQLScalarType({
   serialize: value => String(value),
   parseValue: value => String(value),
   parseLiteral: ast => {
-    console.log('KIND', ast.kind)
     if (ast.kind !== Kind.STRING) {
       throw new GraphQLError('Query error: Password is not a string, it is a: ' + ast.kind, [ast]);
     }

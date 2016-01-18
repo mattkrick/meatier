@@ -51,7 +51,6 @@ export async function googleAuthCallback(req, res) {
   const [googleTokens] = await getToken(req.query.code); //ignore response
   oauth2Client.setCredentials(googleTokens);
   const [profile] = await getUserInfo({auth: oauth2Client});
-  console.log(profile);
   const result = await graphql(Schema, query, null, {profile});
   const objToSend = JSON.stringify(result);
   res.send(objToSend);
