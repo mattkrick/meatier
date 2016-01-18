@@ -186,7 +186,6 @@ export default {
       profile: {type: new GraphQLNonNull(GoogleProfile)}
     },
     async resolve(source, {profile}, {rootValue}) {
-      console.log('resolvin', profile)
       const user = await getUserByEmail(profile.email);
       if (!user) {
         //create new user

@@ -5,19 +5,19 @@ import socketOptions from 'universal/utils/socketOptions';
 import styles from './graphiql.css';
 
 
-function graphQLFetcher({query, variables}) {
+const graphQLFetcher = async ({query, variables}) => {
   if (!__CLIENT__) return;
   const authToken = localStorage.getItem(socketOptions.authTokenName);
-
   variables = variables ? JSON.parse(variables) : undefined;
-  return fetch('http://localhost:3000/graphql', {
+  const res = await fetch('http://localhost:3000/graphql', {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({query, variables}),
-  }).then(response => response.json());
+  })
+  return res.json();
 }
 
 export default class Graphiql extends Component {

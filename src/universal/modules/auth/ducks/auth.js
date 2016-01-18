@@ -250,16 +250,11 @@ export function oauthLogin(providerEndpoint, redirect) {
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
     let res = await fetch(hostUrl() + providerEndpoint, {
-      //fetch is currently a shitshow, this is just guess & check
       method: 'get',
       mode: 'no-cors',
-      credentials: 'include',
-      headers: {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
-      }
+      credentials: 'include'
     });
     let parsedRes = await parseJSON(res);
-    console.log('1', parsedRes);
     const {error, data} = parsedRes;
     if (error) {
       dispatch({type: LOGIN_USER_ERROR, error});

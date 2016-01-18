@@ -10,15 +10,11 @@ const oauth = google.oauth2('v2'); //v3 should come out soonish
 export const oauth2Client = new OAuth2(googleClientID, googleClientSecret, googleCallbackURL);
 const getToken = promisify(oauth2Client.getToken.bind(oauth2Client));
 const getUserInfo = promisify(oauth.userinfo.get.bind(oauth.userinfo));
-const scopes = [
-  'https://www.googleapis.com/auth/userinfo.email',
-  'https://www.googleapis.com/auth/userinfo.profile'
-];
 
 export const googleAuthUrl = oauth2Client.generateAuthUrl({
   //approval_prompt: "force", //get the refresh_token every time (for debugging only)
   //access_type: 'offline', // 'online' (default) or 'offline' (gets refresh_token)
-  scope: scopes // If you only need one scope you can pass it as string
+  scope: ['email', 'profile'] // If you only need one scope you can pass it as string
 });
 
 const userWithAuthToken = `
@@ -55,15 +51,8 @@ export async function googleAuthCallback(req, res) {
   const [googleTokens] = await getToken(req.query.code); //ignore response
   oauth2Client.setCredentials(googleTokens);
   const [profile] = await getUserInfo({auth: oauth2Client});
-  console.log('prof from goog', profile)
+  console.log(profile);
   const result = await graphql(Schema, query, null, {profile});
-
-  //ugly way to work around fetch being lame
   const objToSend = JSON.stringify(result);
-  //res.send(objToSend);
-  res.writeHead(200, {
-    'Content-Type': 'application/json',
-    'Content-Length': Buffer.byteLength(objToSend)
-  });
-  res.end(objToSend);
+  res.send(objToSend);
 }

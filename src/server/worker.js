@@ -72,6 +72,13 @@ export function run(worker) {
     socket.on('graphql', wsGraphQLHandler);
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
+    socket.on('graphql', async (body, cb) => {
+      const {query, variables, ...rootVals} = body;
+      const authToken = socket.getAuthToken();
+      const result = await graphql(Schema, query, {authToken, ...rootVals}, variables);
+      const {error, data} = prepareClientError(result);
+      cb(error, data);
+    });
   });
 }
 // TODO: dont let tokens expire while still connected, depends on PR to SC
