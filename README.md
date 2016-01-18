@@ -107,6 +107,9 @@ The kanban lane titles & notes are really basic, you click them & they turn into
 The notes can be dragged from lane to lane. This is to showcase a local state change that doesn't affect the persisted state.
 When the note is dropped to its new location, the change is persisted. 
 
+##Tutorials (not for beginners!)
+ - [A production-ready realtime SaaS with webpack](https://medium.com/@matt.krick/a-production-ready-realtime-saas-with-webpack-7b11ba2fa5b0#.bifdf5iz8)
+ - [GraphQL Field Guide to Auth](https://medium.com/@matt.krick/graphql-field-guide-to-auth-ead84f657ab#.f3tg2sf3d)
 
 ##Similar Projects
  - https://github.com/erikras/react-redux-universal-hot-example (Really nice, but no auth or DB)
