@@ -5,7 +5,7 @@ export default store => {
     onEnter: requireNoAuth,
     path: 'signup',
     getComponent: async (location, cb) => {
-      let component = await System.import('universal/modules/auth/containers/auth/AuthContainer');
+      let component = await System.import('universal/modules/auth/containers/Auth/AuthContainer');
       cb(null, component)
     }
   }

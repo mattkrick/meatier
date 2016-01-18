@@ -7,7 +7,7 @@ export default store => {
     onEnter: requireNoAuth(store),
     path: 'login',
     getIndexRoute: async (location, cb) => {
-      let component = await System.import('universal/modules/auth/containers/auth/AuthContainer');
+      let component = await System.import('universal/modules/auth/containers/Auth/AuthContainer');
       cb(null, {component})
     },
     getChildRoutes: (location, cb) => {
