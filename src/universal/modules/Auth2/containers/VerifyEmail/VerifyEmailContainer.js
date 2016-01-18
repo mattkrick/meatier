@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import {verifyEmail} from 'universal/modules/auth/ducks/auth';
+import {verifyEmail} from '../..//ducks/auth';
 import { connect } from 'react-redux';
-import VerifyEmail from 'universal/modules/auth/components/VerifyEmail/VerifyEmail';
+import VerifyEmail from '../..//components/VerifyEmail/VerifyEmail';
 import {ensureState} from 'redux-optimistic-ui';
 
 @connect(mapStateToProps)

@@ -5,8 +5,8 @@ import styles from './ResetPassword.css';
 import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
-import {authSchemaPassword} from 'universal/modules/auth/schemas/auth';
-import {resetPassword} from 'universal/modules/auth/ducks/auth'
+import {authSchemaPassword} from '../..//schemas/auth';
+import {resetPassword} from '../..//ducks/auth'
 import {parsedJoiErrors} from 'universal/utils/schema';
 import {getFormState} from 'universal/redux/helpers';
 

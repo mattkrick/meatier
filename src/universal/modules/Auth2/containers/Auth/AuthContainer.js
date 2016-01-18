@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import {authSchemaInsert} from 'universal/modules/auth/schemas/auth';
+import {authSchemaInsert} from '../..//schemas/auth';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Auth from 'universal/modules/auth/components/Auth/Auth';
+import Auth from '../..//components/Auth/Auth';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
 import {postJSON, parseJSON} from 'universal/utils/fetching';

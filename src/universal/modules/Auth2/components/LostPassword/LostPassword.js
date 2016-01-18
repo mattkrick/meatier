@@ -5,8 +5,8 @@ import styles from './LostPassword.css';
 import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
-import {emailPasswordReset} from 'universal/modules/auth/ducks/auth';
-import {authSchemaEmail} from 'universal/modules/auth/schemas/auth'
+import {emailPasswordReset} from '../..//ducks/auth';
+import {authSchemaEmail} from '../..//schemas/auth'
 import {parsedJoiErrors} from 'universal/utils/schema';
 import {getFormState} from 'universal/redux/helpers';
 

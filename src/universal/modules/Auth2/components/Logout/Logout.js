@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import {logoutAndRedirect} from 'universal/modules/auth/ducks/auth';
+import {logoutAndRedirect} from '../..//ducks/auth';
 import {delay} from 'universal/utils/fetching';
 import {connect} from 'react-redux';
 

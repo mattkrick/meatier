@@ -3,7 +3,7 @@ import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './Auth.css';
 import {Link} from 'react-router';
-import {loginUser, signupUser, oauthLogin} from 'universal/modules/auth/ducks/auth';
+import {loginUser, signupUser, oauthLogin} from '../..//ducks/auth';
 import {getJSON} from 'universal/utils/fetching';
 
 export default class Auth extends Component {
