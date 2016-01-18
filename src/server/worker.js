@@ -3,12 +3,13 @@ import webpack from 'webpack';
 import compression from 'compression';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import config from '../../webpack/webpack.config.dev';
-import createSSR from './createSSR';
-import makeAuthEndpoints from './controllers/makeAuthEndpoints';
 import {graphql} from 'graphql';
 import jwt from 'express-jwt';
+
+import config from '../../webpack/webpack.config.dev';
+import createSSR from './createSSR';
 import {jwtSecret} from './secrets';
+import {googleAuthUrl, googleAuthCallback} from './graphql/models/User/oauthGoogle';
 import {prepareClientError} from './graphql/models/utils';
 import wsGraphQLHandler from './graphql/wsGraphQLHandler';
 import httpGraphQLHandler from './graphql/httpGraphQLHandler';
@@ -23,8 +24,9 @@ const PROD = process.env.NODE_ENV === 'production';
 export function run(worker) {
   console.log('   >> Worker PID:', process.pid);
   const app = express();
-  const httpServer = worker.httpServer;
   const scServer = worker.scServer;
+  const httpServer = worker.httpServer;
+  httpServer.on('request', app);
 
   // HMR
   if (!PROD) {
@@ -35,9 +37,10 @@ export function run(worker) {
     }));
     app.use(require('webpack-hot-middleware')(compiler));
   }
+
+  // setup middleware
   app.use(bodyParser.json());
   app.use(cors({origin: true, credentials: true}));
-  // setup middleware
   app.use((req, res, next) => {
     if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {
       res.status(404).end();
@@ -51,16 +54,14 @@ export function run(worker) {
   }
 
   //Oauth
-  makeAuthEndpoints(app);
+  app.get('/auth/google', async (req, res) => res.redirect(googleAuthUrl));
+  app.get('auth/google/callback',googleAuthCallback);
 
   // HTTP GraphQL endpoint
   app.post('/graphql', jwt({secret: jwtSecret, credentialsRequired: false}), httpGraphQLHandler);
 
   // server-side rendering
   app.get('*', createSSR);
-
-  // startup
-  httpServer.on('request', app);
 
   // handle sockets
   scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, subscribeMiddleware);
@@ -72,13 +73,6 @@ export function run(worker) {
     socket.on('graphql', wsGraphQLHandler);
     socket.on('subscribe', subscribeHandler);
     socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
-    socket.on('graphql', async (body, cb) => {
-      const {query, variables, ...rootVals} = body;
-      const authToken = socket.getAuthToken();
-      const result = await graphql(Schema, query, {authToken, ...rootVals}, variables);
-      const {error, data} = prepareClientError(result);
-      cb(error, data);
-    });
   });
 }
 // TODO: dont let tokens expire while still connected, depends on PR to SC
