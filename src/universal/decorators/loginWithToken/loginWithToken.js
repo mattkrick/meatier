@@ -10,7 +10,6 @@ export default authTokenName => ComposedComponent => {
           this.props.dispatch(loginToken());
         }
       }
-      //TODO: goto url next query param upon success (needs redux-simple-router@2)
     }
 
     render() {

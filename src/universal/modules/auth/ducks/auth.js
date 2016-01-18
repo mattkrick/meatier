@@ -145,7 +145,7 @@ export const loginUser = (dispatch, variables, redirect) => {
 }
 
 export function loginToken() {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch({type: LOGIN_USER_REQUEST});
     const query = `
     query {
@@ -158,6 +158,11 @@ export function loginToken() {
     } else {
       const {payload} = data;
       dispatch(loginUserSuccess({user: payload}));
+      const routingState = ensureState(getState()).get('routing');
+      const next = routingState && routingState.location && routingState.location.query && routingState.location.query.next;
+      if (next) {
+        dispatch(replace(next));
+      }
     }
   }
 }
@@ -240,7 +245,6 @@ export function verifyEmail(verifiedEmailToken) {
   }
 }
 
-//FIXME when i get internet again
 export function oauthLogin(providerEndpoint, redirect) {
   redirect = redirect || '/';
   return async function (dispatch) {

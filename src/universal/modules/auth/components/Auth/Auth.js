@@ -71,7 +71,7 @@ export default class Auth extends Component {
   //need async?
   loginWithGoogle = () => {
     const redirectRoute = this.props.location.query.next || '/';
-    this.props.dispatch(oauthLogin('/auth/google'));
+    this.props.dispatch(oauthLogin('/auth/google', redirectRoute));
   };
 
   onSubmit = (data, dispatch) => {

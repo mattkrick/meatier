@@ -4,12 +4,10 @@ import socketOptions from 'universal/utils/socketOptions';
 import {ensureState} from 'redux-optimistic-ui';
 import {connect} from 'react-redux';
 
-const {replace} = routeActions;
-//TODO
-/* Currently, we allow server-rendered requests to pass on through
-* This is because we don't have an auth token to know whether or not the user is legit
-* A better solution might be to send them home with a query & then the loginWithAuth would pick up that param
-* and redirect them to where they wanted to be*/
+const {replace, push} = routeActions;
+
+// workaround for https://github.com/rackt/redux-simple-router/issues/212
+let key;
 export default ComposedComponent => {
   return class RequiredAuth extends Component {
 
@@ -31,10 +29,12 @@ export default ComposedComponent => {
 
     checkForAuth(props) {
       if (__CLIENT__) {
-        const {dispatch, hasAuthError} = props;
+        const {dispatch, hasAuthError, location} = props;
+        let newKey = location && location.key || 'none';
         const authToken = localStorage.getItem(socketOptions.authTokenName);
-        if (hasAuthError || !authToken) {
-          dispatch(replace('/'));
+        if (hasAuthError || !authToken && newKey !== key) {
+          key = newKey;
+          dispatch(push('/login?next=%2Fkanban'));
         }
       }
     }
