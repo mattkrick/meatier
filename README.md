@@ -36,22 +36,22 @@ Some of my chief complaints with Meteor
  
 ##Installation
 - `brew install rethinkdb`
+- `npm i -g webpack@2.0.2-beta` (optional, but recommended)
+- `rethinkdb` (in second terminal window)
 - `git clone` this repo
 - `cd meatier`
 - `npm install`
 - `npm run quickstart`
-- `npm i -g webpack@2.0.2-beta` (optional, but recommended)
-- `rethinkdb`
 
 ##Client-side development
-- `npm start` (in a second terminal window)
+- `npm start`
 - http://localhost:3000
 
 Rebuilds the client code in-memory & uses hot module reload so you can develop super fast!
 On my 2013 MBA an initial build takes about 8 seconds and updates usually take 800ms
 
 ##Server-side development
-- `npm run prod` (in a second terminal window)
+- `npm run prod`
 - http://localhost:3000
 - If you edit any client or universal files, run `npm run bs` to rebuild & serve the bundle
 
