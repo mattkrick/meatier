@@ -79,7 +79,6 @@
     "googleapis": "2.1.7",
     "graphiql": "0.4.5",
     "graphql": "0.4.14",
-    "graphql-type-factory": "0.1.0",
     "immutable": "3.7.6",
     "isomorphic-fetch": "2.2.1",
     "joi": "7.2.1",

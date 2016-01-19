@@ -132,6 +132,7 @@ export const loginUser = (dispatch, variables, redirect) => {
     }`
     const {error, data} = await fetchGraphQL({query, variables});
     if (error) {
+      localStorage.removeItem(authTokenName);
       dispatch(loginUserError(error));
       reject(error)
     } else {
@@ -177,6 +178,7 @@ export function signupUser(dispatch, variables, redirect) {
     }`
     const {error, data} = await fetchGraphQL({query, variables});
     if (error) {
+      localStorage.removeItem(authTokenName);
       dispatch(signupUserError(error));
       reject(error)
     } else {
@@ -257,6 +259,7 @@ export function oauthLogin(providerEndpoint, redirect) {
     let parsedRes = await parseJSON(res);
     const {error, data} = parsedRes;
     if (error) {
+      localStorage.removeItem(authTokenName);
       dispatch({type: LOGIN_USER_ERROR, error});
     } else {
       const {payload} = data;

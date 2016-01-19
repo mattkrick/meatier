@@ -54,8 +54,8 @@ export function run(worker) {
   }
 
   //Oauth
-  app.get('/auth/google', async (req, res) => res.redirect(googleAuthUrl));
-  app.get('auth/google/callback',googleAuthCallback);
+  app.get('/auth/google', (req, res) => res.redirect(googleAuthUrl));
+  app.get('/auth/google/callback', googleAuthCallback);
 
   // HTTP GraphQL endpoint
   app.post('/graphql', jwt({secret: jwtSecret, credentialsRequired: false}), httpGraphQLHandler);

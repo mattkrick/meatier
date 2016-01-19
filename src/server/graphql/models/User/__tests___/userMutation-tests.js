@@ -158,7 +158,6 @@ test('createUser:alreadyexists', async t => {
 });
 
 test('createUser:emailexistsdifferentpass', async t => {
-  //treat it like a login
   const query = `
   mutation {
     newUser: createUser(
@@ -168,7 +167,7 @@ test('createUser:emailexistsdifferentpass', async t => {
     ${userWithAuthToken}
   }`
   t.plan(1);
-  const user1 = await graphql(Schema, query);
+  await graphql(Schema, query);
   const actual = await graphql(Schema, query.replace('a123123', 'b123123'));
   const expected = {
     "data": {
@@ -182,4 +181,27 @@ test('createUser:emailexistsdifferentpass', async t => {
     ]
   }
   t.is(actual.errors[0].message, expected.errors[0].message)
+});
+
+test('emailPasswordReset:success', async t => {
+  const createQuery = `
+  mutation {
+    newUser: createUser(
+      email: "emailPasswordReset:success@emailPasswordReset:success",
+      password: "a123123"
+    )
+    ${userWithAuthToken}
+  }`
+  const query = `
+  mutation {
+    newUser: emailPasswordReset(
+      email: "emailPasswordReset:success@emailPasswordReset:success"
+    )
+  }`
+  t.plan(1);
+  await graphql(Schema, createQuery);
+  await graphql(Schema, query);
+  const dbUser = await r.table('users').getAll("emailpasswordreset:success@emailpasswordreset:success", {index: 'email'});
+  const {resetToken} = dbUser[0].strategies.local;
+  t.ok(resetToken)
 });
