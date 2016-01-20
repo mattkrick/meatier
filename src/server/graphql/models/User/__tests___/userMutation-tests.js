@@ -205,3 +205,16 @@ test('emailPasswordReset:success', async t => {
   const {resetToken} = dbUser[0].strategies.local;
   t.ok(resetToken)
 });
+
+test('emailPasswordReset:userdoesntexist', async t => {
+  const query = `
+  mutation {
+    newUser: emailPasswordReset(
+      email: "emailPasswordReset:userdoesntexist@emailPasswordReset:userdoesntexist"
+    )
+  }`
+  t.plan(1);
+  const result = await graphql(Schema, query);
+  t.is(result.errors[0].message, '{"_error":"User not found"}');
+});
+

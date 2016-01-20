@@ -126,7 +126,7 @@ export const loginUser = (dispatch, variables, redirect) => {
   dispatch({type: LOGIN_USER_REQUEST});
   return new Promise(async (resolve, reject) => {
     const query = `
-    query($email: email!, $password: password!){
+    query($email: Email!, $password: Password!){
        payload: login(email: $email, password: $password)
        ${userWithAuthToken}
     }`
@@ -172,7 +172,7 @@ export function signupUser(dispatch, variables, redirect) {
   dispatch({type: SIGNUP_USER_REQUEST});
   return new Promise(async function (resolve, reject) {
     const query = `
-    mutation($email: email!, $password: password!){
+    mutation($email: Email!, $password: Password!){
        payload: createUser(email: $email, password: $password)
        ${userWithAuthToken}
     }`
@@ -193,7 +193,7 @@ export function signupUser(dispatch, variables, redirect) {
 export function emailPasswordReset(variables, dispatch) {
   return new Promise(async function (resolve, reject) {
     const query = `
-    mutation($email: email!){
+    mutation($email: Email!){
        payload: emailPasswordReset(email: $email)
     }`
     const {error, data} = await fetchGraphQL({query, variables});
@@ -213,7 +213,7 @@ export function resetPassword({resetToken, password}, dispatch) {
       return reject(resetTokenObj._error);
     }
     const query = `
-    mutation($password: password!){
+    mutation($password: Password!){
        payload: resetPassword(password: $password)
        ${userWithAuthToken}
     }`
