@@ -19,9 +19,3 @@ export default (newReducers, reducerEnhancers) => {
   }
   return reducer;
 }
-//if (module.hot && module.hot.data) {
-//  currentReducers = module.hot.data.currentReducers;
-//}
-//if (module.hot) {
-//  module.hot.dispose(function(data) { data.currentReducers = currentReducers; })
-//}
