@@ -89,14 +89,15 @@ To test this, disable javascript in the browser. You'll see the site & css loads
 ##How it works
 When the page loads, it checks your localStorage for `Meatier.token` & will automatically log you in if the token is legit. 
 If not, just head to the 'Sign up' page. The 'Sign up' page uses redux-form, which handles all errors, schema validation,
-and submissions. Your credentials are sent to a REST API and a user document (similar to Meteor's) is returned to your state.
+and submissions. Your credentials are set as variables in a GraphQL mutation & sent to the GraphQL endpoint and a user document (similar to Meteor's) and authToken is returned to your state.
 
 The 'Kanban' app requires a login & websocket, so when you enter, your token will be used to authenticate a websocket.
 That token is stored on the server so it is only sent during the handshake (very similar to DDP). Socket state is managed
 by `redux-socket-cluster`, just clicking `socket` in the devtools let's you explore its current state. 
-To make this happen, the package uses a fork of socketcluster-client (v4.0 is still in the works). 
 
-When the component loads, it subscribes to `lanes` & `notes`, which starts your personalized changefeed.
+When you enter the route, reducers are lazily loaded to the redux store and the `redux-optimistic-ui` reducer enhancer is applied to the store to enable an optimistic UI. To work, it requires some middleware that scans each redux action for an `isOptimistic` prop and reverts actions that fail server side.
+
+When the kanban component loads, it subscribes to `lanes` & `notes`, which starts your personalized changefeed.
 When you do something that changes the persisted state (eg add a kanban lane) that action is executed
 optimistically on the client & emitted to the server where it is validated & sent to the database. 
 The database then emits a changefeed doc to all subscribed viewers.
@@ -107,7 +108,7 @@ The kanban lane titles & notes are really basic, you click them & they turn into
 The notes can be dragged from lane to lane. This is to showcase a local state change that doesn't affect the persisted state.
 When the note is dropped to its new location, the change is persisted. 
 
-##Tutorials (not for beginners!)
+##Tutorials (not for beginners...but then again, neither is meatier)
  - [A production-ready realtime SaaS with webpack](https://medium.com/@matt.krick/a-production-ready-realtime-saas-with-webpack-7b11ba2fa5b0#.bifdf5iz8)
  - [GraphQL Field Guide to Auth](https://medium.com/@matt.krick/graphql-field-guide-to-auth-ead84f657ab#.f3tg2sf3d)
 
