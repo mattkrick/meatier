@@ -108,10 +108,16 @@ const baseMeta = {
 };
 
 export function loadNotes() {
-  const sub = 'allNotes';
+  const query = `
+  subscription {
+    getAllNotes
+  }`
+  const graphQLParams = JSON.stringify({query});
+  const sub = 'getAllNotes'
   const socket = socketCluster.connect(socketOptions);
-  socket.subscribe(sub, {waitForAuth: true});
+  socket.subscribe(graphQLParams, {waitForAuth: true});
   return dispatch => {
+    //client-side changefeed handler
     socket.on(sub, data => {
       const meta = {synced: true};
       if (!data.old_val) {

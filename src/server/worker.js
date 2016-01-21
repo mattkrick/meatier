@@ -11,13 +11,9 @@ import createSSR from './createSSR';
 import {jwtSecret} from './secrets';
 import {googleAuthUrl, googleAuthCallback} from './graphql/models/User/oauthGoogle';
 import {prepareClientError} from './graphql/models/utils';
-import wsGraphQLHandler from './graphql/wsGraphQLHandler';
+import {wsGraphQLHandler, wsGraphQLSubHandler} from './graphql/wsGraphQLHandlers';
 import httpGraphQLHandler from './graphql/httpGraphQLHandler';
 import Schema from './graphql/rootSchema';
-
-// "live query"
-import subscribeMiddleware from './publish/subscribeMiddleware';
-import subscribeHandler from './publish/subscribeHandler';
 
 const PROD = process.env.NODE_ENV === 'production';
 
@@ -64,14 +60,13 @@ export function run(worker) {
   app.get('*', createSSR);
 
   // handle sockets
-  scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, subscribeMiddleware);
   scServer.on('connection', socket => {
     console.log('Client connected:', socket.id);
     // hold the client-submitted docs in a queue while they get validated & handled in the DB
     // then, when the DB emits a change, we know if the client caused it or not
     socket.docQueue = new Set();
     socket.on('graphql', wsGraphQLHandler);
-    socket.on('subscribe', subscribeHandler);
+    socket.on('subscribe', wsGraphQLSubHandler);
     socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
   });
 }

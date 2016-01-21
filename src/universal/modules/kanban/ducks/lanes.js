@@ -92,9 +92,14 @@ const baseMeta = {
 };
 
 export function loadLanes() {
-  const sub = 'allLanes';
+  const query = `
+  subscription {
+    getAllLanes
+  }`
+  const graphQLParams = JSON.stringify({query});
+  const sub = 'getAllLanes'
   const socket = socketCluster.connect(socketOptions);
-  socket.subscribe(sub, {waitForAuth: true});
+  socket.subscribe(graphQLParams, {waitForAuth: true});
   return dispatch => {
     //client-side changefeed handler
     socket.on(sub, data => {

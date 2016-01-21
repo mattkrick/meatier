@@ -45,6 +45,8 @@ export const getClientError = errors => {
 }
 
 export const fetchGraphQL = async (graphParams) => {
+  // compress
+  graphParams.query = graphParams.query.replace(/\s/g, '');
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   const res = await fetch('http://localhost:3000/graphql', {
     method: 'post',
