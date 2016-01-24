@@ -1,14 +1,19 @@
 import r from '../../../database/rethinkdriver';
 import {GraphQLBoolean} from 'graphql';
 import {isLoggedIn} from '../authorization';
+import {getFields} from '../utils';
+import {Note} from './noteSchema';
 
 export default {
   getAllNotes: {
-    type: GraphQLBoolean,
-    async resolve (source, args, {rootValue, fieldName}) {
-      isLoggedIn(rootValue);
+    type: Note,
+    async resolve (source, args, refs) {
+      const {rootValue, fieldName} = refs;
       const {socket} = rootValue;
+      const requestedFields = Object.keys(getFields(refs));
+      isLoggedIn(rootValue);
       r.table('notes')
+        .pluck(requestedFields)
         .changes({includeInitial: true})
         .run({cursor: true}, (err, cursor) => {
           if (err) throw err;
@@ -23,7 +28,6 @@ export default {
             }
           })
         });
-      return true;
     }
   }
 }

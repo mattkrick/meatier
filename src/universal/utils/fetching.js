@@ -44,9 +44,14 @@ export const getClientError = errors => {
   return (error.indexOf('{"_error"') === -1) ? {_error: 'Server query error'} : JSON.parse(error);
 }
 
-export const fetchGraphQL = async (graphParams) => {
+export const prepareGraphQLParams = graphParams => {
   // compress
   graphParams.query = graphParams.query.replace(/\s/g, '');
+  return JSON.stringify(graphParams);
+}
+
+export const fetchGraphQL = async (graphParams) => {
+  const serializedParams = prepareGraphQLParams(graphParams);
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   const res = await fetch('http://localhost:3000/graphql', {
     method: 'post',
@@ -54,7 +59,7 @@ export const fetchGraphQL = async (graphParams) => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
-    body: JSON.stringify(graphParams)
+    body: serializedParams
   });
   const resJSON = await res.json();
   const {data, errors} = resJSON;

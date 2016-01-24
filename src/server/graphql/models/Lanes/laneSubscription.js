@@ -1,14 +1,21 @@
 import r from '../../../database/rethinkdriver';
 import {GraphQLBoolean} from 'graphql';
 import {isLoggedIn} from '../authorization';
+import {getFields} from '../utils';
+import {Lane} from './laneSchema';
+
 
 export default {
   getAllLanes: {
-    type: GraphQLBoolean,
-    async resolve (source, args, {rootValue, fieldName}) {
+    type: Lane,
+    async resolve (source, args, refs) {
+      const {rootValue, fieldName} = refs;
+      const {socket, authToken} = rootValue;
+      const requestedFields = Object.keys(getFields(refs));
       isLoggedIn(rootValue);
-      const {socket} = rootValue;
-      r.table('lanes').filter(r.row('isPrivate').eq(false).or(r.row('userId').eq(rootValue.authToken.id)))
+      r.table('lanes')
+        .filter(r.row('isPrivate').eq(false).or(r.row('userId').eq(authToken.id)))
+        .pluck(requestedFields)
         .changes({includeInitial: true})
         .run({cursor: true}, (err, cursor) => {
           if (err) throw err;
@@ -23,7 +30,6 @@ export default {
             }
           })
         });
-      return true;
     }
   }
 }

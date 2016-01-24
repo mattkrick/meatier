@@ -2,6 +2,7 @@ import socketCluster from 'socketcluster-client';
 import socketOptions from '../../../utils/socketOptions';
 import {fromJS, Map, List} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
+import {prepareGraphQLParams} from '../../../utils/fetching';
 
 /*
  * Action types
@@ -110,12 +111,18 @@ const baseMeta = {
 export function loadNotes() {
   const query = `
   subscription {
-    getAllNotes
+    getAllNotes {
+      id,
+      title,
+      laneId,
+      userId,
+      index
+    }
   }`
-  const graphQLParams = JSON.stringify({query});
+  const serializedParams = prepareGraphQLParams({query});
   const sub = 'getAllNotes'
   const socket = socketCluster.connect(socketOptions);
-  socket.subscribe(graphQLParams, {waitForAuth: true});
+  socket.subscribe(serializedParams, {waitForAuth: true});
   return dispatch => {
     //client-side changefeed handler
     socket.on(sub, data => {

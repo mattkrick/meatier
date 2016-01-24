@@ -4,6 +4,7 @@ import socketOptions from '../../../utils/socketOptions';
 import {deleteNote} from './notes';
 import {fromJS, Map, List} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
+import {prepareGraphQLParams} from '../../../utils/fetching';
 
 /*
  * Action types
@@ -94,12 +95,16 @@ const baseMeta = {
 export function loadLanes() {
   const query = `
   subscription {
-    getAllLanes
+    getAllLanes {
+      id,
+      userId,
+      title
+    }
   }`
-  const graphQLParams = JSON.stringify({query});
+  const serializedParams = prepareGraphQLParams({query});
   const sub = 'getAllLanes'
   const socket = socketCluster.connect(socketOptions);
-  socket.subscribe(graphQLParams, {waitForAuth: true});
+  socket.subscribe(serializedParams, {waitForAuth: true});
   return dispatch => {
     //client-side changefeed handler
     socket.on(sub, data => {
