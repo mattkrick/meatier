@@ -32,27 +32,49 @@ Some of my chief complaints with Meteor
 | Testing           | Velocity (or nothing at all)                                    | [AVA](https://github.com/sindresorhus/ava)                          | awesome es2016 concurrent testing                                   |
 | Linting           | Your choice                                                     | [xo](https://www.npmjs.com/package/xo)                              | no dotfiles, fixes errors                                           |
 | Routing           | [FlowRouter](https://github.com/kadirahq/flow-router)           | [redux-simple-router](https://github.com/rackt/redux-simple-router) | stick the route in the state, react-router SSR, async routes        |
-| Server            | Node 0.10.41                                                    | Node 5                                                              | Faster, maintained, not a dinosaur...                               |                             |
- 
-##Installation
-- `brew install rethinkdb`
-- `npm i -g webpack@2.0.2-beta` (optional, but recommended)
-- `rethinkdb` (in second terminal window)
-- `git clone` this repo
-- `cd meatier`
-- `npm install`
-- `npm run quickstart`
+| Server            | Node 0.10.41                                                    | Node 5                                                              | Faster, maintained, not a dinosaur...                               |
 
-##Client-side development
+
+## Minimum requirements
+
+- 64-bit architecture machine
+- Mac OSX or Linux (Windows: planned)
+- bash (command-line tool available on virtually all unix systems)
+- Internet connection (only needed while downloading images)
+
+## Meatier now utilizes [azk](http://www.azk.io/) orchestrated development environment!
+###### Should you already have it, feel free to skip the first step. 
+
+##### Step 1 - azk installation
+###### Mac OSX:
+- curl -sSL http://azk.io/install.sh | bash
+
+###### Linux:
+- wget -nv http://azk.io/install.sh -O- -t 2 -T 10 | bash
+
+##### Step 2 - new meatier installation
+- git clone git@github.com:Araphel/meatier.git
+- cd meatier
+- azk start
+
+###### If you like to watch / something doesnt work
+- azk start -vv && azk logs --follow
+
+
+## Other operational modes
+You will need to enter the shell mode to execute individual development modes
+- 'azk shell meatier'
+
+#### Client-side development
 - `npm start`
-- http://localhost:3000
+- http://meatier.dev.azk.io
 
 Rebuilds the client code in-memory & uses hot module reload so you can develop super fast!
 On my 2013 MBA an initial build takes about 8 seconds and updates usually take 800ms
 
-##Server-side development
+#### Server-side development
 - `npm run prod`
-- http://localhost:3000
+- http://meatier.dev.azk.io
 - If you edit any client or universal files, run `npm run bs` to rebuild & serve the bundle
 
 This mode is great because you can make changes to the server ***without having to recompile the client code***

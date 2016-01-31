@@ -9,7 +9,7 @@ const graphQLFetcher = async ({query, variables}) => {
   if (!__CLIENT__) return;
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   variables = variables ? JSON.parse(variables) : undefined;
-  const res = await fetch('http://localhost:3000/graphql', {
+  const res = await fetch('http://meatier.dev.azk.io/graphql', {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
