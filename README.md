@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/mattkrick/meatier](https://badges.gitter.im/mattkrick/meatier.svg)](https://gitter.im/mattkrick/meatier?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Meteor is awesome! But after 3 years, it's starting to show it's age. This project is designed to showcase 
+Meteor is awesome! But after 3 years, it's starting to show its age. This project is designed to showcase 
 the exact same functionality as Meteor, *but without the monolithic structure.* 
 It trades a little simplicity for a lot of flexibility.
 
