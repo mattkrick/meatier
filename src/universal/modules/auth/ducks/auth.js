@@ -251,25 +251,21 @@ export function oauthLogin(providerEndpoint, redirect) {
   redirect = redirect || '/';
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
-    let res = await fetch(hostUrl() + providerEndpoint, {
-      method: 'get',
-      mode: 'no-cors',
-      credentials: 'include'
-    });
-    let parsedRes = await parseJSON(res);
-    const {error, data} = parsedRes;
-    if (error) {
-      localStorage.removeItem(authTokenName);
-      dispatch({type: LOGIN_USER_ERROR, error});
-    } else {
-      const {payload} = data;
-      if (payload.authToken) {
-        localStorage.setItem(authTokenName, payload.authToken);
-        dispatch({type: LOGIN_USER_SUCCESS, payload});
+    window.open(hostUrl() + providerEndpoint);
+    const loginListener = event => {
+      if (event.key === `${authTokenName}Payload` && localStorage.getItem(authTokenName)) {
+        dispatch({type: LOGIN_USER_SUCCESS, payload: JSON.parse(localStorage.getItem(`${authTokenName}Payload`))});
+        localStorage.removeItem(`${authTokenName}Payload`);
         dispatch(replace(redirect));
+        window.removeEventListener('storage', loginListener);
+      } else if (event.key === `${authTokenName}Error`) {
+        dispatch({type: LOGIN_USER_ERROR, error: JSON.parse(localStorage.getItem(`${authTokenName}Error`))});
+        localStorage.removeItem(`${authTokenName}Error`);
+        window.removeEventListener('storage', loginListener);
       }
-    }
-  }
+    };
+    window.addEventListener('storage', loginListener);
+  };
 }
 
 
