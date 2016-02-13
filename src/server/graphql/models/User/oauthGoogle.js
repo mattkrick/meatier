@@ -3,6 +3,9 @@ import promisify from 'es6-promisify';
 import google from 'googleapis';
 import Schema from '../../rootSchema';
 import {graphql} from 'graphql';
+import socketOptions from '../../../../universal/utils/socketOptions';
+
+const {authTokenName} = socketOptions;
 
 const OAuth2 = google.auth.OAuth2;
 const oauth = google.oauth2('v2'); //v3 should come out soonish
@@ -47,11 +50,22 @@ export async function googleAuthCallback(req, res) {
   mutation($profile: GoogleProfile!){
      payload: loginWithGoogle(profile: $profile)
      ${userWithAuthToken}
-  }`
-  const [googleTokens] = await getToken(req.query.code); //ignore response
+  }`;
+  const [googleTokens] = await getToken(req.query.code); // ignore response
   oauth2Client.setCredentials(googleTokens);
   const [profile] = await getUserInfo({auth: oauth2Client});
   const result = await graphql(Schema, query, null, {profile});
-  const objToSend = JSON.stringify(result);
-  res.send(objToSend);
+  const {error, data} = result;
+  if (error) {
+    res.send(`<script>localStorage.removeItem('${authTokenName}');
+                      localStorage.setItem('${authTokenName}Error', '${JSON.stringify(error)}');
+                      window.close()</script>`);
+  } else {
+    const {payload} = data;
+    if (payload.authToken) {
+      res.send(`<script>localStorage.setItem('${authTokenName}', '${payload.authToken}');
+                        localStorage.setItem('${authTokenName}Payload', '${JSON.stringify(payload)}');
+                        window.close()</script>`);
+    }
+  }
 }
