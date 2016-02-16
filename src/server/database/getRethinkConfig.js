@@ -4,7 +4,7 @@ import flag from 'node-env-flag';
 export const getRethinkConfig = () => {
 
   let config = {
-    host: process.env.DATABASE_HOST || 'localhost',
+    host: process.env.DATABASE_HOST || 'http://rethinkdb.dev.azk.io' || 'localhost',
     port: process.env.DATABASE_PORT || 28015,
     authKey: process.env.DATABASE_AUTH_KEY || '',
     db: process.env.NODE_ENV === 'testing' ? 'ava' : 'meatier',

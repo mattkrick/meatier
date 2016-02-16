@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStore, applyMiddleware} from 'redux';
-import makeReducer from '../universal/redux/makeReducer';
+import makeReducer from '../redux/makeReducer';
 import {match} from 'react-router';
 import Html from './Html.js';
 import {UPDATE_LOCATION} from 'react-router-redux';
