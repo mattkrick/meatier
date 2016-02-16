@@ -60,9 +60,12 @@ Some of my chief complaints with Meteor
 - azk start -vv && azk logs --follow
 
 
-## Other operational modes
-You will need to enter the shell mode to execute individual development modes
-- 'azk shell meatier'
+## Execution of commands
+- 'azk shell meatier -- //commands//'
+For example:
+- 'azk shell meatier -- npm start'
+- 'azk shell meatier -- npm run prod'
+- 'azk shell meatier -- npm run bs'
 
 #### Client-side development
 - `npm start`
