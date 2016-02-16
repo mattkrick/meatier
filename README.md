@@ -1,8 +1,8 @@
-# meatier
+<img src="https://cloud.githubusercontent.com/assets/5986600/12841730/d500562a-cc28-11e5-84d9-90ae6abd5486.png" width="600">
 
 [![Join the chat at https://gitter.im/mattkrick/meatier](https://badges.gitter.im/mattkrick/meatier.svg)](https://gitter.im/mattkrick/meatier?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Meteor is awesome! But after 3 years, it's starting to show it's age. This project is designed to showcase 
+Meteor is awesome! But after 3 years, it's starting to show its age. This project is designed to showcase 
 the exact same functionality as Meteor, *but without the monolithic structure.* 
 It trades a little simplicity for a lot of flexibility.
 
@@ -31,10 +31,9 @@ Some of my chief complaints with Meteor
 | Optimistic UI     | latency compensation                                            | [redux-optimistic-ui](https://github.com/mattkrick/redux-optimistic-ui)  | written by yours truly                                         |
 | Testing           | Velocity (or nothing at all)                                    | [AVA](https://github.com/sindresorhus/ava)                          | awesome es2016 concurrent testing                                   |
 | Linting           | Your choice                                                     | [xo](https://www.npmjs.com/package/xo)                              | no dotfiles, fixes errors                                           |
-| Routing           | [FlowRouter](https://github.com/kadirahq/flow-router)           | [redux-simple-router](https://github.com/rackt/redux-simple-router) | stick the route in the state, react-router SSR, async routes        |
-| Server            | Node 0.10.41                                                    | Node 5                                                              | Faster, maintained, not a dinosaur...                               |
-
-
+| Routing           | [FlowRouter](https://github.com/kadirahq/flow-router)           | [redux-simple-router](https://github.com/reactjs/react-router-redux) | stick the route in the state, react-router SSR, async routes       |
+| Server            | Node 0.10.41                                                    | Node 5                                                              | Faster, maintained, not a dinosaur...                               |                             |
+ 
 ## Minimum requirements
 
 - 64-bit architecture machine
@@ -142,7 +141,7 @@ When the note is dropped to its new location, the change is persisted.
 
 ##In Action
 I don't know of any place that hosts RethinkDB for free...so here's a gif. 
-![Meatier](http://imgur.com/B3IErZr.gif)
+![Meatier](http://i.imgur.com/B3IErZr.gif)
 
 ##Contributing
  - Pull requests welcomed!
