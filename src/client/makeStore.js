@@ -6,9 +6,9 @@ import {browserHistory} from 'react-router';
 import makeReducer from '../universal/redux/makeReducer';
 
 const storeCreator = () =>
-	window.devToolsExtension
-		? window.devToolsExtension()(createStore)
-		: createStore;
+  window.devToolsExtension
+    ? window.devToolsExtension()(createStore)
+    : createStore;
 
 export default function (initialState) {
   const reduxRouterMiddleware = syncHistory(browserHistory);
