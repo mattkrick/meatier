@@ -4,8 +4,8 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
-const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal')];
-const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
+const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src')];
+const globalCSS = path.join(root, 'src', 'styles','global');
 
 const prefetches = [
   'react-dnd-html5-backend/lib/index.js',
@@ -18,7 +18,7 @@ const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(s
 
 export default {
   context: path.join(root, "src"),
-  entry: {prerender: "universal/routes/index.js"},
+  entry: {prerender: "routes/index.js"},
   target: "node",
   output: {
     path: path.join(root, 'build'),

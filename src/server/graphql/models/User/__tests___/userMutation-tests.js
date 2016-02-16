@@ -2,7 +2,7 @@ import test from 'ava';
 import promisify from 'es6-promisify';
 import 'babel-register';
 import 'babel-polyfill';
-import validateSecretToken from '../../../../../universal/utils/validateSecretToken'
+import validateSecretToken from '../../../../../utils/validateSecretToken'
 import bcrypt from 'bcrypt';
 import {graphql} from 'graphql';
 import Schema from '../../../rootSchema';
