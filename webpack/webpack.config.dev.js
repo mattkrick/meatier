@@ -3,7 +3,7 @@ import webpack from 'webpack';
 import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
-const clientInclude = path.join(root, 'src');
+const clientInclude = [path.join(root, 'src', 'components'), path.join(root, 'src', 'containers'), path.join(root, 'src', 'decorators'), path.join(root, 'src', 'redux'), path.join(root, 'src', 'routes'), path.join(root, 'src', 'styles'), path.join(root, 'src', 'utils')];
 const globalCSS = path.join(root, 'src', 'styles','global');
 
 const prefetches = [
