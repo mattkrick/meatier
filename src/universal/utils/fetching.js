@@ -1,20 +1,14 @@
 import fetch from 'isomorphic-fetch';
 import socketOptions from './socketOptions';
+import {getGraphQLHost, getGraphQLProtocol} from './graphQLConfig';
 
 export function parseJSON(response) {
   return response.json()
 }
 
 export function hostUrl() {
-  let host, protocol;
-  //testing doesn't know about webpack & throws an error if window is inside a conditional
-  //if (__CLIENT__) {
-  //  host = window.location.host;
-  //  protocol = window.location.protocol;
-  //} else {
-  host = 'localhost:3000';
-  protocol = 'http:';
-  //}
+  let host = getGraphQLHost(),
+    protocol = getGraphQLProtocol();
   return `${protocol}//${host}`;
 }
 
@@ -53,7 +47,9 @@ export const prepareGraphQLParams = graphParams => {
 export const fetchGraphQL = async (graphParams) => {
   const serializedParams = prepareGraphQLParams(graphParams);
   const authToken = localStorage.getItem(socketOptions.authTokenName);
-  const res = await fetch('http://localhost:3000/graphql', {
+  const currentHostUrl = hostUrl();
+  const graphQLUrl = `${currentHostUrl}/graphql`;
+  const res = await fetch(graphQLUrl, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -65,5 +61,3 @@ export const fetchGraphQL = async (graphParams) => {
   const {data, errors} = resJSON;
   return {data, error: getClientError(errors)}
 }
-
-

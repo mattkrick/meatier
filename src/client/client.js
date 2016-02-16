@@ -1,6 +1,5 @@
 import {render} from 'react-dom';
 import React from 'react';
-import {syncHistory, routeReducer} from 'redux-simple-router'
 import {Map, fromJS} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
