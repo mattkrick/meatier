@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import fetch from 'isomorphic-fetch';
-import {routeActions} from 'redux-simple-router';
+import {routeActions} from 'react-router-redux';
 import {parseJSON, hostUrl, fetchGraphQL} from '../../../utils/fetching';
 import socketOptions from '../../../utils/socketOptions';
 import validateSecretToken from '../../../utils/validateSecretToken';

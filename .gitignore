@@ -5,3 +5,4 @@ build
 rethinkdb_data
 stats.json
 .azk
+.env

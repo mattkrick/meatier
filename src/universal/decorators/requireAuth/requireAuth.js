@@ -1,12 +1,12 @@
 import React, { Component,PropTypes } from 'react';
-import {routeActions} from 'redux-simple-router';
+import {routeActions} from 'react-router-redux';
 import socketOptions from 'universal/utils/socketOptions';
 import {ensureState} from 'redux-optimistic-ui';
 import {connect} from 'react-redux';
 
 const {replace, push} = routeActions;
 
-// workaround for https://github.com/rackt/redux-simple-router/issues/212
+// workaround for https://github.com/rackt/react-router-redux/issues/212
 let key;
 export default ComposedComponent => {
   return class RequiredAuth extends Component {

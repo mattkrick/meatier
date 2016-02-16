@@ -1,8 +1,8 @@
 systems({
   meatier: {
-	  docker_extra: {
+    docker_extra: {
       User: 'root',
-     },
+    },
     depends: ["rethinkdb"],
     // More images:  http://images.azk.io
     image: {"docker": "azukiapp/node"},
@@ -20,7 +20,11 @@ systems({
     },
     scalable: {"default": 1},
     http: {
-      domains: [ "#{system.name}.#{azk.default_domain}" ]
+      domains: [
+        "#{env.HOST_DOMAIN}",
+        "#{env.HOST_IP}",
+        "#{system.name}.#{azk.default_domain}"
+      ]
     },
     ports: {
       // exports global variables
@@ -32,8 +36,10 @@ systems({
       // if you're setting it in a .env file
       NODE_ENV: "development",
       PORT: "3000",
+      GRAPHQL_HOST: "#{system.name}.#{azk.default_domain}"
     },
   },
+
   rethinkdb: {
     image: { docker: "rethinkdb" },
     shell: '/bin/bash',
@@ -56,5 +62,19 @@ systems({
       "DATABASE_PORT": '#{net.port.data}',
       "DATABASE_URL": 'rethinkdb://#{net.host}:#{net.port.data}',
     }
-}
+  },
+
+  deploy: {
+    image: {"docker": "azukiapp/deploy-digitalocean"},
+    mounts: {
+      "/azk/deploy/src" :    path("."),
+      "/azk/deploy/.ssh":    path("#{env.HOME}/.ssh"),
+      "/azk/deploy/.config": persistent("deploy-config"),
+    },
+    envs: {
+      REMOTE_HOST:        "159.203.25.99",
+    },
+    scalable: {"default": 0, "limit": 0}
+  }
+
 });

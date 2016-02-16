@@ -24,10 +24,12 @@
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
-  "contributors": [{
-    "name": "Bartek Kus",
-    "email": "bartekus@gmail.com"
-	}],
+  "contributors": [
+    {
+      "name": "Bartek Kus",
+      "email": "bartekus@gmail.com"
+    }
+  ],
   "license": "MIT",
   "devDependencies": {
     "assets-webpack-plugin": "3.2.0",
@@ -37,6 +39,7 @@
     "babel-loader": "6.2.1",
     "babel-plugin-add-module-exports": "0.1.2",
     "babel-plugin-react-transform": "2.0.0",
+    "babel-plugin-static-fs": "^1.1.0",
     "babel-plugin-transform-decorators-legacy": "1.3.4",
     "babel-preset-es2015": "6.3.13",
     "babel-preset-react": "6.3.13",
@@ -89,6 +92,7 @@
     "jsonwebtoken": "5.5.4",
     "jwt-decode": "1.5.0",
     "material-ui": "0.14.2",
+    "node-env-flag": "^0.1.0",
     "node-uuid": "1.4.7",
     "piping": "0.3.0",
     "query-string": "3.0.0",
@@ -99,6 +103,7 @@
     "react-dom-stream": "0.4.1",
     "react-redux": "4.0.6",
     "react-router": "2.0.0-rc5",
+    "react-router-redux": "3.0.0",
     "react-tap-event-plugin": "0.2.1",
     "redux": "3.0.5",
     "redux-devtools": "3.0.1",
@@ -109,7 +114,6 @@
     "redux-logger": "2.3.2",
     "redux-optimistic-ui": "0.3.1",
     "redux-promise": "0.5.0",
-    "redux-simple-router": "2.0.3",
     "redux-socket-cluster": "0.5.1",
     "redux-thunk": "1.0.3",
     "reselect": "2.0.2",
