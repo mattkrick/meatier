@@ -1,4 +1,4 @@
-import {createStore, applyMiddleware, compose} from 'redux';
+import {applyMiddleware, compose} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import optimisticMiddleware from '../universal/redux/middleware/optimisticMiddleware';
 import {syncHistory, routeReducer} from 'redux-simple-router'
