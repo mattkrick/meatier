@@ -83,7 +83,7 @@ systems({
       "/azk/deploy/.config": persistent("deploy-config"),
     },
     envs: {
-      REMOTE_HOST:        "159.203.25.99",
+      REMOTE_HOST:        "45.55.18.77",
     },
     scalable: {"default": 0, "limit": 0}
   }
