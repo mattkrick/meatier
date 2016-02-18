@@ -12,12 +12,10 @@ const prefetches = [
   'react-dock/lib/index.js',
   'lodash/object/mapValues.js',
   'joi/lib/index.js',
-  'universal/modules/kanban/containers/Kanban/KanbanContainer.js',
-  'redux-devtools-log-monitor/lib/index.js'
+  'universal/modules/kanban/containers/Kanban/KanbanContainer.js'
 ]
+
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
-
-
 
 const babelQuery = {
   "plugins": [
@@ -86,7 +84,6 @@ export default {
         exclude: globalCSS,
         include: clientInclude
       },
-
       {
         test: /\.js$/,
         loader: 'babel',
