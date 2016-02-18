@@ -4,9 +4,7 @@ import {syncHistory, routeReducer} from 'redux-simple-router';
 import {Map, fromJS} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
-const ENV_SUFFIX = __PRODUCTION__ ? 'prod' : 'dev';
-
-const makeStore = require(`./makeStore.${ENV_SUFFIX}.js`);
+const makeStore = __PRODUCTION__ ? require('./makeStore.prod.js') : require('./makeStore.dev.js');
 const Root = require('./Root.js');
 const {auth, routing, form} = window.__INITIAL_STATE__;
 
