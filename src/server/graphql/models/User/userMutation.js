@@ -5,7 +5,7 @@ import {getUserByEmail, signJwt, getAltLoginMessage, makeSecretToken} from './he
 import {errorObj} from '../utils';
 import {GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean} from 'graphql';
 import {jwtSecret} from '../../../secrets';
-import validateSecretToken from '../../../../universal/utils/validateSecretToken';
+import validateSecretToken from '../../../../utils/validateSecretToken';
 import {isLoggedIn} from '../authorization';
 import promisify from 'es6-promisify';
 import bcrypt from 'bcrypt';

@@ -3,8 +3,8 @@ import webpack from 'webpack';
 import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
-const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')];
-const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
+const clientInclude = [path.join(root, 'src', 'components'), path.join(root, 'src', 'containers'), path.join(root, 'src', 'decorators'), path.join(root, 'src', 'redux'), path.join(root, 'src', 'routes'), path.join(root, 'src', 'styles'), path.join(root, 'src', 'utils')];
+const globalCSS = path.join(root, 'src', 'styles','global');
 
 const prefetches = [
   'react-dnd/lib/index.js',
@@ -12,7 +12,7 @@ const prefetches = [
   'react-dock/lib/index.js',
   'lodash/object/mapValues.js',
   'joi/lib/index.js',
-  'universal/modules/kanban/containers/Kanban/KanbanContainer.js',
+  'containers/Kanban/KanbanContainer.js',
   'redux-devtools-log-monitor/lib/index.js'
 ]
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
@@ -40,7 +40,7 @@ export default {
   devtool: 'eval',
   context: path.join(root, "src"),
   entry: {
-    app: ['babel-polyfill', 'client/client.js', 'webpack-hot-middleware/client']
+    app: ['babel-polyfill', 'client.js', 'webpack-hot-middleware/client']
   },
   output: {
     // https://github.com/webpack/webpack/issues/1752
@@ -60,8 +60,8 @@ export default {
     })
   ],
   resolve: {
-    extensions: ['', '.js'],
-    root: path.join(root, 'src')
+    extensions: ['.js'],
+    modules: [path.join(root, 'src'), "node_modules"]
   },
   // used for joi validation on client
   node: {
