@@ -3,17 +3,14 @@ import webpack from 'webpack';
 import compression from 'compression';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import {graphql} from 'graphql';
 import jwt from 'express-jwt';
 
 import config from '../../webpack/webpack.config.dev';
 import createSSR from './createSSR';
 import {jwtSecret} from './secrets';
 import {googleAuthUrl, googleAuthCallback} from './graphql/models/User/oauthGoogle';
-import {prepareClientError} from './graphql/models/utils';
 import {wsGraphQLHandler, wsGraphQLSubHandler} from './graphql/wsGraphQLHandlers';
 import httpGraphQLHandler from './graphql/httpGraphQLHandler';
-import Schema from './graphql/rootSchema';
 
 const PROD = process.env.NODE_ENV === 'production';
 
@@ -49,7 +46,7 @@ export function run(worker) {
     app.use('/static', express.static('build'));
   }
 
-  //Oauth
+  // Oauth
   app.get('/auth/google', (req, res) => res.redirect(googleAuthUrl));
   app.get('/auth/google/callback', googleAuthCallback);
 

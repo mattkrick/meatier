@@ -5,7 +5,7 @@ import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal')];
-const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
+const globalCSS = path.join(root, 'src', 'universal', 'styles', 'global');
 
 const prefetches = [
   'react-dnd-html5-backend/lib/index.js',
@@ -13,22 +13,22 @@ const prefetches = [
   'joi/lib/index.js',
   'redux-form/lib/index.js',
   'material-ui/lib/raised-button.js'
-]
+];
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
 export default {
-  context: path.join(root, "src"),
-  entry: {prerender: "universal/routes/index.js"},
-  target: "node",
+  context: path.join(root, 'src'),
+  entry: {prerender: 'universal/routes/index.js'},
+  target: 'node',
   output: {
     path: path.join(root, 'build'),
     chunkFilename: '[name]_[chunkhash].js',
-    filename: "[name].js",
-    libraryTarget: "commonjs2",
+    filename: '[name].js',
+    libraryTarget: 'commonjs2',
     publicPath: '/static/'
   },
   // ignore anything that throws warnings & doesn't affect the view
-  externals: ['isomorphic-fetch','es6-promisify','socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],
+  externals: ['isomorphic-fetch', 'es6-promisify', 'socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],
   postcss: [cssModulesValues],
   resolve: {
     extensions: ['', '.js'],
@@ -37,13 +37,13 @@ export default {
   },
   plugins: [...prefetchPlugins,
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin("[name].css"),
+    new ExtractTextPlugin('[name].css'),
     new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
     new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
     new webpack.DefinePlugin({
-      "__CLIENT__": false,
-      "__PRODUCTION__": true,
-      "process.env.NODE_ENV": JSON.stringify('production')
+      '__CLIENT__': false,
+      '__PRODUCTION__': true,
+      'process.env.NODE_ENV': JSON.stringify('production')
     })
   ],
   module: {

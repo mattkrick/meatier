@@ -7,7 +7,7 @@ export default function (store) {
       require('./login')(store),
       require('./signup')(store),
       require('./logout'),
-      require('./verifyEmail'),
+      require('./verifyEmail')
     ]
-  }
+  };
 }

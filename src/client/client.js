@@ -1,17 +1,15 @@
 import {render} from 'react-dom';
 import React from 'react';
-import {syncHistory, routeReducer} from 'redux-simple-router';
-import {Map, fromJS} from 'immutable';
-import {ensureState} from 'redux-optimistic-ui';
+import {Map as iMap, fromJS} from 'immutable';
 
-import makeStore from './makeStore.js';
-const Root = require('./Root.js');
+import makeStore from './makeStore';
+const Root = require('./Root');
 const {auth, routing, form} = window.__INITIAL_STATE__;
 
- /*Currently, 3rd party reducers are kept as plain JS objects (routing and form)
+ /* Currently, 3rd party reducers are kept as plain JS objects (routing and form)
  Although confusing, I'm calling this a best practice because not every reducer
  will be written well enough to handle being transformed into an immutable*/
-let initialState = Map([
+const initialState = iMap([
   ['auth', fromJS(auth)],
   ['routing', routing],
   ['form', form]
