@@ -1,4 +1,4 @@
-import {applyMiddleware, compose} from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import optimisticMiddleware from '../universal/redux/middleware/optimisticMiddleware';
 import {syncHistory, routeReducer} from 'redux-simple-router'
@@ -17,8 +17,9 @@ const loggerMiddleware = createLogger({
 export default function (initialState) {
   const reduxRouterMiddleware = syncHistory(browserHistory)
   const createStoreWithMiddleware = compose(
-    applyMiddleware(reduxRouterMiddleware, optimisticMiddleware, thunkMiddleware, loggerMiddleware)
-  )(storeCreator);
+    applyMiddleware(reduxRouterMiddleware, optimisticMiddleware, thunkMiddleware, loggerMiddleware),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  )(createStore);
 
   const store = createStoreWithMiddleware(makeReducer(), initialState);
   reduxRouterMiddleware.listenForReplays(store, state => ensureState(state).get('routing'));
