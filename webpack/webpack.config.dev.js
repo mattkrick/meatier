@@ -8,7 +8,6 @@ const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
 
 const prefetches = [
   'react-dnd/lib/index.js',
-  'lodash/object/mapValues.js',
   'joi/lib/index.js',
   'universal/modules/kanban/containers/Kanban/KanbanContainer.js'
 ]
