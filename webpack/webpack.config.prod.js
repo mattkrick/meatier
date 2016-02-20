@@ -1,14 +1,13 @@
 import path from 'path';
 import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
 import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
-const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
+const globalCSS = path.join(root, 'src', 'universal', 'styles', 'global');
 
-/*code can be: vendor-common, vendor-page-specific, meatier-common, meatier-page-specific
+/* code can be: vendor-common, vendor-page-specific, meatier-common, meatier-page-specific
  * a small, fast landing page means only include the common from vendor + meatier
  * long-term caching means breaking apart meatier code from vendor code
  * The right balance in this case is to exclude material-ui from the vendor bundle
@@ -19,11 +18,11 @@ const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
 const vendor = [
   'react',
   'react-dom',
-  //'react-router',
-  //'react-redux',
-  //'redux',
-  //'redux-thunk',
-  //'redux-form',
+  // 'react-router',
+  // 'react-redux',
+  // 'redux',
+  // 'redux-thunk',
+  // 'redux-form',
   'joi'
 ];
 
@@ -31,12 +30,12 @@ const prefetches = [
   'react-dnd/lib/index.js',
   'joi/lib/index.js',
   'universal/modules/kanban/containers/Kanban/KanbanContainer.js'
-]
+];
 
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
 export default {
-  context: path.join(root, "src"),
+  context: path.join(root, 'src'),
   entry: {
     app: ['babel-polyfill', 'client/client.js'],
     vendor
@@ -69,9 +68,9 @@ export default {
     new AssetsPlugin({path: path.join(root, 'build'), filename: 'assets.json'}),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
-      "__CLIENT__": true,
-      "__PRODUCTION__": true,
-      "process.env.NODE_ENV": JSON.stringify('production')
+      '__CLIENT__': true,
+      '__PRODUCTION__': true,
+      'process.env.NODE_ENV': JSON.stringify('production')
     })
   ],
   module: {
