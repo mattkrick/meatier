@@ -20,4 +20,4 @@ export const options = {
   socketChannelLimit: 1000,
   rebootWorkerOnCrash: true
 };
-const socketCluster = new SocketCluster(options);
+new SocketCluster(options); // eslint-disable no-new

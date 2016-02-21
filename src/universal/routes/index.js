@@ -10,5 +10,5 @@ export default store => {
       require('./graphql'),
       require('./notFound')
     ]
-  }
-}
+  };
+};

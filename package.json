@@ -20,7 +20,7 @@
     "build:server": "NODE_ENV=production webpack --colors --config ./webpack/server.babel.js",
     "build:db": "node ./src/server/database/setupDB.babel.js",
     "test": "NODE_ENV=testing ava ./src/**/__tests___/**/*.js --verbose",
-    "lint": "xo src/**/*.js --plugin=react --env node --env browser --esnext --space --fix",
+    "lint": "xo --fix src/**/*.js",
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
@@ -47,7 +47,9 @@
     "babel-register": "6.4.3",
     "concurrently": "1.0.0",
     "css-loader": "0.23.1",
-    "eslint-plugin-react": "3.15.0",
+    "eslint": "^2.1.0",
+    "eslint-config-xo-react": "^0.4.0",
+    "eslint-plugin-react": "^3.16.1",
     "extract-text-webpack-plugin": "1.0.1",
     "fake-style-loader": "1.0.0",
     "file-loader": "0.8.5",
@@ -60,9 +62,6 @@
     "react-transform-catch-errors": "1.0.1",
     "react-transform-hmr": "1.0.1",
     "redbox-react": "1.2.0",
-    "redux-devtools": "3.0.1",
-    "redux-devtools-dock-monitor": "1.0.1",
-    "redux-devtools-log-monitor": "1.0.2",
     "rimraf": "2.5.0",
     "stats-webpack-plugin": "0.3.0",
     "style-loader": "0.13.0",
@@ -85,7 +84,7 @@
     "express-jwt": "3.3.0",
     "googleapis": "2.1.7",
     "graphiql": "0.4.5",
-    "graphql": "0.4.14",
+    "graphql": "^0.4.18",
     "immutable": "3.7.6",
     "isomorphic-fetch": "2.2.1",
     "joi": "7.2.1",
@@ -96,19 +95,16 @@
     "node-uuid": "1.4.7",
     "piping": "0.3.0",
     "query-string": "3.0.0",
-    "react": "0.14.6",
+    "react": "^0.14.7",
     "react-dnd": "2.0.2",
     "react-dnd-html5-backend": "2.0.2",
     "react-dom": "0.14.6",
     "react-dom-stream": "0.4.1",
-    "react-redux": "4.0.6",
+    "react-redux": "^4.4.0",
     "react-router": "2.0.0-rc5",
     "react-router-redux": "3.0.0",
     "react-tap-event-plugin": "0.2.1",
-    "redux": "3.0.5",
-    "redux-devtools": "3.0.1",
-    "redux-devtools-dock-monitor": "1.0.1",
-    "redux-devtools-log-monitor": "1.0.2",
+    "redux": "^3.3.1",
     "redux-form": "4.1.3",
     "redux-immutablejs": "0.0.8",
     "redux-logger": "2.3.2",
@@ -121,5 +117,23 @@
     "socketcluster": "4.1.0",
     "socketcluster-client": "4.1.2",
     "url": "0.11.0"
+  },
+  "xo": {
+    "esnext": true,
+    "space": 2,
+    "env": [
+      "browser",
+      "node",
+      "webpack"
+    ],
+    "extends": "xo-react",
+    "globals": [
+      "__CLIENT__",
+      "__PRODUCTION__"
+    ],
+    "rules": {
+      "react/jsx-indent": [2, 2],
+      "react/jsx-indent-props": [2, 2]
+    }
   }
 }

@@ -2,14 +2,14 @@ import React from 'react';
 import {createStore, applyMiddleware} from 'redux';
 import makeReducer from '../universal/redux/makeReducer';
 import {match} from 'react-router';
-import Html from './Html.js';
+import Html from './Html;
 import {UPDATE_LOCATION} from 'react-router-redux';
 import {renderToStaticMarkup} from 'react-dom-stream/server';
 import fs from 'fs';
 import {join, basename} from 'path';
 import promisify from 'es6-promisify';
 import thunkMiddleware from 'redux-thunk';
-import {Map} from 'immutable';
+import {Map as iMap} from 'immutable';
 
 // https://github.com/systemjs/systemjs/issues/953
 
@@ -17,17 +17,21 @@ function renderApp(res, store, assets, renderProps) {
   const location = renderProps ? renderProps.location : '/';
   // Needed so some components can render based on location
   store.dispatch({type: UPDATE_LOCATION, location});
-  const htmlStream = renderToStaticMarkup(<Html title="meatier" store={store} assets={assets}
-                                                renderProps={renderProps}/>);
+  const htmlStream = renderToStaticMarkup(<Html
+    title="meatier"
+    store={store}
+    assets={assets}
+    renderProps={renderProps}
+    />);
   htmlStream.pipe(res, {end: false});
   htmlStream.on('end', () => res.end());
 }
 
 export default async function createSSR(req, res) {
   const finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
-  const store = finalCreateStore(makeReducer(), Map());
+  const store = finalCreateStore(makeReducer(), iMap());
   if (process.env.NODE_ENV === 'production') {
-    const makeRoutes = require('../../build/prerender.js');
+    const makeRoutes = require('../../build/prerender');
     const assets = require('../../build/assets.json');
     const readFile = promisify(fs.readFile);
     assets.manifest.text = await readFile(join(__dirname, '..', '..', 'build', basename(assets.manifest.js)), 'utf-8');
@@ -50,4 +54,3 @@ export default async function createSSR(req, res) {
     renderApp(res, store);
   }
 }
-

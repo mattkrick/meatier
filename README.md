@@ -1,6 +1,7 @@
 <img src="https://cloud.githubusercontent.com/assets/5986600/12841730/d500562a-cc28-11e5-84d9-90ae6abd5486.png" width="600">
 
 [![Join the chat at https://gitter.im/mattkrick/meatier](https://badges.gitter.im/mattkrick/meatier.svg)](https://gitter.im/mattkrick/meatier?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 
 Meteor is awesome! But after 3 years, it's starting to show its age. This project is designed to showcase 
 the exact same functionality as Meteor, *but without the monolithic structure.* 

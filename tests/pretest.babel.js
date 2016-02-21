@@ -1,3 +1,3 @@
 require('babel-register');
-require('babel-polyfill')
-require('./pretest.js')();
+require('babel-polyfill');
+require('./pretest')();
