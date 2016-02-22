@@ -5,7 +5,7 @@ import Paper from 'material-ui/lib/paper';
 import React, { PropTypes, Component } from 'react';
 import styles from './Navigation.css';
 import {Link} from 'react-router';
-import smallLogo from './../Navigation/logo-small.png';
+import smallLogo from 'universal/components/Navigation/logo-small.png';
 
 export default class Navigation extends Component {
   static propTypes = {

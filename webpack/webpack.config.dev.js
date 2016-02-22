@@ -9,7 +9,7 @@ const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
 const prefetches = [
   'react-dnd/lib/index.js',
   'joi/lib/index.js',
-  'universal/modules/kanban/containers/Kanban/KanbanContainer.js'
+  'universal/containers/Kanban/KanbanContainer.js'
 ]
 
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
@@ -55,8 +55,8 @@ export default {
     })
   ],
   resolve: {
-    extensions: ['', '.js'],
-    root: path.join(root, 'src')
+    extensions: ['.js'],
+    modules: [path.join(root, 'src'), "node_modules"]
   },
   // used for joi validation on client
   node: {

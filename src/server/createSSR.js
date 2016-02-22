@@ -3,7 +3,7 @@ import {createStore, applyMiddleware} from 'redux';
 import makeReducer from '../universal/redux/makeReducer';
 import {match} from 'react-router';
 import Html from './Html';
-import {UPDATE_LOCATION} from 'redux-simple-router';
+import {UPDATE_LOCATION} from 'react-router-redux';
 import {renderToStaticMarkup} from 'react-dom-stream/server';
 import fs from 'fs';
 import {join, basename} from 'path';

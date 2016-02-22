@@ -1,10 +1,10 @@
 import React, { PropTypes, Component } from 'react';
-import App from '../../components/App/App';
+import App from 'universal/components/App/App';
 import injectTapeEventPlugin from 'react-tap-event-plugin';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import socketOptions from 'universal/utils/socketOptions';
-import loginWithToken from '../../decorators/loginWithToken/loginWithToken';
+import loginWithToken from 'universal/decorators/loginWithToken/loginWithToken';
 import {ensureState} from 'redux-optimistic-ui';
 
 injectTapeEventPlugin();
