@@ -47,8 +47,8 @@ export default {
     publicPath: '/static/'
   },
   resolve: {
-    extensions: ['', '.js'],
-    root: path.join(root, 'src')
+    extensions: ['.js'],
+    modules: [path.join(root, 'src'), "node_modules"]
   },
   node: {
     dns: 'mock',

@@ -31,8 +31,8 @@ export default {
   externals: ['isomorphic-fetch', 'es6-promisify', 'socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],
   postcss: [cssModulesValues],
   resolve: {
-    extensions: ['', '.js'],
-    root: path.join(root, 'src'),
+    extensions: ['.js'],
+    modules: [path.join(root, 'src'), "node_modules"],
     alias: {}
   },
   plugins: [...prefetchPlugins,

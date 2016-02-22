@@ -12,8 +12,8 @@ systems({
     ],
     workdir: "/azk/#{manifest.dir}",
     shell: "/bin/bash",
-    command: ["npm", "run", "quickstart"],
-    wait: {"retry": 2, "timeout": 20000},
+    command: ["npm", "run", "start"],
+    wait: {"retry": 2, "timeout": 50000},
     mounts: {
       '/azk/#{manifest.dir}': sync("."),
       '/azk/#{manifest.dir}/node_modules': persistent("./node_modules"),
@@ -42,12 +42,24 @@ systems({
 
   rethinkdb: {
     image: { docker: "rethinkdb" },
+    // If you need to expose and bind the rethinkdb ports outside of the docker
+    // enable the docker_extra setting below
+    docker_extra: {
+      HostConfig: {
+        "PortBindings": {
+          "8080/tcp": [{ "HostPort": "8080" }],
+          "28015/tcp": [{ "HostPort": "28015" }],
+          "29015/tcp": [{ "HostPort": "29015" }]
+        },
+      },
+    },
     shell: '/bin/bash',
     scalable: false,
     command: "rethinkdb --bind all --direct-io --cache-size auto --server-name rethinkdb --directory ./rethinkdb --canonical-address rethinkdb.dev.azk.io",
-    wait: {"retry": 2, "timeout": 5000},
+    wait: {"retry": 2, "timeout": 10000},
     mounts: {
       '/rethinkdb': persistent('rethinkdb-#{manifest.dir}'),
+      '/data': persistent('#{system.name}/data'),
     },
     ports: {
       http: "8080",
@@ -72,7 +84,7 @@ systems({
       "/azk/deploy/.config": persistent("deploy-config"),
     },
     envs: {
-      REMOTE_HOST:        "159.203.25.99",
+      REMOTE_HOST:        "45.55.18.77",
     },
     scalable: {"default": 0, "limit": 0}
   }

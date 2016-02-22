@@ -55,8 +55,8 @@ export default {
     })
   ],
   resolve: {
-    extensions: ['', '.js'],
-    root: path.join(root, 'src')
+    extensions: ['.js'],
+    modules: [path.join(root, 'src'), "node_modules"]
   },
   // used for joi validation on client
   node: {

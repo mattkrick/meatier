@@ -61,30 +61,45 @@ Some of my chief complaints with Meteor
 - azk start -vv && azk logs --follow
 
 
-## Other operational modes
-You will need to enter the shell mode to execute individual development modes
-- 'azk shell meatier'
+## Execution of commands
+- 'azk shell meatier -- //commands//'
+For example:
+- 'azk shell meatier -- npm run start:dev'
+- 'azk shell meatier -- npm run start'
+- 'azk shell meatier -- npm run build'
 
 #### Client-side development
-- `npm start`
+- `azk shell meatier -- npm run start:dev`
 - http://meatier.dev.azk.io
 
 Rebuilds the client code in-memory & uses hot module reload so you can develop super fast!
 On my 2013 MBA an initial build takes about 8 seconds and updates usually take 800ms
 
 #### Server-side development
-- `npm run prod`
+- `azk shell meatier -- npm run start`
 - http://meatier.dev.azk.io
-- If you edit any client or universal files, run `npm run bs` to rebuild & serve the bundle
+- If you edit any client or universal files, run `azk shell meatier -- npm run build` to rebuild & serve the bundle
 
 This mode is great because you can make changes to the server ***without having to recompile the client code***
 That means you only wait for the server to restart! GAME CHANGER!
 
 ##Database development
-- http://localhost:8080 for RethinkDB
+- You can use Azk to only start the database by `azk start rethinkdb`
+- http://rethinkdb.dev.azk.io for RethinkDB
 - All tables are managed in `./src/server/setupDB.js`. Just add your tables & indices to that file and rerun
 - A standard ORM would check for tables & ensure indices at least once per build, doing it this way keeps your build times down
-- http://localhost:3000/graphql for testing out new queries/mutations
+- http://meatier.dev.azk.io/graphql for testing out new queries/mutations
+
+##Deployment
+####Currently we recommend deployment on [DigitalOcean](www.digitalocean.com/?refcode=ce49c40dc881)
+######By using the above referral link you are helping us run [meatier.io](http://meatier.io/)
+Make sure that you have .env file in the root folder of meatier. 
+The file should looks like this:
+```
+DEPLOY_API_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+HOST_DOMAIN=hostname.com
+HOST_IP=12.34.56.78
+```
 
 ##Webpack configs
 ####Development config
@@ -141,7 +156,7 @@ When the note is dropped to its new location, the change is persisted.
  - http://survivejs.com/ (A nice alt-flux & react tutorial for a kanban)
 
 ##In Action
-I don't know of any place that hosts RethinkDB for free...so here's a gif. 
+Check it @ [meatier.io](http://meatier.io/)
 ![Meatier](http://i.imgur.com/B3IErZr.gif)
 
 ##Contributing
@@ -150,6 +165,15 @@ I don't know of any place that hosts RethinkDB for free...so here's a gif.
  - No donations necessary (but if you know of any jobs that'll let me move back to San Diego, let me know :wink:)
 
 ##Changelog
+- 0.9.5
+ - Added Azk.io orchestrate development environments
+ - Upgraded all dependencies
+ - Resolved issue #73 : upgrade to the latest webpack 2 version
+ - Resolved issue #67 : How to deploy in production?
+ - Resolved issue #65 : Update `redux-simple-router` and replaced it with `react-router-redux`
+ - Resolved issue #64 : Make meatier more configurable for deployment
+ - Resolved issue #52 : Docker: Environment Variables rather than hardcoded localhost
+ 
 - 0.9
  - Upgraded to `redux-simple-router@2.0.3`
  - Now you can do cool things like time travel through routes!
