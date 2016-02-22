@@ -7,7 +7,7 @@ export default store => {
     onEnter: requireNoAuth(store),
     path: 'login',
     getIndexRoute: async (location, cb) => {
-      let component = await System.import('universal/modules/auth/containers/Auth/AuthContainer');
+      let component = await System.import('universal/containers/Auth/AuthContainer');
       cb(null, {component})
     },
     getChildRoutes: (location, cb) => {
@@ -15,28 +15,28 @@ export default store => {
         {
           path: 'lost-password',
           getComponent: async (location, cb) => {
-            let component = await System.import('universal/modules/auth/components/LostPassword/LostPassword');
+            let component = await System.import('universal/components/LostPassword/LostPassword');
             cb(null, component)
           }
         },
         {
           path: 'reset-email-sent',
           getComponent: async (location, cb) => {
-            let component = await System.import('universal/modules/auth/components/ResetEmailSent/ResetEmailSent');
+            let component = await System.import('universal/components/ResetEmailSent/ResetEmailSent');
             cb(null, component)
           }
         },
         {
           path: 'reset-password/:resetToken',
           getComponent: async (location, cb) => {
-            let component = await System.import('universal/modules/auth/components/ResetPassword/ResetPassword');
+            let component = await System.import('universal/components/ResetPassword/ResetPassword');
             cb(null, component)
           }
         },
         {
           path: 'reset-password-success',
           getComponent: async (location, cb) => {
-            let component = await System.import('universal/modules/auth/components/ResetPasswordSuccess/ResetPasswordSuccess');
+            let component = await System.import('universal/components/ResetPasswordSuccess/ResetPasswordSuccess');
             cb(null, component)
           }
         }

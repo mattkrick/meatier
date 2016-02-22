@@ -1,4 +1,4 @@
-import LandingContainer from 'universal/modules/landing/containers/Landing/LandingContainer';
+import LandingContainer from 'universal/containers/Landing/LandingContainer';
 
 export default {
   path: '*',
