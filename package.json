@@ -1,6 +1,6 @@
 {
   "name": "meatier",
-  "version": "0.9.0",
+  "version": "0.9.2",
   "description": "Like meteor, but meatier",
   "repository": {
     "type": "git",
@@ -11,19 +11,30 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development node ./src/server/server.babel.js",
-    "prod": "NODE_ENV=production node ./src/server/server.babel.js",
-    "build": "rimraf build && concurrent \"npm run build:client\" \"npm run build:server\"",
-    "bs": "rimraf build && concurrent \"npm run build:client\" \"npm run build:server\" \"npm run prod\"",
-    "quickstart": "rimraf build && concurrent \"npm run build:db\" \"npm run build:client\" \"npm run build:server\" \"npm run prod\"",
-    "build:client": "NODE_ENV=production webpack --colors --config ./webpack/prod.babel.js",
-    "build:server": "NODE_ENV=production webpack --colors --config ./webpack/server.babel.js",
-    "build:db": "node ./src/server/database/setupDB.babel.js",
-    "test": "NODE_ENV=testing ava ./src/**/__tests___/**/*.js --verbose",
-    "lint": "xo --fix src/**/*.js",
-    "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
+    "postinstall":  "rimraf build && concurrently \"npm run build:db\" \"npm run build:client\" \"npm run build:server\"",
+    "reset":        "npm run postinstall",
+    "dev":          "NODE_ENV=development node ./src/server/server.babel.js",
+    "prod":         "NODE_ENV=production node ./src/server/server.babel.js",
+    "build":        "rimraf build && concurrently \"npm run build:client\" \"npm run build:server\"",
+    "restart":      "npm run build && npm run prod",
+    "restart:dev":  "npm run build && npm run dev",
+    "start":        "npm run prod",
+    "start:dev":    "npm run dev",
+    "build:client": "NODE_ENV=production webpack -p --config ./webpack/prod.babel.js",
+    "build:server": "NODE_ENV=production webpack -p --config ./webpack/server.babel.js",
+    "build:db":     "node ./src/server/database/setupDB.babel.js",
+    "test":         "NODE_ENV=testing ava ./src/**/__tests___/**/*.js --verbose",
+    "lint":         "xo --fix src/**/*.js",
+    "profile":      "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json",
+    "help":         "npm run"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
+  "contributors": [
+    {
+      "name": "Bartek Kus",
+      "email": "bartekus@gmail.com"
+    }
+  ],
   "license": "MIT",
   "devDependencies": {
     "assets-webpack-plugin": "3.2.0",
@@ -38,7 +49,7 @@
     "babel-preset-react": "6.3.13",
     "babel-preset-stage-0": "6.3.13",
     "babel-register": "6.4.3",
-    "concurrently": "1.0.0",
+    "concurrently": "2.0.0",
     "css-loader": "0.23.1",
     "eslint": "^2.1.0",
     "eslint-config-xo-react": "^0.4.0",
@@ -84,6 +95,7 @@
     "jsonwebtoken": "5.5.4",
     "jwt-decode": "1.5.0",
     "material-ui": "0.14.2",
+    "node-env-flag": "^0.1.0",
     "node-uuid": "1.4.7",
     "piping": "0.3.0",
     "query-string": "3.0.0",
