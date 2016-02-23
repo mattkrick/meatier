@@ -13,7 +13,7 @@ export default {
     },
     async resolve(source, {lane}, {rootValue}) {
       isLoggedIn(rootValue);
-      lane.createdAt = new Date();
+      lane.createdAt = Date.now();
       const newLane = await r.table('lanes').insert(lane, {returnChanges: true});
       if (newLane.errors) {
         throw errorObj({_error: 'Could not add lane'});

@@ -12,7 +12,7 @@ export default {
     },
     async resolve(source, {note}, {rootValue}) {
       isLoggedIn(rootValue);
-      note.createdAt = new Date();
+      note.createdAt = Date.now();
       const newNote = await r.table('notes').insert(note, {returnChanges: true});
       if (newNote.errors) {
         throw errorObj({_error: 'Could not add note'});
