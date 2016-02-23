@@ -1,4 +1,6 @@
 .DS_Store
+.azk
+.env
 node_modules
 npm-debug.log
 build
