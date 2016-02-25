@@ -1,6 +1,6 @@
 {
   "name": "meatier",
-  "version": "0.10",
+  "version": "0.10.0",
   "description": "Like meteor, but meatier",
   "repository": {
     "type": "git",
