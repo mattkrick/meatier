@@ -12,7 +12,7 @@ export function hostUrl() {
   //  host = window.location.host;
   //  protocol = window.location.protocol;
   //} else {
-  host = 'localhost:3000';
+  host = 'meatier.dev.azk.io';
   protocol = 'http:';
   //}
   return `${protocol}//${host}`;
@@ -53,7 +53,7 @@ export const prepareGraphQLParams = graphParams => {
 export const fetchGraphQL = async (graphParams) => {
   const serializedParams = prepareGraphQLParams(graphParams);
   const authToken = localStorage.getItem(socketOptions.authTokenName);
-  const res = await fetch('http://localhost:3000/graphql', {
+  const res = await fetch('http://meatier.dev.azk.io/graphql', {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -65,5 +65,3 @@ export const fetchGraphQL = async (graphParams) => {
   const {data, errors} = resJSON;
   return {data, error: getClientError(errors)}
 }
-
-
