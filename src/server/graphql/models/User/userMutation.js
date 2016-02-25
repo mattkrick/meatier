@@ -59,7 +59,7 @@ export default {
           throw errorObj({_error: 'Could not create account, please try again'});
         }
         //TODO send email with verifiedEmailToken via mailgun or whatever
-        console.log('Verify url:', `http://localhost:3000/verify-email/${verifiedEmailToken}`);
+        console.log('Verify url:', `http://meatier.dev.azk.io/verify-email/${verifiedEmailToken}`);
         const authToken = signJwt({id});
         return {user: userDoc, authToken};
       }
@@ -80,7 +80,7 @@ export default {
       if (!result.replaced) {
         throw errorObj({_error: 'Could not find or update user'});
       }
-      console.log('Reset url:', `http://localhost:3000/login/reset-password/${resetToken}`);
+      console.log('Reset url:', `http://meatier.dev.azk.io/login/reset-password/${resetToken}`);
       return true;
     }
   },
@@ -139,7 +139,7 @@ export default {
         throw errorObj({_error: 'Could not find or update user'});
       }
       //TODO send email with new verifiedEmailToken via mailgun or whatever
-      console.log('Verified url:', `http://localhost:3000/login/verify-email/${verifiedEmailToken}`);
+      console.log('Verified url:', `http://meatier.dev.azk.io/login/verify-email/${verifiedEmailToken}`);
       return true;
     }
   },
