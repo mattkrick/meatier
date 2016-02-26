@@ -1,7 +1,9 @@
 import React, { PropTypes, Component } from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import styles from './Footer.css';
 import {Link} from 'react-router';
 
+@pureRender
 export default class Footer extends Component {
 
   render() {

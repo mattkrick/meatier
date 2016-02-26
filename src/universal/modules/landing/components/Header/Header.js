@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import styles from './Header.css';
 import {Link} from 'react-router';
 import RaisedButton from 'material-ui/lib/raised-button';
 
+@pureRender
 export default class Header extends Component {
   render() {
     return (

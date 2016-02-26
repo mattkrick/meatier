@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
@@ -11,6 +12,7 @@ import {loadNotes} from 'universal/modules/kanban/ducks/notes';
 import {ensureState} from 'redux-optimistic-ui';
 import requireAuth from 'universal/decorators/requireAuth/requireAuth';
 
+@pureRender
 @connect(mapStateToProps, mapDispatchToProps)
 @requireAuth
 @reduxSocket(socketOptions)

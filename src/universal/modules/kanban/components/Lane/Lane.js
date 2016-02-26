@@ -1,10 +1,12 @@
 import React, {Component, PropTypes} from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import EditableContainer from '../../containers/Editable/EditableContainer.js';
 import Notes from '../Notes/Notes';
 import styles from './lane.css';
 import uuid from 'node-uuid';
 import {getFormState} from 'universal/redux/helpers';
 
+@pureRender
 export default class Lane extends Component {
   static propTypes = {
     laneActions: PropTypes.object.isRequired,

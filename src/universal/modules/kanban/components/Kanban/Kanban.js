@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import Lanes from '../Lanes/Lanes.js';
 import styles from './Kanban.css';
 import uuid from 'node-uuid';
 
+@pureRender
 export default class Kanban extends Component {
   static propTypes = {
     laneActions: PropTypes.object.isRequired,

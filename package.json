@@ -88,6 +88,7 @@
     "piping": "0.3.0",
     "query-string": "3.0.0",
     "react": "^0.14.7",
+    "react-addons-shallow-compare": "0.14.7",
     "react-dnd": "2.0.2",
     "react-dnd-html5-backend": "2.0.2",
     "react-dom": "0.14.6",

@@ -3,10 +3,12 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
 import React, { PropTypes, Component } from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import styles from './Navigation.css';
 import {Link} from 'react-router';
 import smallLogo from './../Navigation/logo-small.png';
 
+@pureRender
 export default class Navigation extends Component {
   static propTypes = {
     isAuthenticated: PropTypes.bool.isRequired

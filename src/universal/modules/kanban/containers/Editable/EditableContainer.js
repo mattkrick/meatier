@@ -1,9 +1,11 @@
 import React, {PropTypes, Component} from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
 import Editable from 'universal/modules/kanban/components/Editable/Editable';
 import {getFormState} from 'universal/redux/helpers';
 
+@pureRender
 @reduxForm({getFormState})
 export default class EditableContainer extends Component {
   static PropTypes = {
