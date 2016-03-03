@@ -129,6 +129,10 @@ I don't know of any place that hosts RethinkDB for free...so here's a gif.
  - No donations necessary (but if you know of any jobs that'll let me move back to San Diego, let me know :wink:)
 
 ##Changelog
+- 0.10
+ - Use the redux devtools chrome extension 
+ - Update just about all the deps
+ - Make deployments more configurable (deployment strategy coming soon)
 - 0.9
  - Upgraded to `redux-simple-router@2.0.3`
  - Now you can do cool things like time travel through routes!
