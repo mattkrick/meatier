@@ -6,7 +6,7 @@ import {browserHistory} from 'react-router';
 import makeReducer from '../universal/redux/makeReducer';
 import {ensureState} from 'redux-optimistic-ui';
 
-export default makeStore = initialState => {
+export default initialState => {
   let store;
   const reducer = makeReducer();
   const reduxRouterMiddleware = syncHistory(browserHistory);
