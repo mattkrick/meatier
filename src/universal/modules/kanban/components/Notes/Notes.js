@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import EditableContainer from '../../containers/Editable/EditableContainer.js';
 import {NOTE} from 'universal/modules/kanban/ducks/notes';
 import {DropTarget} from 'react-dnd';
@@ -24,6 +25,7 @@ const noteTarget = {
   connectDropTarget: connect.dropTarget()
 }))
 
+@pureRender
 export default class Notes extends Component {
 
   render() {

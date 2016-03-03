@@ -1,6 +1,8 @@
 import React, {Component, PropTypes} from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import LaneContainer from '../../containers/Lane/LaneContainer.js';
 
+@pureRender
 export default class Lanes extends Component {
   static propTypes = {
     laneActions: PropTypes.object.isRequired,

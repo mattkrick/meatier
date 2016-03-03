@@ -1,9 +1,11 @@
 import React, { PropTypes, Component } from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import styles from './Landing.css';
 
 import Footer from 'universal/components/Footer/Footer';
 import Navigation from 'universal/components/Navigation/Navigation';
 
+@pureRender
 export default class Landing extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {noteActions} from 'universal/modules/kanban/ducks/notes.js';
@@ -6,6 +7,7 @@ import Lane from 'universal/modules/kanban/components/Lane/Lane';
 import {List} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
+@pureRender
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LaneContainer extends Component {
   static propTypes = {

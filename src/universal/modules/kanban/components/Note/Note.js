@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import pureRender from 'universal/decorators/pureRender/pureRender';
 import {DragSource, DropTarget} from 'react-dnd';
 import { findDOMNode } from 'react-dom';
 import {NOTE} from 'universal/modules/kanban/ducks/notes';
@@ -75,6 +76,7 @@ const noteTarget = {
 @DropTarget(NOTE, noteTarget, (connect) => ({
   connectDropTarget: connect.dropTarget()
 }))
+@pureRender
 export default class Note extends React.Component {
   render() {
     const {connectDragSource, connectDropTarget, isDragging, ...props} = this.props;
