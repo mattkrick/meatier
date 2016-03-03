@@ -2,7 +2,6 @@ import {readCert} from './readCert';
 import flag from 'node-env-flag';
 
 export const getRethinkConfig = () => {
-
   let config = {
     host: process.env.DATABASE_HOST || 'localhost',
     port: process.env.DATABASE_PORT || 28015,
@@ -17,18 +16,11 @@ export const getRethinkConfig = () => {
     // we may need a cert for production deployment
     // Compose.io requires this, for example.
     // https://www.compose.io/articles/rethinkdb-and-ssl-think-secure/
-
-    // TODO: cert currently is relatively hardcoded to be at './cacert'
-    const cert = readCert();
-
-    return Object.assign({}, config, {
+    Object.assign(config, {
       ssl: {
-        ca: cert
+        ca: readCert()
       }
     });
-
-  } else {
-    // if not production, then use basic config
-    return config;
   }
+  return config;
 }
