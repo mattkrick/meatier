@@ -4,11 +4,12 @@ import optimisticMiddleware from '../universal/redux/middleware/optimisticMiddle
 import {syncHistory} from 'redux-simple-router';
 import {browserHistory} from 'react-router';
 import makeReducer from '../universal/redux/makeReducer';
+import {ensureState} from 'redux-optimistic-ui';
 
-export const makeStore = initialState => {
+export default makeStore = initialState => {
+  let store;
   const reducer = makeReducer();
   const reduxRouterMiddleware = syncHistory(browserHistory);
-  const devtoolsExt = global.devToolsExtension && global.devToolsExtension();
 
   const middlewares = [
     reduxRouterMiddleware,
@@ -17,6 +18,7 @@ export const makeStore = initialState => {
   ];
 
   if (!__PRODUCTION__) {
+    const devtoolsExt = global.devToolsExtension && global.devToolsExtension();
     if (!devtoolsExt) {
       // We don't have the Redux extension in the browser, show the Redux logger
       const createLogger = require('redux-logger');
@@ -26,21 +28,13 @@ export const makeStore = initialState => {
       });
       middlewares.push(logger);
     }
-  }
-
-  const mw = compose(
-    applyMiddleware(...middlewares),
-    devtoolsExt || (f => f)
-  );
-  const store = createStore(reducer, initialState, mw);
-
-  if (!__PRODUCTION__) {
-    const {ensureState} = require('redux-optimistic-ui');
-
+    store = createStore(reducer, initialState, compose(
+      applyMiddleware(...middlewares),
+      devtoolsExt || (f => f)
+    ));
     reduxRouterMiddleware.listenForReplays(store, state => ensureState(state).get('routing'));
+  } else {
+    store = createStore(reducer, initialState, applyMiddleware(...middlewares));
   }
-
   return store;
 };
-
-export default makeStore;
