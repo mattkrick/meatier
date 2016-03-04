@@ -60,11 +60,11 @@ export default class Auth extends Component {
             />
 
           </div>
+          <div className={styles.hrWithText}>
+            <span className={styles.hrText}>or</span>
+          </div>
+          <span onClick={this.loginWithGoogle}>Login with Google</span>
         </form>
-        <div className={styles.hrWithText}>
-          <span className={styles.hrText}>or</span>
-        </div>
-        <span onClick={this.loginWithGoogle}>Login with Google</span>
       </div>
     );
   }
