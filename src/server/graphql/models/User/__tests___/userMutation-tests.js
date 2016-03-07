@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import {graphql} from 'graphql';
 import Schema from '../../../rootSchema';
 import r from '../../../../database/rethinkdriver';
+import {same} from '../../../../../../tests/utils';
 
 const compare = promisify(bcrypt.compare);
 const user = `
@@ -88,31 +89,31 @@ test('createUser:success', async t => {
   const actual = await graphql(Schema, query);
   const {user:{id, createdAt}, authToken} = actual.data.newUser;
   const expected = {
-    "data": {
-      "newUser": {
-        "user": {
-          "id": id,
-          "email": "createuser:success@createuser:success",
-          "createdAt": createdAt,
-          "updatedAt": null,
-          "strategies": {
-            "local": {
-              "isVerified": false,
-              "password": null,
-              "verifiedEmailToken": null,
-              "resetToken": null
+    data: {
+      newUser: {
+        user: {
+          id: id,
+          email: 'createuser:success@createuser:success',
+          createdAt: createdAt,
+          updatedAt: null,
+          strategies: {
+            local: {
+              isVerified: false,
+              password: null,
+              verifiedEmailToken: null,
+              resetToken: null
             },
-            "google": null
+            google: null
           }
         },
-        "authToken": authToken
+        authToken: authToken
       }
     }
   }
   t.true(new Date(createdAt) <= new Date());
   t.true(typeof id === 'string');
   t.ok(authToken);
-  t.same(actual, expected)
+  same(t, actual, expected)
 });
 
 test('createUser:alreadyexists', async t => {

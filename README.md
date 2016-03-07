@@ -37,7 +37,7 @@ Some of my chief complaints with Meteor
  
 ##Installation
 - `brew install rethinkdb`
-- `npm i -g webpack@2.0.2-beta` (optional, but recommended)
+- make sure you are using webpack@2.x (not a v1 installed globally)
 - `rethinkdb` (in second terminal window)
 - `git clone` this repo
 - `cd meatier`
