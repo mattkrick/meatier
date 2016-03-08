@@ -22,8 +22,15 @@
   font-weight: 500 !important;
   color: primary !important;
 }
+
 .brand {
   color: primary;
   text-decoration: none;
   font-size: 1.75em; /* ~28px */
+}
+
+.span {
+  display: flex;
+  align-items: center;
+  text-align: center;
 }

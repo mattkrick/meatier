@@ -6,7 +6,6 @@ export default class Home extends Component {
     return (
       <div>
         <Header/>
-        <h1>...Nothing here. Try the kanban already.</h1>
       </div>
     );
   }

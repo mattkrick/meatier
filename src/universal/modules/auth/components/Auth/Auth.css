@@ -1,6 +1,7 @@
 @value primary, secondary from 'universal/styles/colors.css';
 
 .loginForm {
+  height: 87.6%;
   display: flex;
   flex-direction: column;
   align-items: center;

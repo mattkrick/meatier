@@ -42,19 +42,18 @@ Some of my chief complaints with Meteor
 - `git clone` this repo
 - `cd meatier`
 - `npm install`
-- `npm run quickstart`
 
 ##Client-side development
-- `npm start`
+- `npm run dev`
 - http://localhost:3000
 
 Rebuilds the client code in-memory & uses hot module reload so you can develop super fast!
 On my 2013 MBA an initial build takes about 8 seconds and updates usually take 800ms
 
 ##Server-side development
-- `npm run prod`
+- `npm start`
 - http://localhost:3000
-- If you edit any client or universal files, run `npm run bs` to rebuild & serve the bundle
+- If you edit any client or universal files, run `npm run restart` to rebuild & serve the bundle
 
 This mode is great because you can make changes to the server ***without having to recompile the client code***
 That means you only wait for the server to restart! GAME CHANGER!

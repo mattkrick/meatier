@@ -7,6 +7,8 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
+console.log(('   Server is running in %s mode.'), process.env.NODE_ENV);
+
 require('babel-register');
 require('babel-polyfill');
 require('./server');

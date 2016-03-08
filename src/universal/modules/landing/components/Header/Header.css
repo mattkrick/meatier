@@ -3,12 +3,10 @@
 
 
 .header {
-  background-image: url('./paddleboard.jpg');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+  height: 87.6%;
+  background: url('./paddleboard.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: #fff;
-  min-height: 700px;
-
 }
 
 .banner {
