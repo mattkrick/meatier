@@ -34,6 +34,7 @@
 .addNote button {
   background-color: #fdfdfd;
   border: 1px solid #ccc;
+  color: #000;
 }
 
 .delete {

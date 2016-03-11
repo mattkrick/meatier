@@ -12,7 +12,7 @@ const prefetches = [
   'react-dnd/lib/index.js',
   'joi/lib/index.js',
   'redux-form/lib/index.js',
-  'material-ui/lib/raised-button.js'
+  'react-toolbox/lib/button/index.js'
 ];
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
@@ -31,7 +31,7 @@ export default {
   externals: ['isomorphic-fetch', 'es6-promisify', 'socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],
   postcss: [cssModulesValues],
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.scss'],
     modules: [path.join(root, 'src'), 'node_modules']
   },
   plugins: [...prefetchPlugins,
@@ -66,6 +66,15 @@ export default {
         test: /\.js$/,
         loader: 'babel',
         include: serverInclude
+      },
+      {
+        test: /(\.scss|\.css)$/,
+        include: /(node_modules)\/react-toolbox/,
+        loaders: [
+          'style',
+          'css-loader?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'sass?sourceMap'
+        ]
       }
     ]
   }
