@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import TextField from 'material-ui/lib/text-field';
-import RaisedButton from 'material-ui/lib/raised-button';
+import Input from 'react-toolbox/lib/input';
+import Button from 'react-toolbox/lib/button';
 import styles from './ResetPassword.css';
 import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
@@ -22,17 +22,17 @@ export default class ResetPassword extends Component {
         <form className={styles.resetPasswordForm} onSubmit={handleSubmit(this.onSubmit)}>
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
 
-          <TextField {...password}
+          <Inbox {...password}
             type="password"
-            floatingLabelText="Password"
-            hintText="hunter2"
-            errorText={ password.touched && password.error || ''}
+            label="Password"
+            hint="hunter2"
+            error={ password.touched && password.error || ''}
           />
           <input style={{display:'none'}} type="text" name="javascriptDisabled"/>
           <div className={styles.resetPasswordButton}>
-            <RaisedButton
+            <Button raised={true}
               label='Set new password'
-              secondary={true}
+              primary={true}
               type='submit'
               disabled={submitting}
               onClick={handleSubmit(this.onSubmit)}

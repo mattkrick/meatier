@@ -26,7 +26,7 @@ function renderApp(res, store, assets, renderProps) {
   htmlStream.pipe(res, {end: false});
   htmlStream.on('end', () => res.end());
 }
-
+// TODO: Give it some TLC cuz it ain't working in Production
 export default async function createSSR(req, res) {
   const finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
   const store = finalCreateStore(makeReducer(), iMap());
@@ -42,8 +42,6 @@ export default async function createSSR(req, res) {
       } else if (redirectLocation) {
         res.redirect(redirectLocation.pathname + redirectLocation.search);
       } else if (renderProps) {
-        // just look away, this is ugly & wrong https://github.com/callemall/material-ui/pull/2172
-        GLOBAL.navigator = {userAgent: req.headers['user-agent']};
         renderApp(res, store, assets, renderProps);
       } else {
         res.status(404).send('Not found');

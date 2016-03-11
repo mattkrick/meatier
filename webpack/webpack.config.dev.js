@@ -55,7 +55,7 @@ export default {
     })
   ],
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.scss'],
     modules: [path.join(root, 'src'), 'node_modules']
   },
   // used for joi validation on client
@@ -86,6 +86,15 @@ export default {
         loader: 'babel',
         query: babelQuery,
         include: clientInclude
+      },
+      {
+        test: /(\.scss|\.css)$/,
+        include: /(node_modules)\/react-toolbox/,
+        loaders: [
+          'style',
+          'css-loader?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'sass?sourceMap'
+        ]
       }
     ]
   }

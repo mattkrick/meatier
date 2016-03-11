@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import TextField from 'material-ui/lib/text-field';
-import RaisedButton from 'material-ui/lib/raised-button';
+import Input from 'react-toolbox/lib/input';
+import Button from 'react-toolbox/lib/button';
 import styles from './LostPassword.css';
 import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
@@ -22,19 +22,19 @@ export default class LostPassword extends Component {
         <form className={styles.lostPasswordForm} onSubmit={handleSubmit(emailPasswordReset)}>
           <input style={{display:'none'}} type="text" name="javascript-disabled"/>
 
-          <TextField {...email}
+          <Input {...email}
             type="text"
-            hintText="name@email.com"
-            errorText={ email.touched && email.error || ''}
-            floatingLabelText="Email"
+            hint="name@email.com"
+            error={ email.touched && email.error || ''}
+            label="Email"
             defaultValue={location.query.e}
             autoFocus={true}
           />
           <input style={{display:'none'}} type="text" name="javascript-disabled"/>
           <div className={styles.lostPasswordButton}>
-            <RaisedButton
+            <Button
               label='Send password reset'
-              secondary={true}
+              primary={true}
               type='submit'
               disabled={submitting}
               onClick={handleSubmit(emailPasswordReset)}
