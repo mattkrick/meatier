@@ -1,4 +1,10 @@
+.wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 .component {
+  flex: 1;
   min-height: 700px;
   display: flex;
   flex-direction: column;
