@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './Header.css';
 import {Link} from 'react-router';
-import RaisedButton from 'material-ui/lib/raised-button';
+import Button from 'react-toolbox/lib/button';
 
 export default class Header extends Component {
   render() {
@@ -12,7 +12,7 @@ export default class Header extends Component {
           <h3 className={styles.bannerDesc}>Like Meteor, but Meatier</h3>
           <div className={styles.tryButton}>
             <Link to="/kanban">
-              <RaisedButton secondary={true} label="Try the Kanban"></RaisedButton>
+              <Button raised={true} primary={true} label="Try the Kanban" />
             </Link>
           </div>
         </div>

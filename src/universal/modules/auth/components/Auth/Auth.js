@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import TextField from 'material-ui/lib/text-field';
-import RaisedButton from 'material-ui/lib/raised-button';
+import Input from 'react-toolbox/lib/input';
+import Button from 'react-toolbox/lib/button';
 import styles from './Auth.css';
 import {Link} from 'react-router';
 import {loginUser, signupUser, oauthLogin} from '../..//ducks/auth';
@@ -30,19 +30,19 @@ export default class Auth extends Component {
         <form className={styles.loginForm} onSubmit={handleSubmit(this.onSubmit)}>
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
 
-          <TextField {...email}
+          <Input {...email}
             type="text"
-            hintText="name@email.com"
-            errorText={ email.touched && email.error || ''}
-            floatingLabelText="Email"
+            hint="name@email.com"
+            error={ email.touched && email.error || ''}
+            label="Email"
           />
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
 
-          <TextField {...password}
+          <Input {...password}
             type="password"
-            floatingLabelText="Password"
-            hintText="hunter2"
-            errorText={ password.touched && password.error || ''}
+            label="Password"
+            hint="hunter2"
+            error={ password.touched && password.error || ''}
           />
 
           {isLogin ?
@@ -51,9 +51,9 @@ export default class Auth extends Component {
             </Link> : null}
 
           <div className={styles.loginButton}>
-            <RaisedButton
+            <Button
               label={isLogin ? 'Login' : 'Sign up'}
-              secondary={true}
+              primary={true}
               type='submit'
               disabled={isAuthenticating}
               onClick={handleSubmit(this.onSubmit)}
