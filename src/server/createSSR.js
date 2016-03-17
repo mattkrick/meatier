@@ -22,11 +22,10 @@ function renderApp(res, store, assets, renderProps) {
     store={store}
     assets={assets}
     renderProps={renderProps}
-    />);
+  />);
   htmlStream.pipe(res, {end: false});
   htmlStream.on('end', () => res.end());
 }
-// TODO: Give it some TLC cuz it ain't working in Production
 export default async function createSSR(req, res) {
   const finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
   const store = finalCreateStore(makeReducer(), iMap());

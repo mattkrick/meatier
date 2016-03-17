@@ -47,7 +47,7 @@ export default {
     publicPath: '/static/'
   },
   resolve: {
-    extensions: ['.js', '.scss'],
+    extensions: ['.js'],
     modules: [path.join(root, 'src'), 'node_modules']
   },
   node: {
@@ -96,13 +96,9 @@ export default {
         include: clientInclude
       },
       {
-        test: /(\.scss|\.css)$/,
-        include: /(node_modules)\/react-toolbox/,
-        loaders: [
-          'style',
-          'css-loader?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-          'sass?sourceMap'
-        ]
+        test: /\.scss$/,
+        loader: 'fake-style!css!sass',
+        include: /react-toolbox/,
       }
     ]
   }
