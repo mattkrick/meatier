@@ -12,7 +12,7 @@ export default class Landing extends Component {
   render() {
     const {isAuthenticated, children} = this.props;
     return (
-      <div>
+      <div className={styles.wrapper}>
         <Navigation isAuthenticated={isAuthenticated}/>
         <div className={styles.component}>
           {children}
