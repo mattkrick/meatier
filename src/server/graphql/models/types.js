@@ -33,7 +33,7 @@ export const GraphQLPasswordType = new GraphQLScalarType({
       throw new GraphQLError('Query error: Password is not a string, it is a: ' + ast.kind, [ast]);
     }
     if (ast.value.length < 6) {
-      throw new GraphQLError(`Query error: Password must have a minimum length of 4.`, [ast]);
+      throw new GraphQLError(`Query error: Password must have a minimum length of 6.`, [ast]);
     }
     if (ast.value.length > 60) {
       throw new GraphQLError(`Query error: Password is too long.`, [ast]);
