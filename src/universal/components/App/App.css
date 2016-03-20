@@ -3,7 +3,6 @@
 
 .app {
   min-height: 100vh;
-  display: flex;
   max-width: maxWidth;
   font-family: sans-serif;
   color: #222;
