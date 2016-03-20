@@ -1,8 +1,6 @@
 export async function resolvePromiseMap(promiseMap) {
-  let importMap = new Map();
-  for (var [key, promise] of promiseMap) {
-    let value = await promise;
-    importMap.set(key, value)
-  }
-  return importMap;
+  const keys = Array.from(promiseMap.keys());
+  const promises = Array.from(promiseMap.values());
+  const values = await Promise.all(promises);
+  return new Map(values.map((value, i) => [keys[i], value]));
 }
