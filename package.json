@@ -19,6 +19,7 @@
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js",
     "build:db": "node ./src/server/database/setupDB.babel.js",
+    "update:db": "node ./src/server/database/setupDB.babel.js true",
     "test": "NODE_ENV=testing ava ./src/**/__tests___/**/*.js --verbose",
     "lint": "xo --fix src/**/*.js",
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
