@@ -1,13 +1,12 @@
 import jwtDecode from 'jwt-decode';
 import fetch from 'isomorphic-fetch';
-import {routeActions} from 'redux-simple-router';
+import {push, replace} from 'react-router-redux';
 import {parseJSON, hostUrl, fetchGraphQL} from '../../../utils/fetching';
 import socketOptions from '../../../utils/socketOptions';
 import validateSecretToken from '../../../utils/validateSecretToken';
 import {fromJS, Map, List} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
-const {push, replace} = routeActions;
 const {authTokenName} = socketOptions;
 
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';

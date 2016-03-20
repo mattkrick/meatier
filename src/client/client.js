@@ -6,9 +6,7 @@ import Root from './Root';
 
 const {auth, routing, form} = window.__INITIAL_STATE__;
 
- /* Currently, 3rd party reducers are kept as plain JS objects (routing and form)
- Although confusing, I'm calling this a best practice because not every reducer
- will be written well enough to handle being transformed into an immutable*/
+// form & routing are currently regular JS objects. This may change in the future
 const initialState = Map([
   ['auth', fromJS(auth)],
   ['routing', routing],

@@ -1,7 +1,7 @@
 import {createStore, applyMiddleware, compose} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import optimisticMiddleware from '../universal/redux/middleware/optimisticMiddleware';
-import {syncHistory} from 'redux-simple-router';
+import {routerMiddleware} from 'react-router-redux'
 import {browserHistory} from 'react-router';
 import makeReducer from '../universal/redux/makeReducer';
 import {ensureState} from 'redux-optimistic-ui';
@@ -9,8 +9,7 @@ import {ensureState} from 'redux-optimistic-ui';
 export default initialState => {
   let store;
   const reducer = makeReducer();
-  const reduxRouterMiddleware = syncHistory(browserHistory);
-
+  const reduxRouterMiddleware = routerMiddleware(browserHistory);
   const middlewares = [
     reduxRouterMiddleware,
     optimisticMiddleware,
@@ -32,7 +31,6 @@ export default initialState => {
       applyMiddleware(...middlewares),
       devtoolsExt || (f => f)
     ));
-    reduxRouterMiddleware.listenForReplays(store, state => ensureState(state).get('routing'));
   } else {
     store = createStore(reducer, initialState, applyMiddleware(...middlewares));
   }

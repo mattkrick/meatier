@@ -3,7 +3,7 @@ import {createStore, applyMiddleware} from 'redux';
 import makeReducer from '../universal/redux/makeReducer';
 import {match} from 'react-router';
 import Html from './Html';
-import {UPDATE_LOCATION} from 'redux-simple-router';
+import {push} from 'react-router-redux';
 import {renderToStaticMarkup} from 'react-dom-stream/server';
 import fs from 'fs';
 import {join, basename} from 'path';
@@ -16,7 +16,7 @@ import {Map as iMap} from 'immutable';
 function renderApp(res, store, assets, renderProps) {
   const location = renderProps ? renderProps.location : '/';
   // Needed so some components can render based on location
-  store.dispatch({type: UPDATE_LOCATION, location});
+  store.dispatch(push(location));
   const htmlStream = renderToStaticMarkup(<Html
     title="meatier"
     store={store}
