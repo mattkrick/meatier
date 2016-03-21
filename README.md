@@ -32,7 +32,7 @@ Some of my chief complaints with Meteor
 | Optimistic UI     | latency compensation                                            | [redux-optimistic-ui](https://github.com/mattkrick/redux-optimistic-ui)  | written by yours truly                                         |
 | Testing           | Velocity (or nothing at all)                                    | [AVA](https://github.com/sindresorhus/ava)                          | awesome es2016 concurrent testing                                   |
 | Linting           | Your choice                                                     | [xo](https://www.npmjs.com/package/xo)                              | no dotfiles, fixes errors                                           |
-| Routing           | [FlowRouter](https://github.com/kadirahq/flow-router)           | [redux-simple-router](https://github.com/reactjs/react-router-redux) | stick the route in the state, react-router SSR, async routes        |
+| Routing           | [FlowRouter](https://github.com/kadirahq/flow-router)           | [react-router-redux](https://github.com/reactjs/react-router-redux) | stick the route in the state, react-router SSR, async routes        |
 | Server            | Node 0.10.41                                                    | Node 5                                                              | Faster, maintained, not a dinosaur...                               |                             |
  
 ##Installation
