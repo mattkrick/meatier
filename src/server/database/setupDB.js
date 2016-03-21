@@ -35,14 +35,14 @@ async function reset({db, isUpdate}) {
   }));
   console.log(`>>Adding table indices on: ${db}`);
   const indices = [];
-  database.forEach(async (table) => {
-    const indexList = await r.db(db).table(table).indexList();
+  for (let table of database) {
+    const indexList = await r.db(db).table(table.name).indexList();
     table.indices.forEach(index => {
       if (indexList.indexOf(index) === -1) {
         indices.push(r.db(db).table(table.name).indexCreate(index))
       }
     })
-  });
+  }
   await Promise.all(indices);
   console.log(`>>Setup complete for: ${db}`);
 }
