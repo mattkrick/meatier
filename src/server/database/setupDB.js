@@ -21,28 +21,30 @@ async function reset({db, isUpdate}) {
     console.log(`>>Creating Database: ${db}`);
     await r.dbCreate(db);
   }
-  let tables = await r.db(db).tableList();
+  const tables = await r.db(db).tableList();
   if (!isUpdate) {
     console.log(`>>Dropping tables on: ${db}`);
     await Promise.all(tables.map(table => r.db(db).tableDrop(table)));
   }
-  tables = await r.db(db).tableList();
   console.log(`>>Creating tables on: ${db}`);
   await Promise.all(database.map(table => {
-    if (tables.indexOf(table.name) === -1) {
+    if (!isUpdate || tables.indexOf(table.name) === -1) {
       return r.db(db).tableCreate(table.name);
     }
+    return Promise.resolve(false);
   }));
   console.log(`>>Adding table indices on: ${db}`);
-  const indices = [];
-  for (let table of database) {
-    const indexList = await r.db(db).table(table.name).indexList();
-    table.indices.forEach(index => {
-      if (indexList.indexOf(index) === -1) {
-        indices.push(r.db(db).table(table.name).indexCreate(index));
+  const tableIndicies = await Promise.all(database.map(table => {
+    return r.db(db).table(table.name).indexList().run();
+  }));
+  await Promise.all([...database.map((table, i) => {
+    const indicies = tableIndicies[i] || [];
+    return table.indices.map(index => {
+      if (indicies.indexOf(index) === -1) {
+        return r.db(db).table(table.name).indexCreate(index).run();
       }
+      return Promise.resolve(false);
     });
-  }
-  await Promise.all(indices);
+  })]);
   console.log(`>>Setup complete for: ${db}`);
 }
