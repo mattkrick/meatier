@@ -8,5 +8,5 @@ export const requireNoAuth = store => (nextState, replace, cb) => {
       replace({pathname: '/'});
     }
   }
-  cb()
-}
+  cb();
+};

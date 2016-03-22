@@ -1,4 +1,4 @@
-/*A secret token is a reset or email verification token, not a JWT*/
+/* A secret token is a reset or email verification token, not a JWT*/
 export default function validateSecretToken(secretToken) {
   const invalidToken = {_error: 'Invalid Token'};
   if (typeof secretToken !== 'string') {

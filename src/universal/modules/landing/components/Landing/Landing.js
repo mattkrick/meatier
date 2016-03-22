@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, {PropTypes, Component} from 'react';
 import styles from './Landing.css';
 
 import Footer from 'universal/components/Footer/Footer';
@@ -17,8 +17,8 @@ export default class Landing extends Component {
         <div className={styles.component}>
           {children}
         </div>
-        <Footer />
+        <Footer/>
       </div>
-    )
+    );
   }
 }

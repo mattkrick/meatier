@@ -42,6 +42,6 @@ export default class Lane extends Component {
         </div>
         <Notes {...noteProps} dispatch={dispatch}/>
       </div>
-    )
+    );
   }
 }

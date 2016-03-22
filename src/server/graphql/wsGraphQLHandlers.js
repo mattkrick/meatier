@@ -17,10 +17,10 @@ export const wsGraphQLHandler = async function (body, cb) {
     this.docQueue.delete(docId);
   }
   cb(error, data);
-}
+};
 
 export const wsGraphQLSubHandler = function (subscription) {
   const {query, variables, ...rootVals} = JSON.parse(subscription);
   const authToken = this.getAuthToken();
   graphql(Schema, query, {socket: this, authToken, ...rootVals}, variables);
-}
+};

@@ -1,4 +1,4 @@
-import {GraphQLBoolean,GraphQLString,GraphQLObjectType,GraphQLNonNull,GraphQLID, GraphQLInputObjectType} from 'graphql';
+import {GraphQLBoolean, GraphQLString, GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLInputObjectType} from 'graphql';
 import {GraphQLEmailType, GraphQLURLType} from '../types';
 import {resolveForAdmin} from '../utils';
 

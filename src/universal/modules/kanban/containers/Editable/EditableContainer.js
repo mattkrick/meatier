@@ -21,7 +21,7 @@ export default class EditableContainer extends Component {
     const {dispatch, item, updateItem, handleSubmit} = this.props;
     const isEditing = this.props.active === fieldName;
     const compProps = {dispatch, item, updateItem, handleSubmit, isEditing};
-    return <Editable {...compProps} formProps={field}/>
+    return <Editable {...compProps} formProps={field}/>;
   }
 }
 

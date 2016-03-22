@@ -7,4 +7,4 @@ export default {
     const component = await System.import('universal/components/NotFound/NotFound');
     cb(null, {component});
   }
-}
+};

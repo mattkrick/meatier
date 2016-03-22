@@ -9,7 +9,7 @@ import {
 import {GraphQLTitleType} from '../types';
 import {makeRequired} from '../utils';
 
-export const Note =  new GraphQLObjectType({
+export const Note = new GraphQLObjectType({
   name: 'Note',
   description: 'A kanban note',
   fields: () => ({
@@ -29,16 +29,16 @@ const inputFields = {
   title: {type: GraphQLTitleType, description: 'The lane title'},
   index: {type: GraphQLInt, description: 'The index of the note in its lane'},
   laneId: {type: GraphQLID, description: 'The laneId that the note belongs to'},
-}
+};
 
 
-export const UpdatedNote =  new GraphQLInputObjectType({
+export const UpdatedNote = new GraphQLInputObjectType({
   name: 'UpdatedNote',
   description: 'Args to update a note in a kanban lane',
   fields: () => makeRequired(inputFields, ['id'])
 });
 
-export const NewNote =  new GraphQLInputObjectType({
+export const NewNote = new GraphQLInputObjectType({
   name: 'NewNote',
   description: 'Args to add a note in kanban lane',
   fields: () => makeRequired(inputFields, ['userId', 'title', 'index', 'laneId'])

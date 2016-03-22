@@ -14,7 +14,7 @@ export default function (store) {
       store.replaceReducer(newReducer);
       cb(null, {component});
     }
-  }
+  };
 }
 
 function setKanbanImports() {
@@ -34,5 +34,5 @@ function getKanbanImports(importMap) {
     lanes: importMap.get('lanes').reducer,
     notes: importMap.get('notes').reducer,
     socket: importMap.get('socket').socketClusterReducer
-  }
+  };
 }

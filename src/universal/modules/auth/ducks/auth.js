@@ -80,28 +80,28 @@ export function loginUserSuccess(payload) {
   return {
     type: LOGIN_USER_SUCCESS,
     payload
-  }
+  };
 }
 
 export function loginUserError(error) {
   return {
     type: LOGIN_USER_ERROR,
     error
-  }
+  };
 }
 
 export function signupUserSuccess(payload) {
   return {
     type: SIGNUP_USER_SUCCESS,
     payload
-  }
+  };
 }
 
 export function signupUserError(error) {
   return {
     type: SIGNUP_USER_ERROR,
     error
-  }
+  };
 }
 
 const user = `
@@ -113,13 +113,13 @@ const user = `
       isVerified
     }
   }
-}`
+}`;
 
 const userWithAuthToken = `
 {
   user ${user},
   authToken
-}`
+}`;
 
 export const loginUser = (dispatch, variables, redirect) => {
   dispatch({type: LOGIN_USER_REQUEST});
@@ -128,21 +128,21 @@ export const loginUser = (dispatch, variables, redirect) => {
     query($email: Email!, $password: Password!){
        payload: login(email: $email, password: $password)
        ${userWithAuthToken}
-    }`
+    }`;
     const {error, data} = await fetchGraphQL({query, variables});
     if (error) {
       localStorage.removeItem(authTokenName);
       dispatch(loginUserError(error));
-      reject(error)
+      reject(error);
     } else {
       const {payload} = data;
       localStorage.setItem(authTokenName, payload.authToken);
       dispatch(loginUserSuccess(payload));
       dispatch(push(redirect));
-      resolve()
+      resolve();
     }
   });
-}
+};
 
 export function loginToken() {
   return async (dispatch, getState) => {
@@ -151,7 +151,7 @@ export function loginToken() {
     query {
        payload: loginAuthToken
        ${user}
-    }`
+    }`;
     const {error, data} = await fetchGraphQL({query});
     if (error) {
       dispatch(loginUserError(error));
@@ -164,7 +164,7 @@ export function loginToken() {
         dispatch(replace(next));
       }
     }
-  }
+  };
 }
 
 export function signupUser(dispatch, variables, redirect) {
@@ -174,18 +174,18 @@ export function signupUser(dispatch, variables, redirect) {
     mutation($email: Email!, $password: Password!){
        payload: createUser(email: $email, password: $password)
        ${userWithAuthToken}
-    }`
+    }`;
     const {error, data} = await fetchGraphQL({query, variables});
     if (error) {
       localStorage.removeItem(authTokenName);
       dispatch(signupUserError(error));
-      reject(error)
+      reject(error);
     } else {
       const {payload} = data;
       localStorage.setItem(authTokenName, payload.authToken);
       dispatch(signupUserSuccess(payload));
       dispatch(push(redirect));
-      resolve()
+      resolve();
     }
   });
 }
@@ -194,10 +194,10 @@ export function emailPasswordReset(variables, dispatch) {
     const query = `
     mutation($email: Email!){
        payload: emailPasswordReset(email: $email)
-    }`
+    }`;
     const {error, data} = await fetchGraphQL({query, variables});
     if (error) {
-      reject(error)
+      reject(error);
     } else {
       dispatch(replace('/login/reset-email-sent'));
       resolve();
@@ -215,7 +215,7 @@ export function resetPassword({resetToken, password}, dispatch) {
     mutation($password: Password!){
        payload: resetPassword(password: $password)
        ${userWithAuthToken}
-    }`
+    }`;
     const {error, data} = await fetchGraphQL({query, variables: {password}, resetToken});
     if (error) {
       reject(error);
@@ -236,14 +236,14 @@ export function verifyEmail(verifiedEmailToken) {
     mutation {
        payload: verifyEmail
        ${userWithAuthToken}
-    }`
+    }`;
     const {error, data} = await fetchGraphQL({query, verifiedEmailToken});
     if (error) {
       return dispatch({type: VERIFY_EMAIL_ERROR, error});
     }
     const {payload} = data;
     return dispatch({type: VERIFY_EMAIL_SUCCESS, payload});
-  }
+  };
 }
 
 export function oauthLogin(providerEndpoint, redirect) {
@@ -268,7 +268,7 @@ export function oauthLogin(providerEndpoint, redirect) {
         dispatch(replace(redirect));
       }
     }
-  }
+  };
 }
 
 
@@ -277,5 +277,5 @@ export function logoutAndRedirect() {
   return function (dispatch) {
     dispatch({type: LOGOUT_USER});
     dispatch(replace('/'));
-  }
+  };
 }

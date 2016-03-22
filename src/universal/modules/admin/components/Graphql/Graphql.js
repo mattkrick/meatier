@@ -19,9 +19,9 @@ const graphQLFetcher = async ({query, variables}) => {
       'Authorization': `Bearer ${authToken}`
     },
     body: JSON.stringify({query, variables}),
-  })
-  return res.json()
-}
+  });
+  return res.json();
+};
 
 export default class Graphiql extends Component {
   render() {

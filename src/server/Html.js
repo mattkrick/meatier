@@ -20,7 +20,7 @@ export default class Html extends Component {
     const initialState = `window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}`;
     const root = PROD && renderToString(
       <Provider store={store}>
-        <RouterContext {...renderProps} />
+        <RouterContext {...renderProps}/>
       </Provider>);
     return (
       <html>

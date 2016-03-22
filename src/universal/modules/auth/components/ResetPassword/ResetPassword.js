@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './ResetPassword.css';
@@ -6,7 +6,7 @@ import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
 import {authSchemaPassword} from '../..//schemas/auth';
-import {resetPassword} from '../..//ducks/auth'
+import {resetPassword} from '../..//ducks/auth';
 import {parsedJoiErrors} from 'universal/utils/schema';
 import {getFormState} from 'universal/redux/helpers';
 
@@ -26,14 +26,14 @@ export default class ResetPassword extends Component {
             type="password"
             floatingLabelText="Password"
             hintText="hunter2"
-            errorText={ password.touched && password.error || ''}
+            errorText={password.touched && password.error || ''}
           />
           <input style={{display:'none'}} type="text" name="javascriptDisabled"/>
           <div className={styles.resetPasswordButton}>
             <RaisedButton
-              label='Set new password'
-              secondary={true}
-              type='submit'
+              label="Set new password"
+              secondary
+              type="submit"
               disabled={submitting}
               onClick={handleSubmit(this.onSubmit)}
             />
@@ -42,7 +42,7 @@ export default class ResetPassword extends Component {
       </div>
     );
   }
-  onSubmit = (data,dispatch) => {
+  onSubmit = (data, dispatch) => {
     const {resetToken} = this.props.params;
     const outData = Object.assign({}, data, {resetToken});
     return resetPassword(outData, dispatch);

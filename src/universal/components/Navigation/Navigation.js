@@ -2,7 +2,7 @@ import FlatButton from 'material-ui/lib/flat-button';
 import RaisedButton from 'material-ui/lib/raised-button';
 import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
-import React, { PropTypes, Component } from 'react';
+import React, {PropTypes, Component} from 'react';
 import styles from './Navigation.css';
 import {Link} from 'react-router';
 import smallLogo from './../Navigation/logo-small.png';
@@ -36,7 +36,7 @@ export default class Navigation extends Component {
       <Link className={styles.buttonBuffer} to="/logout">
         <FlatButton className={styles.menuButton} label="Logout"/>
       </Link>
-    )
+    );
   }
 
   renderLoggedOut() {
@@ -46,9 +46,9 @@ export default class Navigation extends Component {
             <FlatButton className={styles.menuButton} label="Login"/>
           </Link>
           <Link className={styles.buttonBuffer} to="/signup">
-            <RaisedButton secondary={true} className={styles.menuButton} label="Sign up"/>
+            <RaisedButton secondary className={styles.menuButton} label="Sign up"/>
           </Link>
         </span>
-    )
+    );
   }
 }

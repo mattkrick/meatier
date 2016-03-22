@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './Auth.css';
@@ -33,7 +33,7 @@ export default class Auth extends Component {
           <TextField {...email}
             type="text"
             hintText="name@email.com"
-            errorText={ email.touched && email.error || ''}
+            errorText={email.touched && email.error || ''}
             floatingLabelText="Email"
           />
           <input style={{display:'none'}} type="text" name="chromeisabitch"/>
@@ -42,7 +42,7 @@ export default class Auth extends Component {
             type="password"
             floatingLabelText="Password"
             hintText="hunter2"
-            errorText={ password.touched && password.error || ''}
+            errorText={password.touched && password.error || ''}
           />
 
           {isLogin ?
@@ -53,8 +53,8 @@ export default class Auth extends Component {
           <div className={styles.loginButton}>
             <RaisedButton
               label={isLogin ? 'Login' : 'Sign up'}
-              secondary={true}
-              type='submit'
+              secondary
+              type="submit"
               disabled={isAuthenticating}
               onClick={handleSubmit(this.onSubmit)}
             />
@@ -68,14 +68,14 @@ export default class Auth extends Component {
       </div>
     );
   }
-  //need async?
+  // need async?
   loginWithGoogle = () => {
     const redirectRoute = this.props.location.query.next || '/';
     this.props.dispatch(oauthLogin('/auth/google', redirectRoute));
   };
 
   onSubmit = (data, dispatch) => {
-    //gotta get that redirect from props
+    // gotta get that redirect from props
     const redirectRoute = this.props.location.query.next || '/';
     const authFunc = this.props.isLogin ? loginUser : signupUser;
     return authFunc(dispatch, data, redirectRoute);
