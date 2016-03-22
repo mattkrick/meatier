@@ -21,7 +21,7 @@
     "build:db": "node ./src/server/database/setupDB.babel.js",
     "update:db": "node ./src/server/database/setupDB.babel.js true",
     "test": "NODE_ENV=testing ava ./src/**/__tests___/**/*.js --verbose",
-    "lint": "xo --fix src/**/*.js",
+    "lint": "xo --fix 'src/**/*.js' 'tests/*.js' 'webpack/*.js'",
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
   },
   "author": "Matt Krick <matt.krick@gmail.com>",
