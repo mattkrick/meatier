@@ -4,7 +4,6 @@ import optimisticMiddleware from '../universal/redux/middleware/optimisticMiddle
 import {routerMiddleware} from 'react-router-redux';
 import {browserHistory} from 'react-router';
 import makeReducer from '../universal/redux/makeReducer';
-import {ensureState} from 'redux-optimistic-ui';
 
 export default initialState => {
   let store;

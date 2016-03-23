@@ -1,10 +1,9 @@
 import r from '../../../database/rethinkdriver';
-import {User, UserWithAuthToken, GoogleProfile} from './userSchema';
-import {GraphQLEmailType, GraphQLURLType, GraphQLPasswordType} from '../types';
+import {UserWithAuthToken, GoogleProfile} from './userSchema';
+import {GraphQLEmailType, GraphQLPasswordType} from '../types';
 import {getUserByEmail, signJwt, getAltLoginMessage, makeSecretToken} from './helpers';
 import {errorObj} from '../utils';
-import {GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean} from 'graphql';
-import {jwtSecret} from '../../../secrets';
+import {GraphQLNonNull, GraphQLBoolean} from 'graphql';
 import validateSecretToken from '../../../../universal/utils/validateSecretToken';
 import {isLoggedIn} from '../authorization';
 import promisify from 'es6-promisify';
@@ -33,9 +32,8 @@ export default {
         if (isCorrectPass) {
           const authToken = signJwt({id: user.id});
           return {authToken, user};
-        } else {
-          throw errorObj({_error: 'Cannot create account', email: 'Email already exists'});
         }
+        throw errorObj({_error: 'Cannot create account', email: 'Email already exists'});
       } else {
         // production should use 12+, but it's slow for dev
         const newHashedPassword = await hash(password, 10);
@@ -101,7 +99,7 @@ export default {
       }
       const userResetToken = user.strategies && user.strategies.local && user.strategies.local.resetToken;
       if (!userResetToken || userResetToken !== resetToken) {
-        throw new errorObj({_error: 'Unauthorized'});
+        throw errorObj({_error: 'Unauthorized'});
       }
       const newHashedPassword = await hash(password, 10);
       const updates = {
@@ -146,7 +144,7 @@ export default {
   verifyEmail: {
     type: UserWithAuthToken,
     async resolve(source, args, {rootValue}) {
-      const {verifiedEmailToken, authToken} = rootValue;
+      const {verifiedEmailToken} = rootValue;
       const verifiedEmailTokenObj = validateSecretToken(verifiedEmailToken);
       if (verifiedEmailTokenObj._error) {
         throw errorObj(verifiedEmailTokenObj);
@@ -160,7 +158,7 @@ export default {
         throw errorObj({_error: 'Email already verified'});
       }
       if (localStrategy && localStrategy.verifiedEmailToken !== verifiedEmailToken) {
-        throw new errorObj({_error: 'Unauthorized'});
+        throw errorObj({_error: 'Unauthorized'});
       }
       const updates = {
         strategies: {
@@ -185,7 +183,7 @@ export default {
     args: {
       profile: {type: new GraphQLNonNull(GoogleProfile)}
     },
-    async resolve(source, {profile}, {rootValue}) {
+    async resolve(source, {profile}) {
       const user = await getUserByEmail(profile.email);
       if (!user) {
         // create new user

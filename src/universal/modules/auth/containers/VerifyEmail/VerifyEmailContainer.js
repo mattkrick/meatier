@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {verifyEmail} from '../..//ducks/auth';
 import {connect} from 'react-redux';
 import VerifyEmail from '../..//components/VerifyEmail/VerifyEmail';

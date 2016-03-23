@@ -15,16 +15,16 @@ const prefetches = [
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
 const babelQuery = {
-  "plugins": [
+  plugins: [
     ["transform-decorators-legacy"],
     ["react-transform", {
-      "transforms": [{
-        "transform": "react-transform-hmr",
-        "imports": ["react"],
-        "locals": ["module"]
+      transforms: [{
+        transform: "react-transform-hmr",
+        imports: ["react"],
+        locals: ["module"]
       }, {
-        "transform": "react-transform-catch-errors",
-        "imports": ["react", "redbox-react"]
+        transform: "react-transform-catch-errors",
+        imports: ["react", "redbox-react"]
       }]
     }]
   ]

@@ -3,8 +3,7 @@ import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './Auth.css';
 import {Link} from 'react-router';
-import {loginUser, signupUser, oauthLogin} from '../..//ducks/auth';
-import {getJSON} from 'universal/utils/fetching';
+import {loginUser, signupUser, oauthLogin} from '../../ducks/auth';
 
 export default class Auth extends Component {
   static PropTypes = {
@@ -28,7 +27,7 @@ export default class Auth extends Component {
         <h3>{isLogin ? 'Login' : 'Sign up'}</h3>
         {localError && <span>{localError}</span>}
         <form className={styles.loginForm} onSubmit={handleSubmit(this.onSubmit)}>
-          <input style={{display:'none'}} type="text" name="chromeisabitch"/>
+          <input style={{display: 'none'}} type="text" name="chromeisabitch"/>
 
           <TextField {...email}
             type="text"
@@ -36,7 +35,7 @@ export default class Auth extends Component {
             errorText={email.touched && email.error || ''}
             floatingLabelText="Email"
           />
-          <input style={{display:'none'}} type="text" name="chromeisabitch"/>
+          <input style={{display: 'none'}} type="text" name="chromeisabitch"/>
 
           <TextField {...password}
             type="password"
@@ -46,7 +45,7 @@ export default class Auth extends Component {
           />
 
           {isLogin ?
-            <Link to={{pathname: "/login/lost-password", query: {e:email.value}}} className={styles.lostPassword}>
+            <Link to={{pathname: "/login/lost-password", query: {e: email.value}}} className={styles.lostPassword}>
               Forgot your password?
             </Link> : null}
 

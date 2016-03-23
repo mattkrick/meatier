@@ -9,7 +9,9 @@ const graphQLHost = getGraphQLHost();
 const graphQLProtocol = getGraphQLProtocol();
 
 const graphQLFetcher = async ({query, variables}) => {
-  if (!__CLIENT__) return;
+  if (!__CLIENT__) {
+    return;
+  }
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   variables = variables ? JSON.parse(variables) : undefined;
   const res = await fetch(`${graphQLProtocol}//${graphQLHost}/graphql`, {
@@ -18,7 +20,7 @@ const graphQLFetcher = async ({query, variables}) => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${authToken}`
     },
-    body: JSON.stringify({query, variables}),
+    body: JSON.stringify({query, variables})
   });
   return res.json();
 };

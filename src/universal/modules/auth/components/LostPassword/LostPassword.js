@@ -1,12 +1,11 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './LostPassword.css';
-import {Link} from 'react-router';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
-import {emailPasswordReset} from '../..//ducks/auth';
-import {authSchemaEmail} from '../..//schemas/auth';
+import {emailPasswordReset} from '../../ducks/auth';
+import {authSchemaEmail} from '../../schemas/auth';
 import {parsedJoiErrors} from 'universal/utils/schema';
 import {getFormState} from 'universal/redux/helpers';
 
@@ -20,7 +19,7 @@ export default class LostPassword extends Component {
         <span className={styles.instructions}>Enter your email address and we'll send you a password reset link.</span>
         {error && <span>{error}</span>}
         <form className={styles.lostPasswordForm} onSubmit={handleSubmit(emailPasswordReset)}>
-          <input style={{display:'none'}} type="text" name="javascript-disabled"/>
+          <input style={{display: 'none'}} type="text" name="javascript-disabled"/>
 
           <TextField {...email}
             type="text"
@@ -30,7 +29,7 @@ export default class LostPassword extends Component {
             defaultValue={location.query.e}
             autoFocus
           />
-          <input style={{display:'none'}} type="text" name="javascript-disabled"/>
+          <input style={{display: 'none'}} type="text" name="javascript-disabled"/>
           <div className={styles.lostPasswordButton}>
             <RaisedButton
               label="Send password reset"

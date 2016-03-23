@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import styles from './ResetPasswordSuccess.css';
 
 export default class ResetPasswordSuccess extends Component {

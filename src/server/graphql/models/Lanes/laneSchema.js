@@ -7,11 +7,10 @@ import {
   GraphQLID,
   GraphQLList
 } from 'graphql';
-import {GraphQLEmailType, GraphQLURLType, GraphQLTitleType} from '../types';
+import {GraphQLTitleType} from '../types';
 import {makeRequired} from '../utils';
 import {Note} from '../Notes/noteSchema';
 import r from '../../../database/rethinkdriver';
-
 
 export const Lane = new GraphQLObjectType({
   name: 'Lane',
@@ -26,7 +25,7 @@ export const Lane = new GraphQLObjectType({
     notes: {
       type: new GraphQLList(Note),
       description: 'The notes in a given lane',
-      resolve(source, args, ref) {
+      resolve(source) {
         return r.table('notes').getAll(source.id, {index: 'laneId'}).run();
       }
     }
@@ -39,7 +38,6 @@ const inputFields = {
   isPrivate: {type: GraphQLBoolean, description: 'Whether the lane is visible to other users'},
   title: {type: GraphQLTitleType, description: 'The lane title'}
 };
-
 
 export const UpdatedLane = new GraphQLInputObjectType({
   name: 'UpdatedLane',

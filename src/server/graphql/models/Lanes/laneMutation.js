@@ -4,7 +4,6 @@ import {isLoggedIn} from '../authorization';
 import {GraphQLNonNull, GraphQLBoolean, GraphQLID} from 'graphql';
 import r from '../../../database/rethinkdriver';
 
-
 export default {
   addLane: {
     type: Lane,

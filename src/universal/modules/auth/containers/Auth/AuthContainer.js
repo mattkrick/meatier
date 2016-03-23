@@ -1,11 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import {authSchemaInsert} from '../../schemas/auth';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Auth from '../../components/Auth/Auth';
 import {reduxForm} from 'redux-form';
 import Joi from 'joi';
-import {postJSON, parseJSON} from 'universal/utils/fetching';
 import {parsedJoiErrors} from 'universal/utils/schema';
 import {getFormState} from 'universal/redux/helpers';
 import {ensureState} from 'redux-optimistic-ui';
@@ -28,7 +26,8 @@ export default class AuthContainer extends Component {
   };
 
   render() {
-    const isLogin = this.props.pathname && this.props.pathname.indexOf('/login') !== -1;
+    const {pathname} = this.props;
+    const isLogin = pathname && pathname.indexOf('/login') !== -1;
     return <Auth isLogin={isLogin} {...this.props}/>;
   }
 }
@@ -36,7 +35,6 @@ export default class AuthContainer extends Component {
 function mapStateToProps(state, props) {
   state = ensureState(state);
   const auth = state.get('auth');
-  const routing = state.get('routing');
   return {
     isAuthenticated: auth.get('isAuthenticated'),
     isAuthenticating: auth.get('isAuthenticating'),

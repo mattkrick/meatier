@@ -1,6 +1,5 @@
 import React, {PropTypes, Component} from 'react';
 import {reduxForm} from 'redux-form';
-import Joi from 'joi';
 import Editable from 'universal/modules/kanban/components/Editable/Editable';
 import {getFormState} from 'universal/redux/helpers';
 
@@ -24,5 +23,3 @@ export default class EditableContainer extends Component {
     return <Editable {...compProps} formProps={field}/>;
   }
 }
-
-

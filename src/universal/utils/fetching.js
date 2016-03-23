@@ -7,8 +7,8 @@ export function parseJSON(response) {
 }
 
 export function hostUrl() {
-  let host = getGraphQLHost(),
-    protocol = getGraphQLProtocol();
+  const host = getGraphQLHost();
+  const protocol = getGraphQLProtocol();
   return `${protocol}//${host}`;
 }
 
@@ -33,7 +33,9 @@ export function getJSON(route) {
 // }
 
 export const getClientError = errors => {
-  if (!errors) return;
+  if (!errors) {
+    return;
+  }
   const error = errors[0].message;
   return (error.indexOf('{"_error"') === -1) ? {_error: 'Server query error'} : JSON.parse(error);
 };
@@ -44,7 +46,7 @@ export const prepareGraphQLParams = graphParams => {
   return JSON.stringify(graphParams);
 };
 
-export const fetchGraphQL = async (graphParams) => {
+export const fetchGraphQL = async graphParams => {
   const serializedParams = prepareGraphQLParams(graphParams);
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   const currentHostUrl = hostUrl();
@@ -61,5 +63,3 @@ export const fetchGraphQL = async (graphParams) => {
   const {data, errors} = resJSON;
   return {data, error: getClientError(errors)};
 };
-
-

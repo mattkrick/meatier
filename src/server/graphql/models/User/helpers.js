@@ -1,10 +1,9 @@
-import {errorObj} from '../utils';
 import r from '../../../database/rethinkdriver';
 import jwt from 'jsonwebtoken';
 import {jwtSecret} from '../../../secrets';
 import crypto from 'crypto';
 
-export const getUserByEmail = async(email) => {
+export const getUserByEmail = async email => {
   const users = await r.table('users').getAll(email, {index: 'email'}).limit(1).run();
   return users[0];
 };

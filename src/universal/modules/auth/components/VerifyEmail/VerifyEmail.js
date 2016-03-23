@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import styles from './VerifyEmail.css';
 
 export default class VerifyEmail extends Component {
@@ -8,11 +8,7 @@ export default class VerifyEmail extends Component {
     if (error && error._error) {
       status = `There was an error verifying your email: ${error._error}`;
     } else {
-      if (isVerified) {
-        status = 'Your email has been verified. Thank you!';
-      } else {
-        status = 'Your email is currently being verified...';
-      }
+      status = isVerified ? 'Your email has been verified. Thank you!' : 'Your email is currently being verified...';
     }
 
     return (

@@ -1,10 +1,9 @@
-import jwtDecode from 'jwt-decode';
 import fetch from 'isomorphic-fetch';
 import {push, replace} from 'react-router-redux';
 import {parseJSON, hostUrl, fetchGraphQL} from '../../../utils/fetching';
 import socketOptions from '../../../utils/socketOptions';
 import validateSecretToken from '../../../utils/validateSecretToken';
-import {fromJS, Map, List} from 'immutable';
+import {Map, List} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
 const {authTokenName} = socketOptions;
@@ -195,7 +194,7 @@ export function emailPasswordReset(variables, dispatch) {
     mutation($email: Email!){
        payload: emailPasswordReset(email: $email)
     }`;
-    const {error, data} = await fetchGraphQL({query, variables});
+    const {error} = await fetchGraphQL({query, variables});
     if (error) {
       reject(error);
     } else {
@@ -229,7 +228,6 @@ export function resetPassword({resetToken, password}, dispatch) {
   });
 }
 
-
 export function verifyEmail(verifiedEmailToken) {
   return async function (dispatch) {
     const query = `
@@ -250,12 +248,12 @@ export function oauthLogin(providerEndpoint, redirect) {
   redirect = redirect || '/';
   return async function (dispatch) {
     dispatch({type: LOGIN_USER_REQUEST});
-    let res = await fetch(hostUrl() + providerEndpoint, {
+    const res = await fetch(hostUrl() + providerEndpoint, {
       method: 'get',
       mode: 'no-cors',
       credentials: 'include'
     });
-    let parsedRes = await parseJSON(res);
+    const parsedRes = await parseJSON(res);
     const {error, data} = parsedRes;
     if (error) {
       localStorage.removeItem(authTokenName);
@@ -270,7 +268,6 @@ export function oauthLogin(providerEndpoint, redirect) {
     }
   };
 }
-
 
 export function logoutAndRedirect() {
   localStorage.removeItem(authTokenName);

@@ -17,11 +17,9 @@ const CLEAR_NOTES = 'CLEAR_NOTES'; // local state flush
 const ADD_NOTE_SUCCESS = 'ADD_NOTE_SUCCESS';
 const UPDATE_NOTE_SUCCESS = 'UPDATE_NOTE_SUCCESS';
 const DELETE_NOTE_SUCCESS = 'DELETE_NOTE_SUCCESS';
-const DROP_NOTE_SUCCESS = 'DROP_NOTE_SUCCESS';
 const ADD_NOTE_ERROR = 'ADD_NOTE_ERROR';
 const UPDATE_NOTE_ERROR = 'UPDATE_NOTE_ERROR';
 const DELETE_NOTE_ERROR = 'DELETE_NOTE_ERROR';
-const DROP_NOTE_ERROR = 'DROP_NOTE_ERROR';
 
 
 /*
@@ -90,8 +88,10 @@ function getNewIndex(notes, payload) {
   }
   let minIndex = Infinity * xfactor;
   for (let i = 0; i < notes.length; i++) {
-    let curNote = notes[i];
-    if (curNote.id === sourceId) continue;
+    const curNote = notes[i];
+    if (curNote.id === sourceId) {
+      continue;
+    }
     if (xfactor * curNote.index > xfactor * targetIndex && xfactor * curNote.index < xfactor * minIndex) {
       minIndex = curNote.index;
     }

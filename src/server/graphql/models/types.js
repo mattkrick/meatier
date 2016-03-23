@@ -9,7 +9,7 @@ export const GraphQLEmailType = new GraphQLScalarType({
   parseLiteral: ast => {
     const re = /.+@.+/;
     if (ast.kind !== Kind.STRING) {
-      throw new GraphQLError('Query error: Email is not a string, it is a: ' + ast.kind, [ast]);
+      throw new GraphQLError(`Query error: Email is not a string, it is a: ${ast.kind}`, [ast]);
     }
     if (!re.test(ast.value)) {
       throw new GraphQLError('Query error: Not a valid Email', [ast]);
@@ -30,7 +30,7 @@ export const GraphQLPasswordType = new GraphQLScalarType({
   parseValue: value => String(value),
   parseLiteral: ast => {
     if (ast.kind !== Kind.STRING) {
-      throw new GraphQLError('Query error: Password is not a string, it is a: ' + ast.kind, [ast]);
+      throw new GraphQLError(`Query error: Password is not a string, it is a: ${ast.kind}`, [ast]);
     }
     if (ast.value.length < 6) {
       throw new GraphQLError(`Query error: Password must have a minimum length of 6.`, [ast]);
@@ -48,7 +48,7 @@ export const GraphQLTitleType = new GraphQLScalarType({
   parseValue: value => String(value),
   parseLiteral: ast => {
     if (ast.kind !== Kind.STRING) {
-      throw new GraphQLError('Query error: Title is not a string, it is a: ' + ast.kind, [ast]);
+      throw new GraphQLError(`Query error: Title is not a string, it is a: ${ast.kind}`, [ast]);
     }
     if (ast.value.length < 1) {
       throw new GraphQLError(`Query error: Title must have a minimum length of 1.`, [ast]);
@@ -70,7 +70,7 @@ export const GraphQLURLType = new GraphQLScalarType({
       throw new GraphQLError('Query error: Not a valid URL', [ast]);
     }
     if (ast.kind !== Kind.STRING) {
-      throw new GraphQLError('Query error: URL is not a string, it is a: ' + ast.kind, [ast]);
+      throw new GraphQLError(`Query error: URL is not a string, it is a: ${ast.kind}`, [ast]);
     }
     if (ast.value.length < 1) {
       throw new GraphQLError(`Query error: URL must have a minimum length of 1.`, [ast]);

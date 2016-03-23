@@ -1,4 +1,3 @@
-import uuid from 'node-uuid';
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../../utils/socketOptions';
 import {deleteNote} from './notes';

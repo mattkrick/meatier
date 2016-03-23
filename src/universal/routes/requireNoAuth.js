@@ -1,4 +1,3 @@
-import socketOptions from '../utils/socketOptions';
 import {ensureState} from 'redux-optimistic-ui';
 
 export const requireNoAuth = store => (nextState, replace, cb) => {

@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {DragSource, DropTarget} from 'react-dnd';
 import {findDOMNode} from 'react-dom';
 import {NOTE} from 'universal/modules/kanban/ducks/notes';
@@ -16,7 +16,7 @@ const noteSource = {
   isDragging(props, monitor) {
     return props.note.id === monitor.getItem().id;
   },
-  endDrag: function (props, monitor) {
+  endDrag(props, monitor) {
     if (!monitor.didDrop()) {
       return;
     }
@@ -44,7 +44,9 @@ const noteTarget = {
       laneId: inTargetProps.note.laneId
     };
     const sourceProps = monitor.getItem();
-    if (sourceProps.id === targetProps.id) return;
+    if (sourceProps.id === targetProps.id) {
+      return;
+    }
     if (sourceProps.laneId === targetProps.laneId) {
       // make dragging a little nicer
       const targetBoundingRect = findDOMNode(component).getBoundingClientRect();
@@ -72,16 +74,16 @@ const noteTarget = {
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))
-@DropTarget(NOTE, noteTarget, (connect) => ({
+@DropTarget(NOTE, noteTarget, connect => ({
   connectDropTarget: connect.dropTarget()
 }))
-export default class Note extends React.Component {
+export default class Note extends Component {
   render() {
     const {connectDragSource, connectDropTarget, isDragging, ...props} = this.props;
     return connectDropTarget(connectDragSource(
-      <li style={{
-        opacity: isDragging ? 0 : 1
-      }} {...props}>{props.children}</li>
+      <li style={{opacity: isDragging ? 0 : 1}} {...props}>
+        {props.children}
+      </li>
     ));
   }
 }

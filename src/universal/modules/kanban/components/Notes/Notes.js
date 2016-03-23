@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import EditableContainer from '../../containers/Editable/EditableContainer.js';
 import {NOTE} from 'universal/modules/kanban/ducks/notes';
 import {DropTarget} from 'react-dnd';
@@ -8,8 +8,10 @@ import styles from './Notes.css';
 const noteTarget = {
   hover(inTargetProps, monitor) {
     const targetLaneId = inTargetProps.laneId;
-    const {id:sourceId, index: sourceIndex, laneId:sourceLaneId, onMove} = monitor.getItem();
-    if (inTargetProps.notes.length > 0 || targetLaneId === sourceLaneId) return;
+    const {id: sourceId, index: sourceIndex, laneId: sourceLaneId, onMove} = monitor.getItem();
+    if (inTargetProps.notes.length > 0 || targetLaneId === sourceLaneId) {
+      return;
+    }
     onMove({
       sourceId,
       sourceIndex,
@@ -20,7 +22,7 @@ const noteTarget = {
     });
   }
 };
-@DropTarget(NOTE, noteTarget, (connect) => ({
+@DropTarget(NOTE, noteTarget, connect => ({
   connectDropTarget: connect.dropTarget()
 }))
 
@@ -35,7 +37,8 @@ export default class Notes extends Component {
   renderNote = (note, index) => {
     const {updateNote, dragNote, deleteNote} = this.props.noteActions;
     return (
-      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote} index={index}>
+      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote}
+        index={index}>
         <EditableContainer item={note}
           updateItem={updateNote}
           dispatch={this.props.dispatch}
@@ -43,11 +46,9 @@ export default class Notes extends Component {
           initialValue={note}
           fields={['title']}
           form="noteNameForm"
-          />
+        />
         <div className={styles.delete} onClick={() => deleteNote(note.id)}>x</div>
       </Note>
     );
   };
 }
-
-

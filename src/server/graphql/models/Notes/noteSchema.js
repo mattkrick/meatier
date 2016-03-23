@@ -19,7 +19,7 @@ export const Note = new GraphQLObjectType({
     title: {type: new GraphQLNonNull(GraphQLTitleType), description: 'The lane title'},
     index: {type: new GraphQLNonNull(GraphQLInt), description: 'The index of the note in its lane'},
     createdAt: {type: GraphQLString, description: 'The datetime the lane was created'},
-    updatedAt: {type: GraphQLString, description: 'The datetime the lane was last updated'},
+    updatedAt: {type: GraphQLString, description: 'The datetime the lane was last updated'}
   })
 });
 
@@ -28,9 +28,8 @@ const inputFields = {
   userId: {type: GraphQLID, description: 'The userId that created the lane'},
   title: {type: GraphQLTitleType, description: 'The lane title'},
   index: {type: GraphQLInt, description: 'The index of the note in its lane'},
-  laneId: {type: GraphQLID, description: 'The laneId that the note belongs to'},
+  laneId: {type: GraphQLID, description: 'The laneId that the note belongs to'}
 };
-
 
 export const UpdatedNote = new GraphQLInputObjectType({
   name: 'UpdatedNote',

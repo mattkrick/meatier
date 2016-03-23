@@ -1,7 +1,6 @@
 import React, {PropTypes, Component} from 'react';
 import App from '../../components/App/App';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import socketOptions from 'universal/utils/socketOptions';
 import loginWithToken from '../../decorators/loginWithToken/loginWithToken';

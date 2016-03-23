@@ -1,6 +1,5 @@
 import FlatButton from 'material-ui/lib/flat-button';
 import RaisedButton from 'material-ui/lib/raised-button';
-import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
 import React, {PropTypes, Component} from 'react';
 import styles from './Navigation.css';
@@ -42,13 +41,13 @@ export default class Navigation extends Component {
   renderLoggedOut() {
     return (
       <span>
-          <Link className={styles.buttonBuffer} to="/login">
-            <FlatButton className={styles.menuButton} label="Login"/>
-          </Link>
-          <Link className={styles.buttonBuffer} to="/signup">
-            <RaisedButton secondary className={styles.menuButton} label="Sign up"/>
-          </Link>
-        </span>
+        <Link className={styles.buttonBuffer} to="/login">
+          <FlatButton className={styles.menuButton} label="Login"/>
+        </Link>
+        <Link className={styles.buttonBuffer} to="/signup">
+          <RaisedButton secondary className={styles.menuButton} label="Sign up"/>
+        </Link>
+      </span>
     );
   }
 }

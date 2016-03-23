@@ -7,7 +7,7 @@ export default store => {
     onEnter: requireNoAuth(store),
     path: 'login',
     getIndexRoute: async (location, cb) => {
-      let component = await System.import('universal/modules/auth/containers/Auth/AuthContainer');
+      const component = await System.import('universal/modules/auth/containers/Auth/AuthContainer');
       cb(null, {component});
     },
     getChildRoutes: (location, cb) => {
@@ -15,28 +15,28 @@ export default store => {
         {
           path: 'lost-password',
           getComponent: async (location, cb) => {
-            let component = await System.import('universal/modules/auth/components/LostPassword/LostPassword');
+            const component = await System.import('universal/modules/auth/components/LostPassword/LostPassword');
             cb(null, component);
           }
         },
         {
           path: 'reset-email-sent',
           getComponent: async (location, cb) => {
-            let component = await System.import('universal/modules/auth/components/ResetEmailSent/ResetEmailSent');
+            const component = await System.import('universal/modules/auth/components/ResetEmailSent/ResetEmailSent');
             cb(null, component);
           }
         },
         {
           path: 'reset-password/:resetToken',
           getComponent: async (location, cb) => {
-            let component = await System.import('universal/modules/auth/components/ResetPassword/ResetPassword');
+            const component = await System.import('universal/modules/auth/components/ResetPassword/ResetPassword');
             cb(null, component);
           }
         },
         {
           path: 'reset-password-success',
           getComponent: async (location, cb) => {
-            let component = await System.import('universal/modules/auth/components/ResetPasswordSuccess/ResetPasswordSuccess');
+            const component = await System.import('universal/modules/auth/components/ResetPasswordSuccess/ResetPasswordSuccess');
             cb(null, component);
           }
         }

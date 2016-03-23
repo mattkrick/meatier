@@ -20,7 +20,7 @@ export default class Editable extends Component {
   }
 
   renderEdit = () => {
-    const {item:{title}, formProps, handleSubmit} = this.props;
+    const {item: {title}, formProps, handleSubmit} = this.props;
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
         <input {...formProps}
@@ -37,10 +37,12 @@ export default class Editable extends Component {
   };
 
   onSubmit =(data, dispatch) => {
-    const {item:{id, title}, formProps, updateItem} = this.props;
+    const {item: {id, title}, formProps, updateItem} = this.props;
     const val = this.refs[formProps.name].value;
     formProps.onBlur();
-    if (title === val) return;
+    if (title === val) {
+      return;
+    }
     const payload = {
       title: data.title,
       id
@@ -49,7 +51,7 @@ export default class Editable extends Component {
   };
 
   renderItem = () => {
-    const {item:{title}, formProps} = this.props;
+    const {item: {title}, formProps} = this.props;
     return (
       <span onClick={formProps.onFocus}>
         <span className={styles.title}>{title}</span>

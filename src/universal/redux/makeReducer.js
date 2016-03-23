@@ -2,10 +2,9 @@ import {reducer as form} from 'redux-form';
 import {compose} from 'redux';
 import {combineReducers} from 'redux-immutablejs';
 import auth from '../modules/auth/ducks/auth';
-import {optimistic} from 'redux-optimistic-ui';
 import {routing} from './routing';
 
-let currentReducers = {
+const currentReducers = {
   auth,
   routing,
   form

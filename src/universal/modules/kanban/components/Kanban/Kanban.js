@@ -6,7 +6,8 @@ import uuid from 'node-uuid';
 export default class Kanban extends Component {
   static propTypes = {
     laneActions: PropTypes.object.isRequired,
-    lanes: PropTypes.object.isRequired
+    lanes: PropTypes.object.isRequired,
+    userId: PropTypes.string
   };
 
   render() {

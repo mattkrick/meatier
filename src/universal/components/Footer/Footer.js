@@ -1,4 +1,4 @@
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
 import styles from './Footer.css';
 import {Link} from 'react-router';
 
