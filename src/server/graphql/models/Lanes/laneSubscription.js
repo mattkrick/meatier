@@ -8,7 +8,7 @@ import {Lane} from './laneSchema';
 export default {
   getAllLanes: {
     type: Lane,
-    async resolve (source, args, refs) {
+    async resolve(source, args, refs) {
       const {rootValue, fieldName} = refs;
       const {socket, authToken} = rootValue;
       const requestedFields = Object.keys(getFields(refs));
@@ -28,9 +28,9 @@ export default {
             if (channelName === fieldName) {
               cursor && cursor.close();
             }
-          })
+          });
         });
     }
   }
-}
+};
 

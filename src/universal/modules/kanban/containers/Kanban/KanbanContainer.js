@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { DragDropContext } from 'react-dnd';
+import React, {Component, PropTypes} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Kanban from 'universal/modules/kanban/components/Kanban/Kanban';
 import {reduxSocket} from 'redux-socket-cluster';
@@ -26,14 +26,14 @@ export default class KanbanContainer extends Component {
     super(props);
     const {dispatch, socketState} = props;
     if (socketState === 'closed') {
-      //handle here & not in middleware to make it atomic, otherwise state could change between loadLanes & loadNotes
+      // handle here & not in middleware to make it atomic, otherwise state could change between loadLanes & loadNotes
       dispatch(loadLanes());
       dispatch(loadNotes());
     }
   }
 
   render() {
-    return <Kanban addLane={this.props.laneActions.addLane} {...this.props}/>
+    return <Kanban addLane={this.props.laneActions.addLane} {...this.props}/>;
   }
 }
 
@@ -42,8 +42,8 @@ function mapStateToProps(state) {
   const auth = state.get('auth');
   return {
     lanes: state.get('lanes').toJS(),
-    userId: auth.getIn(['user','id']),
-    socketState: state.getIn(['socket','socketState']),
+    userId: auth.getIn(['user', 'id']),
+    socketState: state.getIn(['socket', 'socketState']),
     isAuthenticated: auth.get('isAuthenticated'),
     hasAuthError: !!auth.get('error').size
   };

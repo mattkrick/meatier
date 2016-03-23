@@ -67,5 +67,5 @@ export default {
       return user;
     }
   }
-}
+};
 

@@ -7,7 +7,7 @@ import {Note} from './noteSchema';
 export default {
   getAllNotes: {
     type: Note,
-    async resolve (source, args, refs) {
+    async resolve(source, args, refs) {
       const {rootValue, fieldName} = refs;
       const {socket} = rootValue;
       const requestedFields = Object.keys(getFields(refs));
@@ -26,9 +26,9 @@ export default {
             if (channelName === fieldName) {
               cursor && cursor.close();
             }
-          })
+          });
         });
     }
   }
-}
+};
 

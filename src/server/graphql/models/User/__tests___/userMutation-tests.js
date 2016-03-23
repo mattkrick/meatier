@@ -2,7 +2,7 @@ import test from 'ava';
 import promisify from 'es6-promisify';
 import 'babel-register';
 import 'babel-polyfill';
-import validateSecretToken from '../../../../../universal/utils/validateSecretToken'
+import validateSecretToken from '../../../../../universal/utils/validateSecretToken';
 import bcrypt from 'bcrypt';
 import {graphql} from 'graphql';
 import Schema from '../../../rootSchema';
@@ -35,13 +35,13 @@ const user = `
       locale
     }
   }
-}`
+}`;
 
 const userWithAuthToken = `
 {
   user ${user},
   authToken
-}`
+}`;
 
 test('createUser:hashedPassword', async t => {
   t.plan(1);
@@ -52,11 +52,11 @@ test('createUser:hashedPassword', async t => {
       password: "a123123"
     )
     ${userWithAuthToken}
-  }`
+  }`;
   const actual = await graphql(Schema, query);
   const {user:{id}} = actual.data.newUser;
   const user = await r.table('users').get(id);
-  t.true(await compare('a123123', user.strategies.local.password))
+  t.true(await compare('a123123', user.strategies.local.password));
 });
 
 test('createUser:caseInsensitive', async t => {
@@ -68,7 +68,7 @@ test('createUser:caseInsensitive', async t => {
       password: "a123123"
     )
     ${userWithAuthToken}
-  }`
+  }`;
   const actual = await graphql(Schema, query);
   const {user:{id, email}} = actual.data.newUser;
   const user = await r.table('users').get(id);
@@ -84,7 +84,7 @@ test('createUser:success', async t => {
       password: "a123123"
     )
     ${userWithAuthToken}
-  }`
+  }`;
   t.plan(4);
   const actual = await graphql(Schema, query);
   const {user:{id, createdAt}, authToken} = actual.data.newUser;
@@ -109,15 +109,15 @@ test('createUser:success', async t => {
         authToken: authToken
       }
     }
-  }
+  };
   t.true(new Date(createdAt) <= new Date());
   t.true(typeof id === 'string');
   t.ok(authToken);
-  same(t, actual, expected)
+  same(t, actual, expected);
 });
 
 test('createUser:alreadyexists', async t => {
-  //treat it like a login
+  // treat it like a login
   const query = `
   mutation {
     newUser: createUser(
@@ -125,7 +125,7 @@ test('createUser:alreadyexists', async t => {
       password: "a123123"
     )
     ${userWithAuthToken}
-  }`
+  }`;
   t.plan(4);
   const user1 = await graphql(Schema, query);
   const actual = await graphql(Schema, query);
@@ -151,11 +151,11 @@ test('createUser:alreadyexists', async t => {
         "authToken": authToken
       }
     }
-  }
+  };
   t.true(new Date(createdAt) <= new Date());
   t.true(typeof id === 'string');
   t.ok(authToken);
-  t.same(actual, expected)
+  t.same(actual, expected);
 });
 
 test('createUser:emailexistsdifferentpass', async t => {
@@ -166,7 +166,7 @@ test('createUser:emailexistsdifferentpass', async t => {
       password: "a123123"
     )
     ${userWithAuthToken}
-  }`
+  }`;
   t.plan(1);
   await graphql(Schema, query);
   const actual = await graphql(Schema, query.replace('a123123', 'b123123'));
@@ -180,8 +180,8 @@ test('createUser:emailexistsdifferentpass', async t => {
         "originalError": {}
       }
     ]
-  }
-  t.is(actual.errors[0].message, expected.errors[0].message)
+  };
+  t.is(actual.errors[0].message, expected.errors[0].message);
 });
 
 test('emailPasswordReset:success', async t => {
@@ -192,19 +192,19 @@ test('emailPasswordReset:success', async t => {
       password: "a123123"
     )
     ${userWithAuthToken}
-  }`
+  }`;
   const query = `
   mutation {
     newUser: emailPasswordReset(
       email: "emailPasswordReset:success@emailPasswordReset:success"
     )
-  }`
+  }`;
   t.plan(1);
   await graphql(Schema, createQuery);
   await graphql(Schema, query);
   const dbUser = await r.table('users').getAll("emailpasswordreset:success@emailpasswordreset:success", {index: 'email'});
   const {resetToken} = dbUser[0].strategies.local;
-  t.ok(resetToken)
+  t.ok(resetToken);
 });
 
 test('emailPasswordReset:userdoesntexist', async t => {
@@ -213,7 +213,7 @@ test('emailPasswordReset:userdoesntexist', async t => {
     newUser: emailPasswordReset(
       email: "emailPasswordReset:userdoesntexist@emailPasswordReset:userdoesntexist"
     )
-  }`
+  }`;
   t.plan(1);
   const result = await graphql(Schema, query);
   t.is(result.errors[0].message, '{"_error":"User not found"}');

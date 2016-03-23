@@ -4,13 +4,13 @@ import cssModulesValues from 'postcss-modules-values';
 
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')];
-const globalCSS = path.join(root, 'src', 'universal', 'styles','global');
+const globalCSS = path.join(root, 'src', 'universal', 'styles', 'global');
 
 const prefetches = [
   'react-dnd/lib/index.js',
   'joi/lib/index.js',
   'universal/modules/kanban/containers/Kanban/KanbanContainer.js'
-]
+];
 
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 
@@ -28,10 +28,10 @@ const babelQuery = {
       }]
     }]
   ]
-}
+};
 
 export default {
-  //devtool: 'source-maps',
+  // devtool: 'source-maps',
   devtool: 'eval',
   context: path.join(root, "src"),
   entry: {

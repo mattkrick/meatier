@@ -3,12 +3,12 @@ import socketOptions from './socketOptions';
 import {getGraphQLHost, getGraphQLProtocol} from './graphQLConfig';
 
 export function parseJSON(response) {
-  return response.json()
+  return response.json();
 }
 
 export function hostUrl() {
   let host = getGraphQLHost(),
-      protocol = getGraphQLProtocol();
+    protocol = getGraphQLProtocol();
   return `${protocol}//${host}`;
 }
 
@@ -21,28 +21,28 @@ export function postJSON(route, obj) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(obj)
-  })
+  });
 }
 
 export function getJSON(route) {
-  return fetch(hostUrl() + route)
+  return fetch(hostUrl() + route);
 }
 
-//export function pick(o, ...fields) {
+// export function pick(o, ...fields) {
 //  return Object.assign({}, ...(for (p of fields) {[p]: o[p]}));
-//}
+// }
 
 export const getClientError = errors => {
   if (!errors) return;
   const error = errors[0].message;
   return (error.indexOf('{"_error"') === -1) ? {_error: 'Server query error'} : JSON.parse(error);
-}
+};
 
 export const prepareGraphQLParams = graphParams => {
   // compress
   graphParams.query = graphParams.query.replace(/\s/g, '');
   return JSON.stringify(graphParams);
-}
+};
 
 export const fetchGraphQL = async (graphParams) => {
   const serializedParams = prepareGraphQLParams(graphParams);
@@ -59,7 +59,7 @@ export const fetchGraphQL = async (graphParams) => {
   });
   const resJSON = await res.json();
   const {data, errors} = resJSON;
-  return {data, error: getClientError(errors)}
-}
+  return {data, error: getClientError(errors)};
+};
 
 

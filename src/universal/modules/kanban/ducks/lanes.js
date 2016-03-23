@@ -9,11 +9,11 @@ import {prepareGraphQLParams} from '../../../utils/fetching';
 /*
  * Action types
  */
-export const LANES = 'lanes'; //db table
+export const LANES = 'lanes'; // db table
 export const ADD_LANE = 'ADD_LANE';
 export const UPDATE_LANE = 'UPDATE_LANE';
 export const DELETE_LANE = 'DELETE_LANE';
-const CLEAR_LANES = 'CLEAR_LANES'; //local state flush
+const CLEAR_LANES = 'CLEAR_LANES'; // local state flush
 const ADD_LANE_SUCCESS = 'ADD_LANE_SUCCESS';
 const UPDATE_LANE_SUCCESS = 'UPDATE_LANE_SUCCESS';
 const DELETE_LANE_SUCCESS = 'DELETE_LANE_SUCCESS';
@@ -58,7 +58,7 @@ export function reducer(state = initialState, action) {
         data: state.get('data').filter(item => item.get('id') !== id)
       });
     case CLEAR_LANES:
-      return initialState
+      return initialState;
 
     case ADD_LANE_SUCCESS:
     case UPDATE_LANE_SUCCESS:
@@ -100,13 +100,13 @@ export function loadLanes() {
       userId,
       title
     }
-  }`
+  }`;
   const serializedParams = prepareGraphQLParams({query});
-  const sub = 'getAllLanes'
+  const sub = 'getAllLanes';
   const socket = socketCluster.connect(socketOptions);
   socket.subscribe(serializedParams, {waitForAuth: true});
   return dispatch => {
-    //client-side changefeed handler
+    // client-side changefeed handler
     socket.on(sub, data => {
       const meta = {synced: true};
       if (!data.old_val) {
@@ -114,15 +114,15 @@ export function loadLanes() {
       } else if (!data.new_val) {
         dispatch(deleteLane(data.old_val.id, meta));
       } else {
-        dispatch(updateLane(data.new_val, meta))
+        dispatch(updateLane(data.new_val, meta));
       }
-    })
+    });
     socket.on('unsubscribe', channelName => {
       if (channelName === sub) {
         dispatch({type: CLEAR_LANES});
       }
-    })
-  }
+    });
+  };
 }
 
 export function addLane(doc, meta) {
@@ -131,7 +131,7 @@ export function addLane(doc, meta) {
      payload: addLane(lane: $doc) {
       id
     }
-  }`
+  }`;
   return {
     type: ADD_LANE,
     payload: {
@@ -139,7 +139,7 @@ export function addLane(doc, meta) {
       variables: {doc}
     },
     meta: Object.assign({}, baseMeta, meta)
-  }
+  };
 }
 
 export function updateLane(doc, meta) {
@@ -148,7 +148,7 @@ export function updateLane(doc, meta) {
      payload: updateLane(lane: $doc) {
       id
     }
-  }`
+  }`;
   return {
     type: UPDATE_LANE,
     payload: {
@@ -163,15 +163,15 @@ export function deleteLane(id, meta) {
   const query = `
   mutation($id: ID!) {
      payload: deleteLane(id: $id)
-  }`
+  }`;
   return (dispatch, getState) => {
     const noteState = ensureState(getState()).get('notes').toJS();
     if (noteState && noteState.data) {
       noteState.data.forEach(note => {
         if (note.laneId === id) {
-          dispatch(deleteNote(note.id))
+          dispatch(deleteNote(note.id));
         }
-      })
+      });
     }
     dispatch({
       type: DELETE_LANE,
@@ -181,7 +181,7 @@ export function deleteLane(id, meta) {
       },
       meta: Object.assign({}, baseMeta, meta)
     });
-  }
+  };
 }
 
 export const laneActions = {

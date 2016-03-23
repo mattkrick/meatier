@@ -27,22 +27,22 @@ const noteTarget = {
 export default class Notes extends Component {
 
   render() {
-    const {notes,connectDropTarget} = this.props;
-    const sortedNotes = notes.sort((a,b) => a.index - b.index);
+    const {notes, connectDropTarget} = this.props;
+    const sortedNotes = notes.sort((a, b) => a.index - b.index);
     return connectDropTarget(<ul className={styles.notes}>{sortedNotes.map(this.renderNote)}</ul>);
-  };
+  }
 
   renderNote = (note, index) => {
     const {updateNote, dragNote, deleteNote} = this.props.noteActions;
     return (
       <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote} index={index}>
         <EditableContainer item={note}
-                           updateItem={updateNote}
-                           dispatch={this.props.dispatch}
-                           formKey={`note${note.id}`}
-                           initialValue={note}
-                           fields={['title']}
-                           form="noteNameForm"
+          updateItem={updateNote}
+          dispatch={this.props.dispatch}
+          formKey={`note${note.id}`}
+          initialValue={note}
+          fields={['title']}
+          form="noteNameForm"
           />
         <div className={styles.delete} onClick={() => deleteNote(note.id)}>x</div>
       </Note>

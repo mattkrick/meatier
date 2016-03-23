@@ -11,12 +11,12 @@ export default class LandingContainer extends Component {
   };
 
   render() {
-    return <Landing {...this.props}/>
+    return <Landing {...this.props}/>;
   }
 }
 
 function mapStateToProps(state) {
   return {
     isAuthenticated: ensureState(state).getIn(['auth', 'isAuthenticated'])
-  }
+  };
 }

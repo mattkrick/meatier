@@ -1,4 +1,4 @@
-import React, { Component,PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import {push, replace} from 'react-router-redux';
 import socketOptions from 'universal/utils/socketOptions';
 import {ensureState} from 'redux-optimistic-ui';
@@ -17,11 +17,11 @@ export default ComposedComponent => {
     }
 
     render() {
-      let {isAuthenticated} = this.props
+      let {isAuthenticated} = this.props;
       if (isAuthenticated) {
-        return <ComposedComponent {...this.props}/>
+        return <ComposedComponent {...this.props}/>;
       }
-      return <div>Logging in...</div>
+      return <div>Logging in...</div>;
     }
 
     checkForAuth(props) {
@@ -29,7 +29,7 @@ export default ComposedComponent => {
         const {dispatch, hasAuthError, location} = props;
         let newKey = location && location.key || 'none';
         if (newKey === key) {
-          return
+          return;
         }
         key = newKey;
         const authToken = localStorage.getItem(socketOptions.authTokenName);
@@ -38,5 +38,5 @@ export default ComposedComponent => {
         }
       }
     }
-  }
-}
+  };
+};

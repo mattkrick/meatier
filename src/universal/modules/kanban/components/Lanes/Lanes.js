@@ -9,7 +9,7 @@ export default class Lanes extends Component {
   render() {
     const {data} = this.props.lanes;
     return <div className="lanes">{data.map(this.renderLane)}</div>;
-  };
+  }
 
   renderLane = (lane) => {
     const {laneActions, userId} = this.props;

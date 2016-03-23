@@ -44,7 +44,7 @@ export default {
     async resolve(source, {id}, {rootValue}) {
       isLoggedIn(rootValue);
       const result = await r.table('notes').get(id).delete();
-      //return true is delete succeeded, false if doc wasn't found
+      // return true is delete succeeded, false if doc wasn't found
       return !!result.deleted;
     }
   }

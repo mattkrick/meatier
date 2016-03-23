@@ -13,7 +13,7 @@ import {Note} from '../Notes/noteSchema';
 import r from '../../../database/rethinkdriver';
 
 
-export const Lane =  new GraphQLObjectType({
+export const Lane = new GraphQLObjectType({
   name: 'Lane',
   description: 'A kanban lane',
   fields: () => ({
@@ -27,7 +27,7 @@ export const Lane =  new GraphQLObjectType({
       type: new GraphQLList(Note),
       description: 'The notes in a given lane',
       resolve(source, args, ref) {
-        return r.table('notes').getAll(source.id, {index: 'laneId'}).run()
+        return r.table('notes').getAll(source.id, {index: 'laneId'}).run();
       }
     }
   })
@@ -38,16 +38,16 @@ const inputFields = {
   userId: {type: GraphQLID, description: 'The userId that created the lane'},
   isPrivate: {type: GraphQLBoolean, description: 'Whether the lane is visible to other users'},
   title: {type: GraphQLTitleType, description: 'The lane title'}
-}
+};
 
 
-export const UpdatedLane =  new GraphQLInputObjectType({
+export const UpdatedLane = new GraphQLInputObjectType({
   name: 'UpdatedLane',
   description: 'Args to update a kanban lane',
   fields: () => makeRequired(inputFields, ['id'])
 });
 
-export const NewLane =  new GraphQLInputObjectType({
+export const NewLane = new GraphQLInputObjectType({
   name: 'NewLane',
   description: 'Args to add a kanban lane',
   fields: () => makeRequired(inputFields, ['userId', 'title'])

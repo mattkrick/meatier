@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import styles from './VerifyEmail.css';
 
 export default class VerifyEmail extends Component {
@@ -6,12 +6,12 @@ export default class VerifyEmail extends Component {
     const {error, isVerified} = this.props;
     let status;
     if (error && error._error) {
-      status = `There was an error verifying your email: ${error._error}`
+      status = `There was an error verifying your email: ${error._error}`;
     } else {
       if (isVerified) {
-        status = 'Your email has been verified. Thank you!'
+        status = 'Your email has been verified. Thank you!';
       } else {
-        status = 'Your email is currently being verified...'
+        status = 'Your email is currently being verified...';
       }
     }
 

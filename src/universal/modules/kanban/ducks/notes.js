@@ -7,13 +7,13 @@ import {prepareGraphQLParams} from '../../../utils/fetching';
 /*
  * Action types
  */
-export const NOTES = 'notes'; //db table
-export const NOTE = 'note'; //dnd
+export const NOTES = 'notes'; // db table
+export const NOTE = 'note'; // dnd
 export const ADD_NOTE = 'ADD_NOTE';
 export const UPDATE_NOTE = 'UPDATE_NOTE';
 export const DELETE_NOTE = 'DELETE_NOTE';
 const DRAG_NOTE = 'DRAG_NOTE';
-const CLEAR_NOTES = 'CLEAR_NOTES'; //local state flush
+const CLEAR_NOTES = 'CLEAR_NOTES'; // local state flush
 const ADD_NOTE_SUCCESS = 'ADD_NOTE_SUCCESS';
 const UPDATE_NOTE_SUCCESS = 'UPDATE_NOTE_SUCCESS';
 const DELETE_NOTE_SUCCESS = 'DELETE_NOTE_SUCCESS';
@@ -61,7 +61,7 @@ export function reducer(state = initialState, action) {
       const {sourceId, ...updates} = action.payload;
       return state.merge({
         data: state.get('data').map(item => item.get('id') === sourceId ? item.merge(updates) : item)
-      })
+      });
     case ADD_NOTE_SUCCESS:
     case UPDATE_NOTE_SUCCESS:
     case DELETE_NOTE_SUCCESS:
@@ -82,7 +82,7 @@ export function reducer(state = initialState, action) {
 }
 
 function getNewIndex(notes, payload) {
-  //if the source is above the target, put it below, otherwise, put it above
+  // if the source is above the target, put it below, otherwise, put it above
   const {sourceId, sourceIndex, sourceLaneId, targetLaneId, targetIndex} = payload;
   let xfactor = 1;
   if ((targetLaneId === sourceLaneId && sourceIndex > targetIndex) || targetLaneId !== sourceLaneId) {
@@ -93,7 +93,7 @@ function getNewIndex(notes, payload) {
     let curNote = notes[i];
     if (curNote.id === sourceId) continue;
     if (xfactor * curNote.index > xfactor * targetIndex && xfactor * curNote.index < xfactor * minIndex) {
-      minIndex = curNote.index
+      minIndex = curNote.index;
     }
   }
   return (minIndex === Infinity * xfactor) ? targetIndex + xfactor : (targetIndex + minIndex) / 2;
@@ -118,13 +118,13 @@ export function loadNotes() {
       userId,
       index
     }
-  }`
+  }`;
   const serializedParams = prepareGraphQLParams({query});
-  const sub = 'getAllNotes'
+  const sub = 'getAllNotes';
   const socket = socketCluster.connect(socketOptions);
   socket.subscribe(serializedParams, {waitForAuth: true});
   return dispatch => {
-    //client-side changefeed handler
+    // client-side changefeed handler
     socket.on(sub, data => {
       const meta = {synced: true};
       if (!data.old_val) {
@@ -132,15 +132,15 @@ export function loadNotes() {
       } else if (!data.new_val) {
         dispatch(deleteNote(data.old_val.id, meta));
       } else {
-        dispatch(updateNote(data.new_val, meta))
+        dispatch(updateNote(data.new_val, meta));
       }
-    })
+    });
     socket.on('unsubscribe', channelName => {
       if (channelName === sub) {
         dispatch({type: CLEAR_NOTES});
       }
-    })
-  }
+    });
+  };
 }
 
 export function addNote(doc, meta) {
@@ -149,7 +149,7 @@ export function addNote(doc, meta) {
      payload: addNote(note: $doc) {
       id
     }
-  }`
+  }`;
   return {
     type: ADD_NOTE,
     payload: {
@@ -157,7 +157,7 @@ export function addNote(doc, meta) {
       variables: {doc}
     },
     meta: Object.assign({}, baseMeta, meta)
-  }
+  };
 }
 
 export function updateNote(doc, meta) {
@@ -166,7 +166,7 @@ export function updateNote(doc, meta) {
      payload: updateNote(note: $doc) {
       id
     }
-  }`
+  }`;
   return {
     type: UPDATE_NOTE,
     payload: {
@@ -181,7 +181,7 @@ export function deleteNote(id, meta) {
   const query = `
   mutation($id: ID!) {
      payload: deleteNote(id: $id)
-  }`
+  }`;
   return {
     type: DELETE_NOTE,
     payload: {
@@ -198,9 +198,9 @@ export function dragNote(data) {
     const index = getNewIndex(notes, data);
     const updates = {index, laneId: data.targetLaneId};
     const payload = Object.assign({}, updates, {sourceId: data.sourceId});
-    Object.assign(data.monitor.getItem(), updates)
+    Object.assign(data.monitor.getItem(), updates);
     dispatch({type: DRAG_NOTE, payload});
-  }
+  };
 }
 
 export const noteActions = {

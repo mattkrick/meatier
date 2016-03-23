@@ -30,7 +30,7 @@ async function reset({db, isUpdate}) {
   console.log(`>>Creating tables on: ${db}`);
   await Promise.all(database.map(table => {
     if (tables.indexOf(table.name) === -1) {
-      return r.db(db).tableCreate(table.name)
+      return r.db(db).tableCreate(table.name);
     }
   }));
   console.log(`>>Adding table indices on: ${db}`);
@@ -39,9 +39,9 @@ async function reset({db, isUpdate}) {
     const indexList = await r.db(db).table(table.name).indexList();
     table.indices.forEach(index => {
       if (indexList.indexOf(index) === -1) {
-        indices.push(r.db(db).table(table.name).indexCreate(index))
+        indices.push(r.db(db).table(table.name).indexCreate(index));
       }
-    })
+    });
   }
   await Promise.all(indices);
   console.log(`>>Setup complete for: ${db}`);

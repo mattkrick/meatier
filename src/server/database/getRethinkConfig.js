@@ -23,4 +23,4 @@ export const getRethinkConfig = () => {
     });
   }
   return config;
-}
+};

@@ -17,7 +17,7 @@ export default class Editable extends Component {
         {this.props.isEditing ? this.renderEdit() : this.renderItem()}
       </div>
     );
-  };
+  }
 
   renderEdit = () => {
     const {item:{title}, formProps, handleSubmit} = this.props;
@@ -26,14 +26,14 @@ export default class Editable extends Component {
         <input {...formProps}
           ref={formProps.name}
           type="text"
-          autoFocus={true}
+          autoFocus
           defaultValue={title}
           onSubmit={handleSubmit(this.onSubmit)}
-          onFocus={()=>{}}
+          onFocus={() => {}}
           onBlur={handleSubmit(this.onSubmit)}
         />
       </form>
-    )
+    );
   };
 
   onSubmit =(data, dispatch) => {
@@ -44,7 +44,7 @@ export default class Editable extends Component {
     const payload = {
       title: data.title,
       id
-    }
+    };
     updateItem(payload);
   };
 
