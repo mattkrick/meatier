@@ -3,7 +3,7 @@ import {push, replace} from 'react-router-redux';
 import {parseJSON, hostUrl, fetchGraphQL} from '../../../utils/fetching';
 import socketOptions from '../../../utils/socketOptions';
 import validateSecretToken from '../../../utils/validateSecretToken';
-import {Map, List} from 'immutable';
+import {fromJS, Map, List} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
 const {authTokenName} = socketOptions;
