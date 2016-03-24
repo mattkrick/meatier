@@ -20,9 +20,9 @@ function renderApp(res, store, assets, renderProps) {
   // Needed so some components can render based on location
   store.dispatch(push(location));
 
-  let combinedStream = CombinedStream.create();
+  const combinedStream = CombinedStream.create();
 
-  let docTypeStream = new Readable();
+  const docTypeStream = new Readable();
   docTypeStream._read = function noop() {}; // prevents not implemented error.
   // More info: http://stackoverflow.com/questions/12755997/how-to-create-streams-from-string-in-node-js
   docTypeStream.push('<!DOCTYPE html>');
