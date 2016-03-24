@@ -23,6 +23,7 @@ function renderApp(res, store, assets, renderProps) {
     assets={assets}
     renderProps={renderProps}
     />);
+  res.write('<!DOCTYPE html>');
   htmlStream.pipe(res, {end: false});
   htmlStream.on('end', () => res.end());
 }
