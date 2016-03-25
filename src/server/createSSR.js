@@ -10,6 +10,8 @@ import {join, basename} from 'path';
 import promisify from 'es6-promisify';
 import thunkMiddleware from 'redux-thunk';
 import {Map as iMap} from 'immutable';
+import {Readable} from 'stream';
+import CombinedStream from 'combined-stream2';
 
 // https://github.com/systemjs/systemjs/issues/953
 
@@ -17,14 +19,27 @@ function renderApp(res, store, assets, renderProps) {
   const location = renderProps ? renderProps.location : '/';
   // Needed so some components can render based on location
   store.dispatch(push(location));
+
+  const combinedStream = CombinedStream.create();
+
+  const docTypeStream = new Readable();
+  docTypeStream._read = function noop() {}; // prevents not implemented error.
+  // More info: http://stackoverflow.com/questions/12755997/how-to-create-streams-from-string-in-node-js
+  docTypeStream.push('<!DOCTYPE html>');
+  docTypeStream.push(null);
+
   const htmlStream = renderToStaticMarkup(<Html
     title="meatier"
     store={store}
     assets={assets}
     renderProps={renderProps}
     />);
-  htmlStream.pipe(res, {end: false});
-  htmlStream.on('end', () => res.end());
+
+  combinedStream.append(docTypeStream);
+  combinedStream.append(htmlStream);
+
+  combinedStream.pipe(res, {end: false});
+  combinedStream.on('end', () => res.end());
 }
 
 export default async function createSSR(req, res) {

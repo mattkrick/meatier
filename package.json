@@ -71,6 +71,7 @@
     "babel-runtime": "6.6.1",
     "bcrypt": "0.8.5",
     "body-parser": "1.15.0",
+    "combined-stream2": "^1.1.2",
     "compression": "1.6.1",
     "cors": "2.7.1",
     "deep-equal": "1.0.1",
