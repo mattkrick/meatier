@@ -16,8 +16,8 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    async resolve(source, args, {rootValue}) {
-      isAdminOrSelf(rootValue, args);
+    async resolve(source, args, authToken) {
+      isAdminOrSelf(authToken, args);
       const user = await r.table('users').get(args.id);
       if (!user) {
         throw errorObj({_error: 'User not found'});
@@ -52,8 +52,8 @@ export default {
   },
   loginAuthToken: {
     type: User,
-    async resolve(source, args, {rootValue}) {
-      const {id} = rootValue.authToken;
+    async resolve(source, args, authToken) {
+      const {id} = authToken;
       if (!id) {
         throw errorObj({_error: 'Invalid authentication Token'});
       }

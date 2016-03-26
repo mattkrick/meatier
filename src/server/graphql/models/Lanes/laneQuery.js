@@ -10,9 +10,9 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    async resolve(source, {id}, {rootValue}) {
-      isLoggedIn(rootValue);
-      const {authToken: {id: verifiedId, isAdmin}} = rootValue;
+    async resolve(source, {id}, authToken) {
+      isLoggedIn(authToken);
+      const {id: verifiedId, isAdmin} = authToken;
       const lane = await r.table('lanes').get(id);
       if (!lane) {
         throw errorObj({_error: 'Lane not found'});

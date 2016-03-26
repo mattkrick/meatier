@@ -5,8 +5,8 @@ export const defaultResolveFn = (source, args, {fieldName}) => {
   return typeof property === 'function' ? property.call(source) : property;
 };
 
-export function resolveForAdmin(source, args, ref) {
-  return ref.rootValue && ref.rootValue.authToken && ref.rootValue.authToken.isAdmin ? defaultResolveFn.apply(this, arguments) : null;
+export function resolveForAdmin(source, args, authToken) {
+  return authToken && authToken.isAdmin ? defaultResolveFn.apply(this, arguments) : null;
 }
 
 export const errorObj = obj => {

@@ -38,12 +38,12 @@ const LocalStrategy = new GraphQLObjectType({
     verifiedEmailToken: {
       type: GraphQLString,
       description: 'The token sent to the user\'s email for verification',
-      resolve: (source, args, info) => resolveForAdmin(source, args, info)
+      resolve: (source, args, authToken) => resolveForAdmin(source, args, authToken)
     },
     resetToken: {
       type: GraphQLString,
       description: 'The token used to reset the user\'s password',
-      resolve: (source, args, info) => resolveForAdmin(source, args, info)
+      resolve: (source, args, authToken) => resolveForAdmin(source, args, authToken)
     }
   })
 });
