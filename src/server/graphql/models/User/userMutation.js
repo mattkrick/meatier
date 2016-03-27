@@ -43,7 +43,7 @@ export default {
         const userDoc = {
           id,
           email,
-          createdAt: r.now(),
+          createdAt: new Date(),
           strategies: {
             local: {
               isVerified: false,
@@ -189,7 +189,7 @@ export default {
         // create new user
         const userDoc = {
           email: profile.email,
-          createdAt: r.now(),
+          createdAt: new Date(),
           strategies: {
             google: {
               id: profile.id,

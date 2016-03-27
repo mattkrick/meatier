@@ -218,9 +218,8 @@ test('emailPasswordReset:userdoesntexist', async t => {
       email: "emailPasswordReset:userdoesntexist@emailPasswordReset:userdoesntexist"
     )
   }`;
-  t.plan(2);
+  t.plan(1);
   const result = await graphql(Schema, query);
-  t.notOk(actual.errors, (actual.errors || []).map(error => error.stack));
   t.is(result.errors[0].message, '{"_error":"User not found"}');
 });
 
