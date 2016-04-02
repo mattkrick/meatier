@@ -6,22 +6,34 @@ import {Link} from 'react-router';
 import {loginUser, signupUser, oauthLogin} from '../../ducks/auth';
 
 export default class Auth extends Component {
-  static PropTypes = {
-    location: PropTypes.object,
-    isAuthenticating: PropTypes.bool.isRequired,
+  static propTypes = {
+    fields: PropTypes.object.isRequired,
+    error: PropTypes.any,
+    handleSubmit: PropTypes.func,
+    submitting: PropTypes.bool,
+    params: PropTypes.shape({
+      resetToken: PropTypes.string
+    }),
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        e: PropTypes.string,
+        next: PropTypes.string
+      })
+    }),
+    isAuthenticating: PropTypes.bool,
+    isLogin: PropTypes.bool,
     authError: PropTypes.shape({
-      _error: PropTypes.string.isRequired,
+      _error: PropTypes.string,
       email: PropTypes.string,
       password: PropTypes.string
     }),
-    fields: PropTypes.object.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired
-  };
+  }
 
   render() {
     const {fields: {email, password}, handleSubmit, isLogin, error, isAuthenticating, authError} = this.props;
     const localError = error || authError._error;
+    /* eslint-disable react/jsx-handler-names*/
     return (
       <div className={styles.loginForm}>
         <h3>{isLogin ? 'Login' : 'Sign up'}</h3>

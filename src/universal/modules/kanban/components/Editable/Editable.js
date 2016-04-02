@@ -2,13 +2,14 @@ import React, {PropTypes, Component} from 'react';
 import styles from './Editable.css';
 
 export default class Editable extends Component {
-  static PropTypes = {
-    deleteItem: PropTypes.func.isRequired,
+  static propTypes = {
+    deleteItem: PropTypes.func,
     dispatch: PropTypes.func.isRequired,
     formProps: PropTypes.object.isRequired,
     isEditing: PropTypes.bool.isRequired,
     item: PropTypes.object.isRequired,
-    updateItem: PropTypes.func.isRequired
+    updateItem: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func
   };
 
   render() {
@@ -21,6 +22,7 @@ export default class Editable extends Component {
 
   renderEdit = () => {
     const {item: {title}, formProps, handleSubmit} = this.props;
+    /* eslint-disable react/jsx-no-bind, react/no-string-refs*/
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
         <input {...formProps}
@@ -36,7 +38,7 @@ export default class Editable extends Component {
     );
   };
 
-  onSubmit =(data, dispatch) => {
+  onSubmit = data => {
     const {item: {id, title}, formProps, updateItem} = this.props;
     const val = this.refs[formProps.name].value;
     formProps.onBlur();
@@ -51,9 +53,9 @@ export default class Editable extends Component {
   };
 
   renderItem = () => {
-    const {item: {title}, formProps} = this.props;
+    const {item: {title}, formProps: {onFocus: handleOnFocus}} = this.props;
     return (
-      <span onClick={formProps.onFocus}>
+      <span onClick={handleOnFocus}>
         <span className={styles.title}>{title}</span>
       </span>
     );

@@ -13,16 +13,16 @@ import {ensureState} from 'redux-optimistic-ui';
 // must come after connect to get the path field
 @reduxForm({form: 'authForm', fields: ['email', 'password'], validate, getFormState})
 export default class AuthContainer extends Component {
-  static PropTypes = {
+  static propTypes = {
     location: PropTypes.object,
-    isAuthenticating: PropTypes.bool.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired,
+    isAuthenticating: PropTypes.bool,
+    isAuthenticated: PropTypes.bool,
     authError: PropTypes.shape({
-      _error: PropTypes.string.isRequired,
+      _error: PropTypes.string,
       email: PropTypes.string,
       password: PropTypes.string
     }),
-    path: PropTypes.string.isRequired
+    pathname: PropTypes.string
   };
 
   render() {

@@ -131,6 +131,10 @@
       "react/jsx-indent-props": [
         2,
         2
+      ],
+      "react/jsx-closing-bracket-location": [
+        0,
+        0
       ]
     }
   }

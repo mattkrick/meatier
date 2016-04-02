@@ -11,7 +11,9 @@ export default class Lane extends Component {
     lane: PropTypes.object.isRequired,
     notes: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
-    userId: PropTypes.string.isRequired
+    userId: PropTypes.string.isRequired,
+    formKey: PropTypes.string,
+    initialValues: PropTypes.any
   };
 
   render() {
@@ -20,6 +22,7 @@ export default class Lane extends Component {
     const laneId = lane.id;
     const laneProps = {dispatch, formKey, initialValues};
     const noteProps = {notes, noteActions: modNoteActions, laneId};
+    /* eslint-disable react/jsx-no-bind*/
     return (
       <div className={styles.lane}>
         <div className={styles.header}>

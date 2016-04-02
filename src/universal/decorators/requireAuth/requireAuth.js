@@ -1,10 +1,21 @@
-import React, {Component} from 'react';
+import React, {PropTypes, Component} from 'react';
 import {push} from 'react-router-redux';
 import socketOptions from 'universal/utils/socketOptions';
 
 let key;
 export default ComposedComponent => {
   return class RequiredAuth extends Component {
+    static propTypes = {
+      isAuthenticated: PropTypes.bool,
+      dispatch: PropTypes.func,
+      hasAuthError: PropTypes.bool,
+      location: PropTypes.shape({
+        query: PropTypes.shape({
+          e: PropTypes.string,
+          next: PropTypes.string
+        })
+      })
+    }
 
     componentWillMount() {
       this.checkForAuth(this.props);

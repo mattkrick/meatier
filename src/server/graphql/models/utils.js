@@ -38,12 +38,14 @@ export const makeRequired = (fields, requiredFieldNames) => {
   return newFields;
 };
 
- export function getFields(context, asts = context.fieldASTs) {
+export function getFields(context, asts = context.fieldASTs) {
   // for recursion...Fragments doesn't have many sets...
-  if (!Array.isArray(asts)) asts = [asts];
+  if (!Array.isArray(asts)) {
+    asts = [asts];
+  }
 
   // get all selectionSets
-  var selections = asts.reduce((selections, source) => {
+  const selections = asts.reduce((selections, source) => {
     selections.push(...source.selectionSet.selections);
     return selections;
   }, []);
@@ -68,4 +70,4 @@ export const makeRequired = (fields, requiredFieldNames) => {
         throw new Error('Unsuported query selection');
     }
   }, {});
- }
+}

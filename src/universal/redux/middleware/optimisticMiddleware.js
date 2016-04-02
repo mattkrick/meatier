@@ -5,7 +5,7 @@ import {BEGIN, COMMIT, REVERT} from 'redux-optimistic-ui';
 const _SUCCESS = '_SUCCESS';
 const _ERROR = '_ERROR';
 let nextTransactionID = 0;
-export default store => next => action => {
+export default () => next => action => {
   if (!action.meta || action.meta.synced !== false) {
     // skip non-document actions or changes received from DB (supersedes optimism)
     return next(action);

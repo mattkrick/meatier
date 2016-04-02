@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PropTypes, Component} from 'react';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './LostPassword.css';
@@ -11,6 +11,20 @@ import {getFormState} from 'universal/redux/helpers';
 
 @reduxForm({form: 'lostPasswordForm', fields: ['email'], validate, getFormState})
 export default class LostPassword extends Component {
+  static propTypes = {
+    fields: PropTypes.object,
+    error: PropTypes.any,
+    handleSubmit: PropTypes.func,
+    submitting: PropTypes.bool,
+    params: PropTypes.shape({
+      resetToken: PropTypes.string
+    }),
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        e: PropTypes.string
+      })
+    })
+  }
   render() {
     const {fields: {email}, error, handleSubmit, submitting, location} = this.props;
     return (

@@ -45,7 +45,7 @@ function mapStateToProps(state) {
     userId: auth.getIn(['user', 'id']),
     socketState: state.getIn(['socket', 'socketState']),
     isAuthenticated: auth.get('isAuthenticated'),
-    hasAuthError: !!auth.get('error').size
+    hasAuthError: Boolean(auth.get('error').size)
   };
 }
 

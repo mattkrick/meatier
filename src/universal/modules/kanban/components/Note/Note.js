@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PropTypes, Component} from 'react';
 import {DragSource, DropTarget} from 'react-dnd';
 import {findDOMNode} from 'react-dom';
 import {NOTE} from 'universal/modules/kanban/ducks/notes';
@@ -78,6 +78,11 @@ const noteTarget = {
   connectDropTarget: connect.dropTarget()
 }))
 export default class Note extends Component {
+  static propTypes = {
+    connectDragSource: PropTypes.any,
+    connectDropTarget: PropTypes.any,
+    isDragging: PropTypes.bool
+  }
   render() {
     const {connectDragSource, connectDropTarget, isDragging, ...props} = this.props;
     return connectDropTarget(connectDragSource(

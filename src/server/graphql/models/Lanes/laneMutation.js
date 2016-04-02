@@ -55,7 +55,7 @@ export default {
       }
       const result = await r.table('lanes').get(id).delete();
       // return true is delete succeeded, false if doc wasn't found
-      return !!result.deleted;
+      return Boolean(result.deleted);
     }
   }
 };

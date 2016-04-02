@@ -1,4 +1,4 @@
-import {writeFileSync} from 'fs';
+import {writeFileSync} from 'fs'; // eslint-disable-line
 
 export const same = (t, actual, expected, message) => {
   // writeFileSync('avaTests.js', `

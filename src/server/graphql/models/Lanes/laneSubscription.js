@@ -24,11 +24,15 @@ export default {
               throw err;
             }
             const docId = data.new_val ? data.new_val.id : data.old_val.id;
-            socket.docQueue.has(docId) ? socket.docQueue.delete(docId) : socket.emit(fieldName, data);
+            if (socket.docQueue.has(docId)) {
+              socket.docQueue.delete(docId);
+            } else {
+              socket.emit(fieldName, data);
+            }
           });
           socket.on('unsubscribe', channelName => {
             if (channelName === fieldName) {
-              cursor && cursor.close();
+              cursor.close();
             }
           });
         });

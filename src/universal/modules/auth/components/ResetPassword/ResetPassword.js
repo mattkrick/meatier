@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PropTypes, Component} from 'react';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 import styles from './ResetPassword.css';
@@ -11,6 +11,15 @@ import {getFormState} from 'universal/redux/helpers';
 
 @reduxForm({form: 'resetPasswordForm', fields: ['password'], validate, getFormState})
 export default class ResetPassword extends Component {
+  static propTypes = {
+    fields: PropTypes.any,
+    error: PropTypes.any,
+    handleSubmit: PropTypes.func,
+    submitting: PropTypes.bool,
+    params: PropTypes.shape({
+      resetToken: PropTypes.string
+    })
+  }
   render() {
     const {fields: {password}, error, handleSubmit, submitting} = this.props;
     return (

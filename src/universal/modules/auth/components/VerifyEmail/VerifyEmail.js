@@ -1,7 +1,12 @@
-import React, {Component} from 'react';
+import React, {PropTypes, Component} from 'react';
 import styles from './VerifyEmail.css';
 
 export default class VerifyEmail extends Component {
+  static propTypes = {
+    error: PropTypes.any,
+    isVerified: PropTypes.bool
+  }
+
   render() {
     const {error, isVerified} = this.props;
     let status;

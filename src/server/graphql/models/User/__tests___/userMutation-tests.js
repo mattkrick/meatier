@@ -2,7 +2,6 @@ import test from 'ava';
 import promisify from 'es6-promisify';
 import 'babel-register';
 import 'babel-polyfill';
-import validateSecretToken from '../../../../../universal/utils/validateSecretToken';
 import bcrypt from 'bcrypt';
 import {graphql} from 'graphql';
 import Schema from '../../../rootSchema';
@@ -54,7 +53,7 @@ test('createUser:hashedPassword', async t => {
     ${userWithAuthToken}
   }`;
   const actual = await graphql(Schema, query);
-  const {user:{id}} = actual.data.newUser;
+  const {user: {id}} = actual.data.newUser;
   const user = await r.table('users').get(id);
   t.true(await compare('a123123', user.strategies.local.password));
 });
@@ -70,10 +69,9 @@ test('createUser:caseInsensitive', async t => {
     ${userWithAuthToken}
   }`;
   const actual = await graphql(Schema, query);
-  const {user:{id, email}} = actual.data.newUser;
-  const user = await r.table('users').get(id);
+  const {user: {id, email}} = actual.data.newUser;
+  await r.table('users').get(id);
   t.is(email, "createuser:caseinsensitive@createuser:caseinsensitive");
-
 });
 
 test('createUser:success', async t => {
@@ -87,14 +85,14 @@ test('createUser:success', async t => {
   }`;
   t.plan(4);
   const actual = await graphql(Schema, query);
-  const {user:{id, createdAt}, authToken} = actual.data.newUser;
+  const {user: {id, createdAt}, authToken} = actual.data.newUser;
   const expected = {
     data: {
       newUser: {
         user: {
-          id: id,
+          id,
           email: 'createuser:success@createuser:success',
-          createdAt: createdAt,
+          createdAt,
           updatedAt: null,
           strategies: {
             local: {
@@ -106,7 +104,7 @@ test('createUser:success', async t => {
             google: null
           }
         },
-        authToken: authToken
+        authToken
       }
     }
   };
@@ -127,28 +125,28 @@ test('createUser:alreadyexists', async t => {
     ${userWithAuthToken}
   }`;
   t.plan(4);
-  const user1 = await graphql(Schema, query);
+  // const user1 = await graphql(Schema, query);
   const actual = await graphql(Schema, query);
-  const {user:{id, createdAt}, authToken} = actual.data.newUser;
+  const {user: {id, createdAt}, authToken} = actual.data.newUser;
   const expected = {
-    "data": {
-      "newUser": {
-        "user": {
-          "id": id,
-          "email": "createuser:alreadyexists@createuser:alreadyexists",
-          "createdAt": createdAt,
-          "updatedAt": null,
-          "strategies": {
-            "local": {
-              "isVerified": false,
-              "password": null,
-              "verifiedEmailToken": null,
-              "resetToken": null
+    data: {
+      newUser: {
+        user: {
+          id,
+          email: "createuser:alreadyexists@createuser:alreadyexists",
+          createdAt,
+          updatedAt: null,
+          strategies: {
+            local: {
+              isVerified: false,
+              password: null,
+              verifiedEmailToken: null,
+              resetToken: null
             },
-            "google": null
+            google: null
           }
         },
-        "authToken": authToken
+        authToken
       }
     }
   };
@@ -171,13 +169,13 @@ test('createUser:emailexistsdifferentpass', async t => {
   await graphql(Schema, query);
   const actual = await graphql(Schema, query.replace('a123123', 'b123123'));
   const expected = {
-    "data": {
-      "newUser": null
+    data: {
+      newUser: null
     },
-    "errors": [
+    errors: [
       {
-        "message": "{\"_error\":\"Cannot create account\",\"email\":\"Email already exists\"}",
-        "originalError": {}
+        message: "{\"_error\":\"Cannot create account\",\"email\":\"Email already exists\"}",
+        originalError: {}
       }
     ]
   };

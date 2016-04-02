@@ -5,12 +5,14 @@ import {getFormState} from 'universal/redux/helpers';
 
 @reduxForm({getFormState})
 export default class EditableContainer extends Component {
-  static PropTypes = {
+  static propTypes = {
     item: PropTypes.object.isRequired,
     updateItem: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
-    form: PropTypes.string.isRequired,
-    fields: PropTypes.object.isRequired
+    form: PropTypes.string,
+    fields: PropTypes.object.isRequired,
+    handleSubmit: PropTypes.func,
+    active: PropTypes.string
   };
 
   render() {

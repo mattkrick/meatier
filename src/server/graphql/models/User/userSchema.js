@@ -77,6 +77,7 @@ export const UserWithAuthToken = new GraphQLObjectType({
   })
 });
 
+/* eslint-disable camelcase*/
 export const GoogleProfile = new GraphQLInputObjectType({
   name: 'GoogleProfile',
   description: 'The profile received from the google oauth2 callback',
@@ -93,3 +94,4 @@ export const GoogleProfile = new GraphQLInputObjectType({
     locale: {type: GraphQLString, description: 'locale of user to help determine language'}
   })
 });
+/* eslint-enable camelcase*/

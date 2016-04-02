@@ -1,6 +1,6 @@
 import socketCluster from 'socketcluster-client';
 import socketOptions from '../../../utils/socketOptions';
-import {fromJS, Map, List} from 'immutable';
+import {fromJS, Map as iMap, List as iList} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 import {prepareGraphQLParams} from '../../../utils/fetching';
 
@@ -25,30 +25,29 @@ const DELETE_NOTE_ERROR = 'DELETE_NOTE_ERROR';
 /*
  * Reducer
  */
-const initialState = Map({
+const initialState = iMap({
   synced: false,
   error: null,
-  data: List()
+  data: iList()
 });
 
 export function reducer(state = initialState, action) {
-  let doc;
-  let id;
+  /* eslint-disable no-case-declarations, no-redeclare */
   switch (action.type) {
     case ADD_NOTE:
-      ({doc} = action.payload.variables);
+      const {doc: addDoc} = action.payload.variables;
       return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: state.get('data').push(fromJS(doc))
+        data: state.get('data').push(fromJS(addDoc))
       });
     case UPDATE_NOTE:
-      ({doc} = action.payload.variables);
+      const {doc: updateDoc} = action.payload.variables;
       return state.merge({
         synced: action.meta && action.meta.synced || false,
-        data: state.get('data').map(item => item.get('id') === doc.id ? item.merge(doc) : item)
+        data: state.get('data').map(item => item.get('id') === updateDoc.id ? item.merge(updateDoc) : item)
       });
     case DELETE_NOTE:
-      ({id} = action.payload.variables);
+      const {id} = action.payload.variables;
       return state.merge({
         synced: action.meta && action.meta.synced || false,
         data: state.get('data').filter(item => item.get('id') !== id)
@@ -129,7 +128,7 @@ export function loadNotes() {
       const meta = {synced: true};
       if (!data.old_val) {
         dispatch(addNote(data.new_val, meta));
-      } else if (!data.new_val) {
+      } else if (!data.new_val) { // eslint-disable-line no-negated-condition
         dispatch(deleteNote(data.old_val.id, meta));
       } else {
         dispatch(updateNote(data.new_val, meta));

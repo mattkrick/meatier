@@ -1,11 +1,15 @@
-import React, {Component} from 'react';
-import {verifyEmail} from '../..//ducks/auth';
+import React, {PropTypes, Component} from 'react';
+import {verifyEmail} from '../../ducks/auth';
 import {connect} from 'react-redux';
-import VerifyEmail from '../..//components/VerifyEmail/VerifyEmail';
+import VerifyEmail from '../../components/VerifyEmail/VerifyEmail';
 import {ensureState} from 'redux-optimistic-ui';
 
 @connect(mapStateToProps)
 export default class VerifyEmailContainer extends Component {
+  static propTypes = {
+    error: PropTypes.any,
+    isVerified: PropTypes.bool
+  }
   constructor(props) {
     super(props);
     this.verifyHandler(props);

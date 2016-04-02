@@ -45,7 +45,7 @@ export default {
       isLoggedIn(rootValue);
       const result = await r.table('notes').get(id).delete();
       // return true is delete succeeded, false if doc wasn't found
-      return !!result.deleted;
+      return Boolean(result.deleted);
     }
   }
 };

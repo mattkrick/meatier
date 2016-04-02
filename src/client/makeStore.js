@@ -15,7 +15,9 @@ export default initialState => {
     thunkMiddleware
   ];
 
-  if (!__PRODUCTION__) {
+  if (__PRODUCTION__) {
+    store = createStore(reducer, initialState, applyMiddleware(...middlewares));
+  } else {
     const devtoolsExt = global.devToolsExtension && global.devToolsExtension();
     if (!devtoolsExt) {
       // We don't have the Redux extension in the browser, show the Redux logger
@@ -30,8 +32,6 @@ export default initialState => {
       applyMiddleware(...middlewares),
       devtoolsExt || (f => f)
     ));
-  } else {
-    store = createStore(reducer, initialState, applyMiddleware(...middlewares));
   }
   return store;
 };

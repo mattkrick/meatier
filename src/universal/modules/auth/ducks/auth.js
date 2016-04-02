@@ -3,7 +3,7 @@ import {push, replace} from 'react-router-redux';
 import {parseJSON, hostUrl, fetchGraphQL} from '../../../utils/fetching';
 import socketOptions from '../../../utils/socketOptions';
 import validateSecretToken from '../../../utils/validateSecretToken';
-import {fromJS, Map, List} from 'immutable';
+import {fromJS, Map as iMap} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
 
 const {authTokenName} = socketOptions;
@@ -18,15 +18,15 @@ export const LOGOUT_USER = 'LOGOUT_USER';
 export const VERIFY_EMAIL_ERROR = 'VERIFY_EMAIL_ERROR';
 export const VERIFY_EMAIL_SUCCESS = 'VERIFY_EMAIL_SUCCESS';
 
-const initialState = Map({
-  error: Map(),
+const initialState = iMap({
+  error: iMap(),
   isAuthenticated: false,
   isAuthenticating: false,
   authToken: null,
-  user: Map({
+  user: iMap({
     id: null,
     email: null,
-    strategies: Map()
+    strategies: iMap()
   })
 });
 
@@ -35,13 +35,13 @@ export default function reducer(state = initialState, action = {}) {
     case LOGIN_USER_REQUEST:
     case SIGNUP_USER_REQUEST:
       return state.merge({
-        error: Map(),
+        error: iMap(),
         isAuthenticating: true
       });
     case LOGIN_USER_SUCCESS:
     case SIGNUP_USER_SUCCESS:
       return state.merge({
-        error: Map(),
+        error: iMap(),
         isAuthenticating: false,
         isAuthenticated: true,
         authToken: action.payload.authToken,
@@ -50,21 +50,21 @@ export default function reducer(state = initialState, action = {}) {
     case LOGIN_USER_ERROR:
     case SIGNUP_USER_ERROR:
       return state.merge({
-        error: fromJS(action.error) || Map(),
+        error: fromJS(action.error) || iMap(),
         isAuthenticating: false,
         isAuthenticated: false,
         authToken: null,
-        user: Map()
+        user: iMap()
       });
     case LOGOUT_USER:
       return initialState;
     case VERIFY_EMAIL_ERROR:
       return state.merge({
-        error: fromJS(action.error) || Map()
+        error: fromJS(action.error) || iMap()
       });
     case VERIFY_EMAIL_SUCCESS:
       return state.merge({
-        error: Map(),
+        error: iMap(),
         isAuthenticating: false,
         isAuthenticated: true,
         authToken: action.payload.authToken,

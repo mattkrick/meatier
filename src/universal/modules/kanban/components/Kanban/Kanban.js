@@ -12,6 +12,7 @@ export default class Kanban extends Component {
 
   render() {
     const {userId, laneActions: {addLane}} = this.props;
+    /* eslint-disable react/jsx-no-bind*/
     return (
       <div className={styles.kanban} id="kanban">
         <h1 className={styles.title}>Meaty Kanban</h1>
