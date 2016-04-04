@@ -14,7 +14,7 @@ import {Map as iMap} from 'immutable';
 // https://github.com/systemjs/systemjs/issues/953
 
 function renderApp(res, store, assets, renderProps) {
-  const location = renderProps ? renderProps.location : '/';
+  const location = renderProps && renderProps.location && renderProps.location.pathname || '/';
   // Needed so some components can render based on location
   store.dispatch(push(location));
   const htmlStream = renderToStaticMarkup(<Html

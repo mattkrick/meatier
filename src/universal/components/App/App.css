@@ -2,7 +2,7 @@
 @value maxWidth from layout;
 
 .app {
-  min-height: 100vh;
+  height: 100vh;
   max-width: maxWidth;
   font-family: sans-serif;
   color: #222;
