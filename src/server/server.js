@@ -11,7 +11,7 @@ export const options = {
   // change this to scale vertically
   workers: 1 || numCpus,
   brokers: 1,
-  port: 3000,
+  port: process.env.SERVER_PORT || 3000,
   appName: 'Meatier',
   allowClientPublish: false,
   initController: path.join(__dirname, '/init.js'),
