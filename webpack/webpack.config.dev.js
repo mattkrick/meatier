@@ -6,6 +6,10 @@ const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')];
 const globalCSS = path.join(root, 'src', 'universal', 'styles', 'global');
 
+const serverPort = process.env.SERVER_PORT
+const graphQLHost = process.env.GRAPHQL_HOST
+const graphQLProtocol = process.env.GRAPHQL_PROTOCOL
+
 const prefetches = [
   'react-dnd/lib/index.js',
   'joi/lib/index.js',
@@ -52,6 +56,14 @@ export default {
       "__CLIENT__": true,
       "__PRODUCTION__": false,
       "process.env.NODE_ENV": JSON.stringify('development')
+    }),
+    new webpack.DefinePlugin({
+      '__CLIENT__': false,
+      '__PRODUCTION__': true,
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env.SERVER_PORT': JSON.stringify(serverPort) || JSON.stringify('3000'),
+      'process.env.GRAPHQL_HOST': JSON.stringify(graphQLHost) || JSON.stringify('localhost'),
+      'process.env.GRAPHQL_PROTOCOL': JSON.stringify(graphQLProtocol) || JSON.stringify('http:')
     })
   ],
   resolve: {
