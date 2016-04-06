@@ -7,10 +7,6 @@ const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
 const globalCSS = path.join(root, 'src', 'universal', 'styles', 'global');
 
-const serverPort = process.env.SERVER_PORT
-const graphQLHost = process.env.GRAPHQL_HOST
-const graphQLProtocol = process.env.GRAPHQL_PROTOCOL
-
 /* code can be: vendor-common, vendor-page-specific, meatier-common, meatier-page-specific
  * a small, fast landing page means only include the common from vendor + meatier
  * long-term caching means breaking apart meatier code from vendor code
@@ -74,11 +70,13 @@ export default {
     new webpack.DefinePlugin({
       '__CLIENT__': true,
       '__PRODUCTION__': true,
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.SERVER_PORT': JSON.stringify(serverPort) || JSON.stringify('3000'),
-      'process.env.GRAPHQL_HOST': JSON.stringify(graphQLHost) || JSON.stringify('localhost'),
-      'process.env.GRAPHQL_PROTOCOL': JSON.stringify(graphQLProtocol) || JSON.stringify('http:')
-    })
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new webpack.EnvironmentPlugin([
+      'SERVER_PORT',
+      'GRAPHQL_HOST',
+      'GRAPHQL_PROTOCOL'
+    ])
   ],
   module: {
     loaders: [
