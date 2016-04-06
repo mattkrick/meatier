@@ -72,7 +72,7 @@ export default {
     new AssetsPlugin({path: path.join(root, 'build'), filename: 'assets.json'}),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
-      '__CLIENT__': false,
+      '__CLIENT__': true,
       '__PRODUCTION__': true,
       'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env.SERVER_PORT': JSON.stringify(serverPort) || JSON.stringify('3000'),
