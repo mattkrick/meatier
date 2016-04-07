@@ -6,9 +6,9 @@ import bcrypt from 'bcrypt';
 import {graphql} from 'graphql';
 import Schema from '../../../rootSchema';
 import r from '../../../../database/rethinkdriver';
-import {same} from '../../../../../../tests/utils';
+// import {same} from '../../../../../../tests/utils';
 
-//TODO enable tests once graphQL 15 exits beta
+// TODO enable tests once graphQL 15 exits beta
 
 const compare = promisify(bcrypt.compare);
 const user = `
