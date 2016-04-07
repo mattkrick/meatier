@@ -10,7 +10,7 @@ export const same = (t, actual, expected, message) => {
   //
   // `)
 
-  return t.same(actual, expected, `
+  return t.deepEqual(actual, expected, `
 
     ${message}
 
