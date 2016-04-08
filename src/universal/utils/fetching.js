@@ -1,15 +1,15 @@
 import fetch from 'isomorphic-fetch';
 import socketOptions from './socketOptions';
-import {getGraphQLHost, getGraphQLProtocol} from './graphQLConfig';
 
 export function parseJSON(response) {
   return response.json();
 }
 
 export function hostUrl() {
-  const host = getGraphQLHost();
-  const protocol = getGraphQLProtocol();
-  return `${protocol}//${host}`;
+  let host = process.env.GRAPHQL_HOST,
+    protocol = process.env.GRAPHQL_PROTOCOL,
+    port = process.env.SERVER_PORT;
+  return `${protocol}//${host}:${port}`;
 }
 
 export function postJSON(route, obj) {

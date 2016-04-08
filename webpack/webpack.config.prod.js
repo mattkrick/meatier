@@ -71,7 +71,12 @@ export default {
       '__CLIENT__': true,
       '__PRODUCTION__': true,
       'process.env.NODE_ENV': JSON.stringify('production')
-    })
+    }),
+    new webpack.EnvironmentPlugin([
+      'SERVER_PORT',
+      'GRAPHQL_HOST',
+      'GRAPHQL_PROTOCOL'
+    ])
   ],
   module: {
     loaders: [

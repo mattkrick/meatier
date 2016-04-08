@@ -52,8 +52,18 @@ export default {
       "__CLIENT__": true,
       "__PRODUCTION__": false,
       "process.env.NODE_ENV": JSON.stringify('development')
-    })
-  ],
+    }),
+    new webpack.DefinePlugin({
+      '__CLIENT__': false,
+      '__PRODUCTION__': true,
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new webpack.EnvironmentPlugin([
+      'SERVER_PORT',
+      'GRAPHQL_HOST',
+      'GRAPHQL_PROTOCOL'
+    ])
+],
   resolve: {
     extensions: ['.js'],
     modules: [path.join(root, 'src'), 'node_modules']
