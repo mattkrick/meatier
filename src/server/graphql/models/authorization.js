@@ -1,6 +1,6 @@
 import {errorObj} from './utils';
 
-export const isLoggedIn = (authToken) => {
+export const isLoggedIn = authToken => {
   if (!authToken || !authToken.id) {
     throw errorObj({_error: 'Unauthorized'});
   }
