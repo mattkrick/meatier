@@ -48,10 +48,9 @@ export default class Notes extends Component {
     const {updateNote, dragNote, deleteNote} = this.props.noteActions;
     /* eslint-disable react/jsx-no-bind*/
     return (
-      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote}
-        index={index}
-        >
-        <EditableContainer item={note}
+      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote} index={index}>
+        <EditableContainer
+          item={note}
           updateItem={updateNote}
           dispatch={this.props.dispatch}
           formKey={`note${note.id}`}
