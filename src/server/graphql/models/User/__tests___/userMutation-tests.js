@@ -57,7 +57,7 @@ test('createUser:hashedPassword', async t => {
   const actual = await graphql(Schema, query);
   const {user: {id}} = actual.data.newUser;
   const user = await r.table('users').get(id);
-  t.notOk(actual.errors, (actual.errors || []).map(error => error.stack));
+  t.falsy(actual.errors, (actual.errors || []).map(error => error.stack));
   t.true(await compare('a123123', user.strategies.local.password));
 });
 
@@ -74,7 +74,7 @@ test('createUser:caseInsensitive', async t => {
   const actual = await graphql(Schema, query);
   const {user:{id, email}} = actual.data.newUser;
   const user = await r.table('users').get(id);
-  t.notOk(actual.errors, (actual.errors || []).map(error => error.stack));
+  t.falsy(actual.errors, (actual.errors || []).map(error => error.stack));
   t.is(email, "createuser:caseinsensitive@createuser:caseinsensitive");
 });
 
@@ -114,8 +114,8 @@ test('createUser:success', async t => {
   };
   t.true(new Date(createdAt) <= new Date());
   t.true(typeof id === 'string');
-  t.ok(authToken);
-  t.notOk(actual.errors, (actual.errors || []).map(error => error.stack));
+  t.truthy(authToken);
+  t.falsy(actual.errors, (actual.errors || []).map(error => error.stack));
   same(t, actual, expected);
 });
 
@@ -157,9 +157,9 @@ test('createUser:alreadyexists', async t => {
   };
   t.true(new Date(createdAt) <= new Date());
   t.true(typeof id === 'string');
-  t.ok(authToken);
-  t.same(actual, expected);
-  t.notOk(actual.errors, (actual.errors || []).map(error => error.stack));
+  t.truthy(authToken);
+  t.deepEqual(actual, expected);
+  t.falsy(actual.errors, (actual.errors || []).map(error => error.stack));
 });
 
 test('createUser:emailexistsdifferentpass', async t => {
