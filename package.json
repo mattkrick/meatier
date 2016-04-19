@@ -31,6 +31,7 @@
     "ava": "0.14.0",
     "babel-cli": "6.6.5",
     "babel-core": "6.7.4",
+    "babel-eslint": "6.0.2",
     "babel-loader": "6.2.4",
     "babel-plugin-add-module-exports": "0.1.2",
     "babel-plugin-react-transform": "2.0.2",
@@ -43,8 +44,10 @@
     "concurrently": "2.0.0",
     "css-loader": "0.23.1",
     "eslint": "2.7.0",
+    "eslint-config-xo-meatier": "0.2.0",
     "eslint-config-xo-react": "0.5.0",
-    "eslint-plugin-react": "4.3.0",
+    "eslint-plugin-babel": "3.2.0",
+    "eslint-plugin-react": "5.0.1",
     "extract-text-webpack-plugin": "1.0.1",
     "fake-style-loader": "1.0.0",
     "file-loader": "0.8.5",
@@ -113,31 +116,6 @@
     "socketcluster-client": "4.3.13"
   },
   "xo": {
-    "esnext": true,
-    "space": 2,
-    "env": [
-      "browser",
-      "node",
-      "webpack"
-    ],
-    "extends": "xo-react",
-    "globals": [
-      "__CLIENT__",
-      "__PRODUCTION__"
-    ],
-    "rules": {
-      "react/jsx-indent": [
-        2,
-        2
-      ],
-      "react/jsx-indent-props": [
-        2,
-        2
-      ],
-      "react/jsx-closing-bracket-location": [
-        0,
-        0
-      ]
-    }
+    "extends": "xo-meatier"
   }
 }

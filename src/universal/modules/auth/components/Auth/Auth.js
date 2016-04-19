@@ -41,7 +41,8 @@ export default class Auth extends Component {
         <form className={styles.loginForm} onSubmit={handleSubmit(this.onSubmit)}>
           <input style={{display: 'none'}} type="text" name="chromeisabitch"/>
 
-          <TextField {...email}
+          <TextField
+            {...email}
             type="text"
             hintText="name@email.com"
             errorText={email.touched && email.error || ''}
@@ -49,7 +50,8 @@ export default class Auth extends Component {
           />
           <input style={{display: 'none'}} type="text" name="chromeisabitch"/>
 
-          <TextField {...password}
+          <TextField
+            {...password}
             type="password"
             floatingLabelText="Password"
             hintText="hunter2"

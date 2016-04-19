@@ -30,7 +30,8 @@ export default class ResetPassword extends Component {
         <form className={styles.resetPasswordForm} onSubmit={handleSubmit(this.onSubmit)}>
           <input style={{display: 'none'}} type="text" name="chromeisabitch"/>
 
-          <TextField {...password}
+          <TextField
+            {...password}
             type="password"
             floatingLabelText="Password"
             hintText="hunter2"
