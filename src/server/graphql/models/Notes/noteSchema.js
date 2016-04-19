@@ -24,8 +24,8 @@ export const Note = new GraphQLObjectType({
 });
 
 const inputFields = {
-  id: {type: GraphQLID, description: 'The laneId'},
-  userId: {type: GraphQLID, description: 'The userId that created the lane'},
+  id: {type: GraphQLID, description: 'The noteId'},
+  userId: {type: GraphQLID, description: 'The userId that created the note'},
   title: {type: GraphQLTitleType, description: 'The note title'},
   index: {type: GraphQLInt, description: 'The index of the note in its lane'},
   laneId: {type: GraphQLID, description: 'The laneId that the note belongs to'}
