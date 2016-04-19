@@ -43,7 +43,11 @@ export function run(worker) {
   });
   if (PROD) {
     app.use(compression());
-    app.use('/static', express.static('build'));
+    const volatile = ['prerender.js', 'prerender.css', 'assets.json'];
+    for (let i = volatile.length; i--;) {
+      app.use(`/static/${volatile[i]}`, express.static(`build/${volatile[i]}`));
+    }
+    app.use('/static', express.static('build', {maxAge: '1y'}));
   }
 
   // Oauth
