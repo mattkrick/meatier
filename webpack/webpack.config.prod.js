@@ -2,6 +2,10 @@ import path from 'path';
 import webpack from 'webpack';
 import AssetsPlugin from 'assets-webpack-plugin';
 import cssModulesValues from 'postcss-modules-values';
+import { getDotenv } from '../src/universal/utils/dotenv';
+
+// Import .env and expand variables:
+getDotenv();
 
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
@@ -71,7 +75,12 @@ export default {
       '__CLIENT__': true,
       '__PRODUCTION__': true,
       'process.env.NODE_ENV': JSON.stringify('production')
-    })
+    }),
+    new webpack.EnvironmentPlugin([
+      'PROTOCOL',
+      'HOST',
+      'PORT'
+    ])
   ],
   module: {
     loaders: [
