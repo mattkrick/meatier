@@ -25,7 +25,8 @@ export default class Editable extends Component {
     /* eslint-disable react/jsx-no-bind, react/no-string-refs*/
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
-        <input {...formProps}
+        <input
+          {...formProps}
           ref={formProps.name}
           type="text"
           autoFocus

@@ -1,17 +1,20 @@
 import {SocketCluster} from 'socketcluster';
 import os from 'os';
-import {jwtSecret} from './secrets';
 import path from 'path';
 
 const numCpus = os.cpus().length;
+import { getDotenv } from '../universal/utils/dotenv';
+
+// Import .env and expand variables:
+getDotenv();
 
 export const options = {
-  authKey: jwtSecret,
+  authKey: process.env.JWT_SECRET,
   logLevel: 1,
   // change this to scale vertically
   workers: 1 || numCpus,
   brokers: 1,
-  port: 3000,
+  port: process.env.PORT || 3000,
   appName: 'Meatier',
   allowClientPublish: false,
   initController: path.join(__dirname, '/init.js'),

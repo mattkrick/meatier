@@ -35,7 +35,8 @@ export default class LostPassword extends Component {
         <form className={styles.lostPasswordForm} onSubmit={handleSubmit(emailPasswordReset)}>
           <input style={{display: 'none'}} type="text" name="javascript-disabled"/>
 
-          <TextField {...email}
+          <TextField
+            {...email}
             type="text"
             hintText="name@email.com"
             errorText={email.touched && email.error || ''}
