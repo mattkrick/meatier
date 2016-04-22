@@ -4,3 +4,7 @@ npm-debug.log
 build
 rethinkdb_data
 stats.json
+/meatier.sln
+/meatier.njsproj
+/.vs/meatier/v14/.suo
+/.vs/meatier/v14
