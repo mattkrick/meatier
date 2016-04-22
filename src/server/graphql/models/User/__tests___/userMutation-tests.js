@@ -54,7 +54,7 @@ test('createUser:hashedPassword', async t => {
     )
     ${userWithAuthToken}
   }`;
-  const actual = await graphql(Schema, query);
+  const actual = await graphql(Schema, query, null, {});
   const {user: {id}} = actual.data.newUser;
   const user = await r.table('users').get(id);
   t.falsy(actual.errors, (actual.errors || []).map(error => error.stack));
@@ -71,7 +71,7 @@ test('createUser:caseInsensitive', async t => {
     )
     ${userWithAuthToken}
   }`;
-  const actual = await graphql(Schema, query);
+  const actual = await graphql(Schema, query, null, {});
   const {user: {id, email}} = actual.data.newUser;
   await r.table('users').get(id);
   t.falsy(actual.errors, (actual.errors || []).map(error => error.stack));
@@ -88,7 +88,7 @@ test('createUser:success', async t => {
     ${userWithAuthToken}
   }`;
   t.plan(5);
-  const actual = await graphql(Schema, query);
+  const actual = await graphql(Schema, query, null, {});
   const {user: {id, createdAt}, authToken} = actual.data.newUser;
   const expected = {
     data: {
@@ -130,8 +130,8 @@ test('createUser:alreadyexists', async t => {
     ${userWithAuthToken}
   }`;
   t.plan(5);
-  await graphql(Schema, query);
-  const actual = await graphql(Schema, query);
+  await graphql(Schema, query, null, {});
+  const actual = await graphql(Schema, query, null, {});
   const {user: {id, createdAt}, authToken} = actual.data.newUser;
   const expected = {
     data: {
@@ -172,7 +172,7 @@ test('createUser:emailexistsdifferentpass', async t => {
     ${userWithAuthToken}
   }`;
   t.plan(1);
-  await graphql(Schema, query);
+  await graphql(Schema, query, null, {});
   const actual = await graphql(Schema, query.replace('a123123', 'b123123'));
   const expected = {
     data: {
@@ -205,7 +205,7 @@ test('emailPasswordReset:success', async t => {
   }`;
   t.plan(1);
   await graphql(Schema, createQuery);
-  await graphql(Schema, query);
+  await graphql(Schema, query, null, {});
   const dbUser = await r.table('users').getAll("emailpasswordreset:success@emailpasswordreset:success", {index: 'email'});
   const {resetToken} = dbUser[0].strategies.local;
   t.truthy(resetToken);
@@ -219,7 +219,7 @@ test('emailPasswordReset:userdoesntexist', async t => {
     )
   }`;
   t.plan(1);
-  const result = await graphql(Schema, query);
+  const result = await graphql(Schema, query, null, {});
   t.is(result.errors[0].message, '{"_error":"User not found"}');
 });
 
