@@ -10,7 +10,7 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    async resolve(source, {id}, authToken) {
+    async resolve(source, {id}, {authToken}) {
       isLoggedIn(authToken);
       const note = await r.table('notes').get(id);
       if (!note) {

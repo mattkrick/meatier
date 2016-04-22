@@ -16,7 +16,7 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    async resolve(source, args, authToken) {
+    async resolve(source, args, {authToken}) {
       isAdminOrSelf(authToken, args);
       const user = await r.table('users').get(args.id);
       if (!user) {
@@ -52,7 +52,8 @@ export default {
   },
   loginAuthToken: {
     type: User,
-    async resolve(source, args, authToken) {
+    async resolve(source, args, context, foo, bar) {
+      console.log('context', context, foo, bar)
       const {id} = authToken;
       if (!id) {
         throw errorObj({_error: 'Invalid authentication Token'});

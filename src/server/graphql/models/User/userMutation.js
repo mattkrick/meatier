@@ -87,8 +87,7 @@ export default {
     args: {
       password: {type: new GraphQLNonNull(GraphQLPasswordType)}
     },
-    async resolve(source, {password}, authToken, {rootValue}) {
-      const {resetToken} = rootValue;
+    async resolve(source, {password}, {resetToken}) {
       const resetTokenObject = validateSecretToken(resetToken);
       if (resetTokenObject._error) {
         throw errorObj(resetTokenObject);
@@ -121,7 +120,7 @@ export default {
   },
   resendVerificationEmail: {
     type: GraphQLBoolean,
-    async resolve(source, args, authToken) {
+    async resolve(source, args, {authToken}) {
       isLoggedIn(authToken);
       const {id} = authToken;
       const user = await r.table('users').get(id);
@@ -143,8 +142,7 @@ export default {
   },
   verifyEmail: {
     type: UserWithAuthToken,
-    async resolve(source, args, authToken, {rootValue}) {
-      const {verifiedEmailToken} = rootValue;
+    async resolve(source, args, {verifiedEmailToken}) {
       const verifiedEmailTokenObj = validateSecretToken(verifiedEmailToken);
       if (verifiedEmailTokenObj._error) {
         throw errorObj(verifiedEmailTokenObj);

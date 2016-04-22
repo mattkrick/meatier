@@ -6,9 +6,8 @@ import {Lane} from './laneSchema';
 export default {
   getAllLanes: {
     type: Lane,
-    async resolve(source, args, authToken, refs) {
-      const {rootValue, fieldName} = refs;
-      const {socket} = rootValue;
+    async resolve(source, args, {authToken, socket}, refs) {
+      const {fieldName} = refs;
       const requestedFields = Object.keys(getFields(refs));
       isLoggedIn(authToken);
       r.table('lanes')

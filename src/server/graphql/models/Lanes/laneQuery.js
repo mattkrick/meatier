@@ -10,7 +10,7 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    async resolve(source, {id}, authToken) {
+    async resolve(source, {id}, {authToken}) {
       isLoggedIn(authToken);
       const {id: verifiedId, isAdmin} = authToken;
       const lane = await r.table('lanes').get(id);

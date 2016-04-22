@@ -10,7 +10,7 @@ export default {
     args: {
       lane: {type: new GraphQLNonNull(NewLane)}
     },
-    async resolve(source, {lane}, authToken) {
+    async resolve(source, {lane}, {authToken}) {
       isLoggedIn(authToken);
       lane.createdAt = new Date();
       const newLane = await r.table('lanes').insert(lane, {returnChanges: true});
@@ -25,7 +25,7 @@ export default {
     args: {
       lane: {type: new GraphQLNonNull(UpdatedLane)}
     },
-    async resolve(source, {lane}, authToken) {
+    async resolve(source, {lane}, {authToken}) {
       isLoggedIn(authToken);
       lane.updatedAt = new Date();
       const {id, ...updates} = lane;
@@ -41,7 +41,7 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    async resolve(source, {id}, authToken) {
+    async resolve(source, {id}, {authToken}) {
       isLoggedIn(authToken);
       const {id: verifiedId, isAdmin} = authToken;
       if (!isAdmin) {

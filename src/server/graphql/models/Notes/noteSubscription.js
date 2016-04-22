@@ -6,9 +6,8 @@ import {Note} from './noteSchema';
 export default {
   getAllNotes: {
     type: Note,
-    async resolve(source, args, authToken, refs) {
-      const {rootValue, fieldName} = refs;
-      const {socket} = rootValue;
+    async resolve(source, args, {authToken, socket}, refs) {
+      const {fieldName} = refs;
       const requestedFields = Object.keys(getFields(refs));
       isLoggedIn(authToken);
       r.table('notes')
