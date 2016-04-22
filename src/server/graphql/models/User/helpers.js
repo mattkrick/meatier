@@ -8,8 +8,9 @@ export const getUserByEmail = async email => {
 };
 
 export const signJwt = ({id}) => {
+  const secret = process.env.JWT_SECRET || 'topsecret';
   // sync https://github.com/auth0/node-jsonwebtoken/issues/111
-  return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: '7d'});
+  return jwt.sign({id}, secret, {expiresIn: '7d'});
 };
 
 /* if login fails with 1 strategy, suggest another*/

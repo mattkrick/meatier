@@ -1,8 +1,9 @@
 import React, {PropTypes, Component} from 'react';
-import EditableContainer from '../../containers/Editable/EditableContainer.js';
-import {NOTE} from 'universal/modules/kanban/ducks/notes';
 import {DropTarget} from 'react-dnd';
-import Note from '../Note/Note';
+
+import {NOTE} from 'universal/modules/kanban/ducks/notes';
+import EditableContainer from 'universal/modules/kanban/containers/Editable/EditableContainer.js';
+import Note from 'universal/modules/kanban/components/Note/Note';
 import styles from './Notes.css';
 
 const noteTarget = {

@@ -6,11 +6,10 @@ import {Note} from './noteSchema';
 export default {
   getAllNotes: {
     type: Note,
-    async resolve(source, args, refs) {
-      const {rootValue, fieldName} = refs;
-      const {socket} = rootValue;
+    async resolve(source, args, {authToken, socket}, refs) {
+      const {fieldName} = refs;
       const requestedFields = Object.keys(getFields(refs));
-      isLoggedIn(rootValue);
+      isLoggedIn(authToken);
       r.table('notes')
         .pluck(requestedFields)
         .changes({includeInitial: true})

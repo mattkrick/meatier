@@ -1,9 +1,9 @@
 import socketCluster from 'socketcluster-client';
-import socketOptions from '../../../utils/socketOptions';
-import {deleteNote} from './notes';
 import {fromJS, Map as iMap, List as iList} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
+import socketOptions from '../../../utils/socketOptions';
 import {prepareGraphQLParams} from '../../../utils/fetching';
+import {deleteNote} from './notes';
 
 /*
  * Action types

@@ -6,9 +6,9 @@ export function parseJSON(response) {
 }
 
 export function hostUrl() {
-  let host = process.env.HOST,
-    protocol = process.env.PROTOCOL,
-    port = process.env.PORT;
+  const host = process.env.HOST;
+  const protocol = process.env.PROTOCOL;
+  const port = process.env.PORT;
   return `${protocol}://${host}:${port}`;
 }
 
@@ -37,7 +37,10 @@ export const getClientError = errors => {
     return;
   }
   const error = errors[0].message;
-  return (error.indexOf('{"_error"') === -1) ? {_error: 'Server query error'} : JSON.parse(error);
+  if (!error || error.indexOf('{"_error"') === -1) {
+    return {_error: 'Server query error'};
+  }
+  return JSON.parse(error);
 };
 
 export const prepareGraphQLParams = graphParams => {

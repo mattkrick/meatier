@@ -3,7 +3,7 @@ import GraphiQL from 'graphiql';
 import fetch from 'isomorphic-fetch';
 import socketOptions from 'universal/utils/socketOptions';
 import 'universal/styles/global/graphiql.css';
-import {hostUrl} from 'universal/utils/fetching'
+import {hostUrl} from 'universal/utils/fetching';
 
 const graphQLFetcher = async ({query, variables}) => {
   if (!__CLIENT__) {

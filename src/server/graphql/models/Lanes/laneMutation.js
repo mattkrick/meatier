@@ -10,8 +10,8 @@ export default {
     args: {
       lane: {type: new GraphQLNonNull(NewLane)}
     },
-    async resolve(source, {lane}, {rootValue}) {
-      isLoggedIn(rootValue);
+    async resolve(source, {lane}, {authToken}) {
+      isLoggedIn(authToken);
       lane.createdAt = new Date();
       const newLane = await r.table('lanes').insert(lane, {returnChanges: true});
       if (newLane.errors) {
@@ -25,8 +25,8 @@ export default {
     args: {
       lane: {type: new GraphQLNonNull(UpdatedLane)}
     },
-    async resolve(source, {lane}, {rootValue}) {
-      isLoggedIn(rootValue);
+    async resolve(source, {lane}, {authToken}) {
+      isLoggedIn(authToken);
       lane.updatedAt = new Date();
       const {id, ...updates} = lane;
       const updatedLane = await r.table('lanes').get(id).update(updates, {returnChanges: true});
@@ -41,9 +41,9 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    async resolve(source, {id}, {rootValue}) {
-      isLoggedIn(rootValue);
-      const {authToken: {id: verifiedId, isAdmin}} = rootValue;
+    async resolve(source, {id}, {authToken}) {
+      isLoggedIn(authToken);
+      const {id: verifiedId, isAdmin} = authToken;
       if (!isAdmin) {
         const laneToDelete = await r.table('lanes').get(id);
         if (!laneToDelete) {

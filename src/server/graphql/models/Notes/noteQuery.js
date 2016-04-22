@@ -10,8 +10,8 @@ export default {
     args: {
       id: {type: new GraphQLNonNull(GraphQLID)}
     },
-    async resolve(source, {id}, {rootValue}) {
-      isLoggedIn(rootValue);
+    async resolve(source, {id}, {authToken}) {
+      isLoggedIn(authToken);
       const note = await r.table('notes').get(id);
       if (!note) {
         throw errorObj({_error: 'Note not found'});
