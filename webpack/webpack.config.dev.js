@@ -1,7 +1,8 @@
 import path from 'path';
 import webpack from 'webpack';
 import cssModulesValues from 'postcss-modules-values';
-import { getDotenv } from '../src/universal/utils/dotenv';
+import {getDotenv} from '../src/universal/utils/dotenv';
+import HappyPack from 'happypack';
 
 // Import .env and expand variables:
 getDotenv();
@@ -9,6 +10,7 @@ getDotenv();
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal')];
 const globalCSS = path.join(root, 'src', 'universal', 'styles', 'global');
+const srcDir = path.join(root, 'src');
 
 const prefetches = [
   'react-dnd/lib/index.js',
@@ -37,7 +39,7 @@ const babelQuery = {
 export default {
   // devtool: 'source-maps',
   devtool: 'eval',
-  context: path.join(root, "src"),
+  context: srcDir,
   entry: {
     app: ['babel-polyfill', 'client/client.js', 'webpack-hot-middleware/client']
   },
@@ -61,11 +63,16 @@ export default {
       'PROTOCOL',
       'HOST',
       'PORT'
-    ])
+    ]),
+    new HappyPack({
+      // id: 'js',
+      loaders: ['babel'],
+      threads: 4
+    })
   ],
   resolve: {
     extensions: ['.js'],
-    modules: [path.join(root, 'src'), 'node_modules']
+    modules: [srcDir, 'node_modules']
   },
   // used for joi validation on client
   node: {
@@ -92,7 +99,7 @@ export default {
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'happypack/loader',
         query: babelQuery,
         include: clientInclude
       }

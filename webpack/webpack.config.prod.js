@@ -2,7 +2,8 @@ import path from 'path';
 import webpack from 'webpack';
 import AssetsPlugin from 'assets-webpack-plugin';
 import cssModulesValues from 'postcss-modules-values';
-import { getDotenv } from '../src/universal/utils/dotenv';
+import HappyPack from 'happypack';
+import {getDotenv} from '../src/universal/utils/dotenv';
 
 // Import .env and expand variables:
 getDotenv();
@@ -52,7 +53,8 @@ export default {
   },
   resolve: {
     extensions: ['.js'],
-    modules: [path.join(root, 'src'), 'node_modules']
+    modules: [path.join(root, 'src'), 'node_modules'],
+    unsafeCache: true
   },
   node: {
     dns: 'mock',
@@ -80,7 +82,11 @@ export default {
       'PROTOCOL',
       'HOST',
       'PORT'
-    ])
+    ]),
+    new HappyPack({
+      loaders: ['babel'],
+      threads: 4
+    })
   ],
   module: {
     loaders: [
@@ -101,7 +107,8 @@ export default {
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'happypack/loader',
+        // loader: 'babel',
         include: clientInclude
       }
     ]

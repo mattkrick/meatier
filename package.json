@@ -20,7 +20,7 @@
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js",
     "build:db": "node ./src/server/database/setupDB.babel.js",
     "update:db": "node ./src/server/database/setupDB.babel.js true",
-    "test": "NODE_ENV=testing ava ./src/**/__tests___/**/*.js --verbose",
+    "test": "NODE_ENV=testing ava ./src/**/__tests__/**/*.js --verbose",
     "lint": "xo --fix 'src/**/*.js' 'tests/*.js' 'webpack/*.js'",
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
   },
@@ -51,6 +51,7 @@
     "extract-text-webpack-plugin": "1.0.1",
     "fake-style-loader": "1.0.1",
     "file-loader": "0.8.5",
+    "happypack": "^2.0.6",
     "json-loader": "0.5.4",
     "null-loader": "0.1.1",
     "postcss-loader": "0.8.2",
@@ -116,6 +117,9 @@
     "socketcluster-client": "4.3.14"
   },
   "xo": {
-    "extends": "xo-meatier"
+    "extends": "xo-meatier",
+    "rules": {
+      "import-order/import-order": 0
+    }
   }
 }

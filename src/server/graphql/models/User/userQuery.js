@@ -52,8 +52,7 @@ export default {
   },
   loginAuthToken: {
     type: User,
-    async resolve(source, args, context, foo, bar) {
-      console.log('context', context, foo, bar)
+    async resolve(source, args, {authToken}) {
       const {id} = authToken;
       if (!id) {
         throw errorObj({_error: 'Invalid authentication Token'});

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import styles from './Header.css';
 import {Link} from 'react-router';
 import RaisedButton from 'material-ui/lib/raised-button';
+import styles from './Header.css';
 
 export default class Header extends Component {
   render() {

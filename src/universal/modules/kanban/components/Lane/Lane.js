@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from 'react';
+import uuid from 'node-uuid';
 import EditableContainer from '../../containers/Editable/EditableContainer.js';
 import Notes from '../Notes/Notes';
 import styles from './lane.css';
-import uuid from 'node-uuid';
 
 export default class Lane extends Component {
   static propTypes = {

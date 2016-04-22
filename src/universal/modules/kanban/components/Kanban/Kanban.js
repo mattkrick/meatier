@@ -1,7 +1,8 @@
 import React, {Component, PropTypes} from 'react';
+import uuid from 'node-uuid';
+
 import Lanes from '../Lanes/Lanes.js';
 import styles from './Kanban.css';
-import uuid from 'node-uuid';
 
 export default class Kanban extends Component {
   static propTypes = {

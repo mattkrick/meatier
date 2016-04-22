@@ -3,7 +3,7 @@ import os from 'os';
 import path from 'path';
 
 const numCpus = os.cpus().length;
-import { getDotenv } from '../universal/utils/dotenv';
+import {getDotenv} from '../universal/utils/dotenv';
 
 // Import .env and expand variables:
 getDotenv();
