@@ -11,7 +11,7 @@ export const wsGraphQLHandler = async function (body, cb) {
     return cb({_error: 'No documentId found'});
   }
   this.docQueue.add(docId);
-  const result = await graphql(Schema, query, {socket: this, authToken, ...rootVals}, variables);
+  const result = await graphql(Schema, query, {socket: this, ...rootVals}, authToken, variables);
   const {error, data} = prepareClientError(result);
   if (error) {
     this.docQueue.delete(docId);
@@ -22,5 +22,5 @@ export const wsGraphQLHandler = async function (body, cb) {
 export const wsGraphQLSubHandler = function (subscription) {
   const {query, variables, ...rootVals} = JSON.parse(subscription);
   const authToken = this.getAuthToken();
-  graphql(Schema, query, {socket: this, authToken, ...rootVals}, variables);
+  graphql(Schema, query, {socket: this, ...rootVals}, authToken, variables);
 };

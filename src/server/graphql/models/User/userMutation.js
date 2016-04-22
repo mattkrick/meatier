@@ -87,7 +87,7 @@ export default {
     args: {
       password: {type: new GraphQLNonNull(GraphQLPasswordType)}
     },
-    async resolve(source, {password}, {rootValue}) {
+    async resolve(source, {password}, authToken, {rootValue}) {
       const {resetToken} = rootValue;
       const resetTokenObject = validateSecretToken(resetToken);
       if (resetTokenObject._error) {
@@ -115,15 +115,15 @@ export default {
         throw errorObj({_error: 'Could not find or update user'});
       }
       const newUser = result.changes[0].new_val;
-      const authToken = signJwt(newUser);
-      return {authToken, user: newUser};
+      const newAuthToken = signJwt(newUser);
+      return {newAuthToken, user: newUser};
     }
   },
   resendVerificationEmail: {
     type: GraphQLBoolean,
-    async resolve(source, args, {rootValue}) {
-      isLoggedIn(rootValue);
-      const {id} = rootValue.authToken;
+    async resolve(source, args, authToken) {
+      isLoggedIn(authToken);
+      const {id} = authToken;
       const user = await r.table('users').get(id);
       if (!user) {
         throw errorObj({_error: 'User not found'});
@@ -143,7 +143,7 @@ export default {
   },
   verifyEmail: {
     type: UserWithAuthToken,
-    async resolve(source, args, {rootValue}) {
+    async resolve(source, args, authToken, {rootValue}) {
       const {verifiedEmailToken} = rootValue;
       const verifiedEmailTokenObj = validateSecretToken(verifiedEmailToken);
       if (verifiedEmailTokenObj._error) {
