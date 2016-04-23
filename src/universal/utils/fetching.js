@@ -1,15 +1,15 @@
 import fetch from 'isomorphic-fetch';
 import socketOptions from './socketOptions';
-import {getGraphQLHost, getGraphQLProtocol} from './graphQLConfig';
 
 export function parseJSON(response) {
   return response.json();
 }
 
 export function hostUrl() {
-  const host = getGraphQLHost();
-  const protocol = getGraphQLProtocol();
-  return `${protocol}//${host}`;
+  const host = process.env.HOST;
+  const protocol = process.env.PROTOCOL;
+  const port = process.env.PORT;
+  return `${protocol}://${host}:${port}`;
 }
 
 export function postJSON(route, obj) {
@@ -37,7 +37,10 @@ export const getClientError = errors => {
     return;
   }
   const error = errors[0].message;
-  return (error.indexOf('{"_error"') === -1) ? {_error: 'Server query error'} : JSON.parse(error);
+  if (!error || error.indexOf('{"_error"') === -1) {
+    return {_error: 'Server query error'};
+  }
+  return JSON.parse(error);
 };
 
 export const prepareGraphQLParams = graphParams => {

@@ -2,6 +2,11 @@ import path from 'path';
 import webpack from 'webpack';
 import AssetsPlugin from 'assets-webpack-plugin';
 import cssModulesValues from 'postcss-modules-values';
+import HappyPack from 'happypack';
+import {getDotenv} from '../src/universal/utils/dotenv';
+
+// Import .env and expand variables:
+getDotenv();
 
 const root = process.cwd();
 const clientInclude = [path.join(root, 'src', 'client'), path.join(root, 'src', 'universal'), /joi/, /isemail/, /hoek/, /topo/];
@@ -48,7 +53,8 @@ export default {
   },
   resolve: {
     extensions: ['.js'],
-    modules: [path.join(root, 'src'), 'node_modules']
+    modules: [path.join(root, 'src'), 'node_modules'],
+    unsafeCache: true
   },
   node: {
     dns: 'mock',
@@ -71,6 +77,15 @@ export default {
       '__CLIENT__': true,
       '__PRODUCTION__': true,
       'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new webpack.EnvironmentPlugin([
+      'PROTOCOL',
+      'HOST',
+      'PORT'
+    ]),
+    new HappyPack({
+      loaders: ['babel'],
+      threads: 4
     })
   ],
   module: {
@@ -92,7 +107,8 @@ export default {
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'happypack/loader',
+        // loader: 'babel',
         include: clientInclude
       }
     ]

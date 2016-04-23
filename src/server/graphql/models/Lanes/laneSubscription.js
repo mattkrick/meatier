@@ -6,11 +6,10 @@ import {Lane} from './laneSchema';
 export default {
   getAllLanes: {
     type: Lane,
-    async resolve(source, args, refs) {
-      const {rootValue, fieldName} = refs;
-      const {socket, authToken} = rootValue;
+    async resolve(source, args, {authToken, socket}, refs) {
+      const {fieldName} = refs;
       const requestedFields = Object.keys(getFields(refs));
-      isLoggedIn(rootValue);
+      isLoggedIn(authToken);
       r.table('lanes')
         .filter(r.row('isPrivate').eq(false).or(r.row('userId').eq(authToken.id)))
         .pluck(requestedFields)

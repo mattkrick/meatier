@@ -43,7 +43,7 @@ export default {
         const userDoc = {
           id,
           email,
-          createdAt: r.now(),
+          createdAt: new Date(),
           strategies: {
             local: {
               isVerified: false,
@@ -87,8 +87,7 @@ export default {
     args: {
       password: {type: new GraphQLNonNull(GraphQLPasswordType)}
     },
-    async resolve(source, {password}, {rootValue}) {
-      const {resetToken} = rootValue;
+    async resolve(source, {password}, {resetToken}) {
       const resetTokenObject = validateSecretToken(resetToken);
       if (resetTokenObject._error) {
         throw errorObj(resetTokenObject);
@@ -115,15 +114,15 @@ export default {
         throw errorObj({_error: 'Could not find or update user'});
       }
       const newUser = result.changes[0].new_val;
-      const authToken = signJwt(newUser);
-      return {authToken, user: newUser};
+      const newAuthToken = signJwt(newUser);
+      return {newAuthToken, user: newUser};
     }
   },
   resendVerificationEmail: {
     type: GraphQLBoolean,
-    async resolve(source, args, {rootValue}) {
-      isLoggedIn(rootValue);
-      const {id} = rootValue.authToken;
+    async resolve(source, args, {authToken}) {
+      isLoggedIn(authToken);
+      const {id} = authToken;
       const user = await r.table('users').get(id);
       if (!user) {
         throw errorObj({_error: 'User not found'});
@@ -143,8 +142,7 @@ export default {
   },
   verifyEmail: {
     type: UserWithAuthToken,
-    async resolve(source, args, {rootValue}) {
-      const {verifiedEmailToken} = rootValue;
+    async resolve(source, args, {verifiedEmailToken}) {
       const verifiedEmailTokenObj = validateSecretToken(verifiedEmailToken);
       if (verifiedEmailTokenObj._error) {
         throw errorObj(verifiedEmailTokenObj);
@@ -189,7 +187,7 @@ export default {
         // create new user
         const userDoc = {
           email: profile.email,
-          createdAt: r.now(),
+          createdAt: new Date(),
           strategies: {
             google: {
               id: profile.id,

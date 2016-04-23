@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import cssModulesValues from 'postcss-modules-values';
+import HappyPack from 'happypack';
 
 const root = process.cwd();
 const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal')];
@@ -43,6 +44,10 @@ export default {
       '__CLIENT__': false,
       '__PRODUCTION__': true,
       'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new HappyPack({
+      loaders: ['babel'],
+      threads: 4
     })
   ],
   module: {
@@ -64,7 +69,7 @@ export default {
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'happypack/loader',
         include: serverInclude
       }
     ]

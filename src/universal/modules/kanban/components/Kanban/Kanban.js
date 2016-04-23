@@ -1,7 +1,8 @@
 import React, {Component, PropTypes} from 'react';
+import uuid from 'node-uuid';
+
 import Lanes from '../Lanes/Lanes.js';
 import styles from './Kanban.css';
-import uuid from 'node-uuid';
 
 export default class Kanban extends Component {
   static propTypes = {
@@ -16,7 +17,8 @@ export default class Kanban extends Component {
     return (
       <div className={styles.kanban} id="kanban">
         <h1 className={styles.title}>Meaty Kanban</h1>
-        <button className={styles.addLane}
+        <button
+          className={styles.addLane}
           onClick={() => addLane({id: uuid.v4(), userId, isPrivate: false, title: 'New lane'})}>
           Add lane
         </button>

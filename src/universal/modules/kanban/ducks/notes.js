@@ -1,8 +1,8 @@
-import socketCluster from 'socketcluster-client';
-import socketOptions from '../../../utils/socketOptions';
 import {fromJS, Map as iMap, List as iList} from 'immutable';
 import {ensureState} from 'redux-optimistic-ui';
+import socketCluster from 'socketcluster-client';
 import {prepareGraphQLParams} from '../../../utils/fetching';
+import socketOptions from '../../../utils/socketOptions';
 
 /*
  * Action types

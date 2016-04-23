@@ -1,8 +1,9 @@
 import React, {PropTypes, Component} from 'react';
-import EditableContainer from '../../containers/Editable/EditableContainer.js';
-import {NOTE} from 'universal/modules/kanban/ducks/notes';
 import {DropTarget} from 'react-dnd';
-import Note from '../Note/Note';
+
+import {NOTE} from 'universal/modules/kanban/ducks/notes';
+import EditableContainer from 'universal/modules/kanban/containers/Editable/EditableContainer.js';
+import Note from 'universal/modules/kanban/components/Note/Note';
 import styles from './Notes.css';
 
 const noteTarget = {
@@ -48,10 +49,9 @@ export default class Notes extends Component {
     const {updateNote, dragNote, deleteNote} = this.props.noteActions;
     /* eslint-disable react/jsx-no-bind*/
     return (
-      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote}
-        index={index}
-        >
-        <EditableContainer item={note}
+      <Note className={styles.note} note={note} key={`note${note.id}`} onMove={dragNote} updateNote={updateNote} index={index}>
+        <EditableContainer
+          item={note}
           updateItem={updateNote}
           dispatch={this.props.dispatch}
           formKey={`note${note.id}`}

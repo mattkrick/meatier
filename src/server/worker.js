@@ -7,7 +7,6 @@ import jwt from 'express-jwt';
 
 import config from '../../webpack/webpack.config.dev';
 import createSSR from './createSSR';
-import {jwtSecret} from './secrets';
 import {googleAuthUrl, googleAuthCallback} from './graphql/models/User/oauthGoogle';
 import {wsGraphQLHandler, wsGraphQLSubHandler} from './graphql/wsGraphQLHandlers';
 import httpGraphQLHandler from './graphql/httpGraphQLHandler';
@@ -51,7 +50,7 @@ export function run(worker) {
   app.get('/auth/google/callback', googleAuthCallback);
 
   // HTTP GraphQL endpoint
-  app.post('/graphql', jwt({secret: jwtSecret, credentialsRequired: false}), httpGraphQLHandler);
+  app.post('/graphql', jwt({secret: process.env.JWT_SECRET, credentialsRequired: false}), httpGraphQLHandler);
 
   // server-side rendering
   app.get('*', createSSR);

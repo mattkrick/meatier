@@ -3,10 +3,7 @@ import GraphiQL from 'graphiql';
 import fetch from 'isomorphic-fetch';
 import socketOptions from 'universal/utils/socketOptions';
 import 'universal/styles/global/graphiql.css';
-import {getGraphQLHost, getGraphQLProtocol} from 'universal/utils/graphQLConfig';
-
-const graphQLHost = getGraphQLHost();
-const graphQLProtocol = getGraphQLProtocol();
+import {hostUrl} from 'universal/utils/fetching';
 
 const graphQLFetcher = async ({query, variables}) => {
   if (!__CLIENT__) {
@@ -14,7 +11,8 @@ const graphQLFetcher = async ({query, variables}) => {
   }
   const authToken = localStorage.getItem(socketOptions.authTokenName);
   variables = variables ? JSON.parse(variables) : undefined;
-  const res = await fetch(`${graphQLProtocol}//${graphQLHost}/graphql`, {
+  const currentHostUrl = hostUrl();
+  const res = await fetch(`${currentHostUrl}/graphql`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',

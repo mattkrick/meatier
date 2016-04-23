@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from 'react';
+import uuid from 'node-uuid';
 import EditableContainer from '../../containers/Editable/EditableContainer.js';
 import Notes from '../Notes/Notes';
 import styles from './lane.css';
-import uuid from 'node-uuid';
 
 export default class Lane extends Component {
   static propTypes = {
@@ -27,7 +27,8 @@ export default class Lane extends Component {
       <div className={styles.lane}>
         <div className={styles.header}>
           <div className={styles.delete} onClick={() => deleteLane(laneId)}>x</div>
-          <EditableContainer {...laneProps}
+          <EditableContainer
+            {...laneProps}
             item={lane}
             formKey={`lane${laneId}`}
             updateItem={updateLane}
@@ -36,12 +37,13 @@ export default class Lane extends Component {
             form="laneTitleForm"
           />
           <div className={styles.addNote}>
-            <button onClick={() => addNote({
-              userId,
-              title: `New note ${notes.length}`,
-              id: uuid.v4(),
-              laneId,
-              index: notes.length})}
+            <button
+              onClick={() => addNote({
+                userId,
+                title: `New note ${notes.length}`,
+                id: uuid.v4(),
+                laneId,
+                index: notes.length})}
             >
               Add a note
             </button>

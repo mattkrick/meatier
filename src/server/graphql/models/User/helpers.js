@@ -1,6 +1,5 @@
 import r from '../../../database/rethinkdriver';
 import jwt from 'jsonwebtoken';
-import {jwtSecret} from '../../../secrets';
 import crypto from 'crypto';
 
 export const getUserByEmail = async email => {
@@ -9,8 +8,9 @@ export const getUserByEmail = async email => {
 };
 
 export const signJwt = ({id}) => {
+  const secret = process.env.JWT_SECRET || 'topsecret';
   // sync https://github.com/auth0/node-jsonwebtoken/issues/111
-  return jwt.sign({id}, jwtSecret, {expiresIn: '7d'});
+  return jwt.sign({id}, secret, {expiresIn: '7d'});
 };
 
 /* if login fails with 1 strategy, suggest another*/
