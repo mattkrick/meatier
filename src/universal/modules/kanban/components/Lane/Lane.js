@@ -33,7 +33,7 @@ export default class Lane extends Component {
             formKey={`lane${laneId}`}
             updateItem={updateLane}
             initialValues={lane}
-            fields={["title"]}
+            fields={['title']}
             form="laneTitleForm"
           />
           <div className={styles.addNote}>

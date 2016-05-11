@@ -22,15 +22,15 @@ const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(s
 
 const babelQuery = {
   plugins: [
-    ["transform-decorators-legacy"],
-    ["react-transform", {
+    ['transform-decorators-legacy'],
+    ['react-transform', {
       transforms: [{
-        transform: "react-transform-hmr",
-        imports: ["react"],
-        locals: ["module"]
+        transform: 'react-transform-hmr',
+        imports: ['react'],
+        locals: ['module']
       }, {
-        transform: "react-transform-catch-errors",
-        imports: ["react", "redbox-react"]
+        transform: 'react-transform-catch-errors',
+        imports: ['react', 'redbox-react']
       }]
     }]
   ]
@@ -55,9 +55,9 @@ export default {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
-      "__CLIENT__": true,
-      "__PRODUCTION__": false,
-      "process.env.NODE_ENV": JSON.stringify('development')
+      '__CLIENT__': true,
+      '__PRODUCTION__': false,
+      'process.env.NODE_ENV': JSON.stringify('development')
     }),
     new webpack.EnvironmentPlugin([
       'PROTOCOL',
@@ -65,7 +65,6 @@ export default {
       'PORT'
     ]),
     new HappyPack({
-      // id: 'js',
       loaders: ['babel'],
       threads: 4
     })

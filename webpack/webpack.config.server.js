@@ -12,8 +12,7 @@ const prefetches = [
   'react-dnd-html5-backend/lib/index.js',
   'react-dnd/lib/index.js',
   'joi/lib/index.js',
-  'redux-form/lib/index.js',
-  'material-ui/lib/raised-button.js'
+  'redux-form/lib/index.js'
 ];
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
 

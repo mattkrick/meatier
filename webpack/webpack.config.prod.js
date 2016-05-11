@@ -108,7 +108,6 @@ export default {
       {
         test: /\.js$/,
         loader: 'happypack/loader',
-        // loader: 'babel',
         include: clientInclude
       }
     ]

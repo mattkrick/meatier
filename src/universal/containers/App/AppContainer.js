@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import socketOptions from 'universal/utils/socketOptions';
 import loginWithToken from '../../decorators/loginWithToken/loginWithToken';
 import {ensureState} from 'redux-optimistic-ui';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 injectTapEventPlugin();
 @connect(mapStateToProps)
@@ -16,7 +18,11 @@ export default class AppContainer extends Component {
   };
 
   render() {
-    return <App {...this.props}/>;
+    return (
+      <MuiThemeProvider muiTheme={getMuiTheme()}>
+        <App {...this.props}/>
+      </MuiThemeProvider>
+    );
   }
 }
 

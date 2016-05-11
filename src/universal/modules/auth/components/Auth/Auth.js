@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import TextField from 'material-ui/lib/text-field';
-import RaisedButton from 'material-ui/lib/raised-button';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 import styles from './Auth.css';
 import {Link} from 'react-router';
 import {loginUser, signupUser, oauthLogin} from '../../ducks/auth';
@@ -59,7 +59,7 @@ export default class Auth extends Component {
           />
 
           {isLogin ?
-            <Link to={{pathname: "/login/lost-password", query: {e: email.value}}} className={styles.lostPassword}>
+            <Link to={{pathname: '/login/lost-password', query: {e: email.value}}} className={styles.lostPassword}>
               Forgot your password?
             </Link> : null}
 

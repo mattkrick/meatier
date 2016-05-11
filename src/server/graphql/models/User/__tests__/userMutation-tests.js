@@ -75,7 +75,7 @@ test('createUser:caseInsensitive', async t => {
   const {user: {id, email}} = actual.data.newUser;
   await r.table('users').get(id);
   t.falsy(actual.errors, (actual.errors || []).map(error => error.stack));
-  t.is(email, "createuser:caseinsensitive@createuser:caseinsensitive");
+  t.is(email, 'createuser:caseinsensitive@createuser:caseinsensitive');
 });
 
 test('createUser:success', async t => {
@@ -138,7 +138,7 @@ test('createUser:alreadyexists', async t => {
       newUser: {
         user: {
           id,
-          email: "createuser:alreadyexists@createuser:alreadyexists",
+          email: 'createuser:alreadyexists@createuser:alreadyexists',
           createdAt,
           updatedAt: null,
           strategies: {
@@ -180,7 +180,7 @@ test('createUser:emailexistsdifferentpass', async t => {
     },
     errors: [
       {
-        message: "{\"_error\":\"Cannot create account\",\"email\":\"Email already exists\"}",
+        message: '{"_error":"Cannot create account","email":"Email already exists"}',
         originalError: {}
       }
     ]
@@ -206,7 +206,7 @@ test('emailPasswordReset:success', async t => {
   t.plan(1);
   await graphql(Schema, createQuery);
   await graphql(Schema, query, null, {});
-  const dbUser = await r.table('users').getAll("emailpasswordreset:success@emailpasswordreset:success", {index: 'email'});
+  const dbUser = await r.table('users').getAll('emailpasswordreset:success@emailpasswordreset:success', {index: 'email'});
   const {resetToken} = dbUser[0].strategies.local;
   t.truthy(resetToken);
 });

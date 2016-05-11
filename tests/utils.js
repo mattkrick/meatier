@@ -15,10 +15,10 @@ export const same = (t, actual, expected, message) => {
     ${message}
 
     Actual:
-    ${JSON.stringify(actual, null, 2).split("\n").join("\n    ")}
+    ${JSON.stringify(actual, null, 2).split('\n').join('\n    ')}
 
     Expected:
-    ${JSON.stringify(expected, null, 2).split("\n").join("\n    ")}
+    ${JSON.stringify(expected, null, 2).split('\n').join('\n    ')}
 
   `);
 };

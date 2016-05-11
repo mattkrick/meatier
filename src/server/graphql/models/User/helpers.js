@@ -31,5 +31,5 @@ export const makeSecretToken = (userId, minutesToExpire) => {
     id: userId,
     sec: crypto.randomBytes(8).toString('base64'),
     exp: Date.now() + 1000 * 60 * minutesToExpire
-  })).toString("base64");
+  })).toString('base64');
 };

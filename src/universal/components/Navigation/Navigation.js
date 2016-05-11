@@ -1,6 +1,6 @@
-import FlatButton from 'material-ui/lib/flat-button';
-import RaisedButton from 'material-ui/lib/raised-button';
-import Paper from 'material-ui/lib/paper';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
 import React, {PropTypes, Component} from 'react';
 import styles from './Navigation.css';
 import {Link} from 'react-router';
