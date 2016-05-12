@@ -44,7 +44,7 @@
     "concurrently": "2.0.0",
     "css-loader": "0.23.1",
     "eslint": "2.9.0",
-    "eslint-config-xo-meatier": "0.2.0",
+    "eslint-config-xo-meatier": "0.2.2",
     "eslint-config-xo-react": "0.7.0",
     "eslint-plugin-babel": "3.2.0",
     "eslint-plugin-react": "5.1.1",
@@ -117,10 +117,6 @@
     "socketcluster-client": "4.3.17"
   },
   "xo": {
-    "extends": "xo-meatier",
-    "rules": {
-      "import-order/import-order": 0,
-      "xo/filename-case": [0, {"case": "pascalCase"}]
-    }
+    "extends": "xo-meatier"
   }
 }
