@@ -115,12 +115,5 @@
     "rethinkdbdash": "2.3.6",
     "socketcluster": "4.6.1",
     "socketcluster-client": "4.3.17"
-  },
-  "xo": {
-    "extends": "xo-meatier",
-    "rules": {
-      "import-order/import-order": 0,
-      "xo/filename-case": [0, {"case": "pascalCase"}]
-    }
   }
 }
