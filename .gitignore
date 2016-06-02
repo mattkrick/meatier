@@ -1,4 +1,5 @@
 .DS_Store
+.happypack
 node_modules
 npm-debug.log
 build
