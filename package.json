@@ -52,6 +52,7 @@
     "fake-style-loader": "1.0.1",
     "file-loader": "0.8.5",
     "happypack": "2.1.0",
+    "immutable-devtools": "0.0.7",
     "json-loader": "0.5.4",
     "null-loader": "0.1.1",
     "postcss-loader": "0.9.1",

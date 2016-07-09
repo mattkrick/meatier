@@ -5,6 +5,9 @@ import {Map as iMap, fromJS} from 'immutable';
 import makeStore from './makeStore';
 import Root from './Root';
 
+// load immutable-devtools in development
+if (!__PRODUCTION__) require('immutable-devtools')(require('immutable'))
+
 const {auth, routing, form} = window.__INITIAL_STATE__;
 
 // form & routing are currently regular JS objects. This may change in the future
