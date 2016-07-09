@@ -2,14 +2,11 @@ import React, {PropTypes, Component} from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import styles from './ResetPassword.css';
-import {reduxForm} from 'redux-form';
-import Joi from 'joi';
+import meatierForm from 'universal/decorators/meatierForm/meatierForm'
 import {authSchemaPassword} from '../../schemas/auth';
 import {resetPassword} from '../../ducks/auth';
-import {parsedJoiErrors} from 'universal/utils/schema';
-import {getFormState} from 'universal/redux/helpers';
 
-@reduxForm({form: 'resetPasswordForm', fields: ['password'], validate, getFormState})
+@meatierForm({form: 'resetPasswordForm', fields: ['password'], schema: authSchemaPassword})
 export default class ResetPassword extends Component {
   static propTypes = {
     fields: PropTypes.any,
@@ -56,9 +53,4 @@ export default class ResetPassword extends Component {
     const outData = Object.assign({}, data, {resetToken});
     return resetPassword(outData, dispatch);
   };
-}
-
-function validate(values) {
-  const results = Joi.validate(values, authSchemaPassword, {abortEarly: false});
-  return parsedJoiErrors(results.error);
 }
