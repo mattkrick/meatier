@@ -3,8 +3,7 @@ import LandingContainer from 'universal/modules/landing/containers/Landing/Landi
 export default {
   path: '*',
   component: LandingContainer,
-  getIndexRoute: async (location, cb) => {
-    const component = await System.import('universal/components/NotFound/NotFound');
-    cb(null, {component});
+  indexRoute: {
+    component: require('react-router!universal/components/NotFound/NotFound')
   }
 };

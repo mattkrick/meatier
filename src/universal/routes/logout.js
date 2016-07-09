@@ -1,7 +1,4 @@
 export default {
   path: 'logout',
-  getComponent: async (location, cb) => {
-    const component = await System.import('universal/modules/auth/components/Logout/Logout');
-    cb(null, component);
-  }
+  component: require('react-router!universal/modules/auth/components/Logout/Logout')
 };

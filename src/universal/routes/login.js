@@ -6,41 +6,26 @@ export default store => {
   return {
     onEnter: requireNoAuth(store),
     path: 'login',
-    getIndexRoute: async (location, cb) => {
-      const component = await System.import('universal/modules/auth/containers/Auth/AuthContainer');
-      cb(null, {component});
+    indexRoute: {
+      component: require('react-router!universal/modules/auth/containers/Auth/AuthContainer')
     },
-    getChildRoutes: (location, cb) => {
-      cb(null, [
-        {
-          path: 'lost-password',
-          getComponent: async (location, cb) => {
-            const component = await System.import('universal/modules/auth/components/LostPassword/LostPassword');
-            cb(null, component);
-          }
-        },
-        {
-          path: 'reset-email-sent',
-          getComponent: async (location, cb) => {
-            const component = await System.import('universal/modules/auth/components/ResetEmailSent/ResetEmailSent');
-            cb(null, component);
-          }
-        },
-        {
-          path: 'reset-password/:resetToken',
-          getComponent: async (location, cb) => {
-            const component = await System.import('universal/modules/auth/components/ResetPassword/ResetPassword');
-            cb(null, component);
-          }
-        },
-        {
-          path: 'reset-password-success',
-          getComponent: async (location, cb) => {
-            const component = await System.import('universal/modules/auth/components/ResetPasswordSuccess/ResetPasswordSuccess');
-            cb(null, component);
-          }
-        }
-      ]);
-    }
+    childRoutes: [
+      {
+        path: 'lost-password',
+        component: require('react-router!universal/modules/auth/components/LostPassword/LostPassword')
+      },
+      {
+        path: 'reset-email-sent',
+        component: require('react-router!universal/modules/auth/components/ResetEmailSent/ResetEmailSent')
+      },
+      {
+        path: 'reset-password/:resetToken',
+        component: require('react-router!universal/modules/auth/components/ResetPassword/ResetPassword')
+      },
+      {
+        path: 'reset-password-success',
+        component: require('react-router!universal/modules/auth/components/ResetPasswordSuccess/ResetPasswordSuccess')
+      }
+    ]
   };
 };
