@@ -2,14 +2,11 @@ import React, {PropTypes, Component} from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import styles from './LostPassword.css';
-import {reduxForm} from 'redux-form';
-import Joi from 'joi';
+import meatierForm from 'universal/decorators/meatierForm/meatierForm'
 import {emailPasswordReset} from '../../ducks/auth';
 import {authSchemaEmail} from '../../schemas/auth';
-import {parsedJoiErrors} from 'universal/utils/schema';
-import {getFormState} from 'universal/redux/helpers';
 
-@reduxForm({form: 'lostPasswordForm', fields: ['email'], validate, getFormState})
+@meatierForm({form: 'lostPasswordForm', fields: ['email'], schema: authSchemaEmail})
 export default class LostPassword extends Component {
   static propTypes = {
     fields: PropTypes.object,
@@ -58,9 +55,4 @@ export default class LostPassword extends Component {
       </div>
     );
   }
-}
-
-function validate(values) {
-  const results = Joi.validate(values, authSchemaEmail, {abortEarly: false});
-  return parsedJoiErrors(results.error);
 }
