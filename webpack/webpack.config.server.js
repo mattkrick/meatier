@@ -31,7 +31,7 @@ export default {
     chunkFilename: '[name]_[chunkhash].js',
     filename: '[name].js',
     libraryTarget: 'commonjs2',
-    publicPath: BASENAME + '/static/'
+    publicPath: `${BASENAME}/static/`
   },
   // ignore anything that throws warnings & doesn't affect the view
   externals: ['isomorphic-fetch', 'es6-promisify', 'socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],

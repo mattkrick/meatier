@@ -28,7 +28,7 @@ export default class Html extends Component {
       <html>
         <head>
           <meta charSet="utf-8"/>
-          {PROD && <link rel="stylesheet" href={BASENAME + '/static/prerender.css'} type="text/css"/>}
+          {PROD && <link rel="stylesheet" href={`${BASENAME}/static/prerender.css`} type="text/css"/>}
           <title>{title}</title>
         </head>
         <body>
@@ -36,7 +36,7 @@ export default class Html extends Component {
           {PROD ? <div id="root" dangerouslySetInnerHTML={{__html: root}}></div> : <div id="root"></div>}
           {PROD && <script dangerouslySetInnerHTML={{__html: manifest.text}}/>}
           {PROD && <script src={vendor.js}/>}
-          <script src={PROD ? app.js : BASENAME + '/static/app.js'}/>
+          <script src={PROD ? app.js : `${BASENAME}/static/app.js`}/>
         </body>
       </html>
     );

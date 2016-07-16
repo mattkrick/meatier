@@ -43,15 +43,15 @@ export function run(worker) {
   });
   if (PROD) {
     app.use(compression());
-    app.use(BASENAME + '/static', express.static('build'));
+    app.use(`${BASENAME}/static`, express.static('build'));
   }
 
   // Oauth
-  app.get(BASENAME + '/auth/google', (req, res) => res.redirect(googleAuthUrl));
-  app.get(BASENAME + '/auth/google/callback', googleAuthCallback);
+  app.get(`${BASENAME}/auth/google`, (req, res) => res.redirect(googleAuthUrl));
+  app.get(`${BASENAME}/auth/google/callback`, googleAuthCallback);
 
   // HTTP GraphQL endpoint
-  app.post(BASENAME + '/graphql', jwt({secret: process.env.JWT_SECRET, credentialsRequired: false}), httpGraphQLHandler);
+  app.post(`${BASENAME}/graphql`, jwt({secret: process.env.JWT_SECRET, credentialsRequired: false}), httpGraphQLHandler);
 
   // server-side rendering
   app.get('*', createSSR);

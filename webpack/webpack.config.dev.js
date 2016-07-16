@@ -60,7 +60,7 @@ export default {
     filename: 'app.js',
     chunkFilename: '[name]_[chunkhash].js',
     path: path.join(root, 'build'),
-    publicPath: BASENAME + '/static/'
+    publicPath: `${BASENAME}/static/`
   },
   plugins: [
     ...prefetchPlugins,
