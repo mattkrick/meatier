@@ -6,10 +6,12 @@ export function parseJSON(response) {
 }
 
 export function hostUrl() {
-  const host = process.env.HOST;
-  const protocol = process.env.PROTOCOL;
-  const port = process.env.PORT;
-  return `${protocol}://${host}:${port}`;
+  let origin = 'http://localhost:3000';
+  if (typeof window !== 'undefined') {
+    origin = window && window.location && window.location.origin || origin;
+  }
+  const basename = process.env.BASENAME || '';
+  return origin + basename;
 }
 
 export function postJSON(route, obj) {

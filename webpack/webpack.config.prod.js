@@ -38,6 +38,13 @@ const prefetches = [
 ];
 
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
+const otherPlugins = [];
+const BASENAME = process.env.BASENAME || '';
+if (BASENAME) {
+  otherPlugins.push(new webpack.EnvironmentPlugin([
+    'BASENAME'
+  ]));
+}
 
 export default {
   context: path.join(root, 'src'),
@@ -49,7 +56,7 @@ export default {
     filename: '[name]_[chunkhash].js',
     chunkFilename: '[name]_[chunkhash].js',
     path: path.join(root, 'build'),
-    publicPath: '/static/'
+    publicPath: BASENAME + '/static/'
   },
   resolve: {
     extensions: ['.js'],
@@ -78,11 +85,7 @@ export default {
       '__PRODUCTION__': true,
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    new webpack.EnvironmentPlugin([
-      'PROTOCOL',
-      'HOST',
-      'PORT'
-    ]),
+    ...otherPlugins,
     new HappyPack({
       loaders: ['babel'],
       threads: 4

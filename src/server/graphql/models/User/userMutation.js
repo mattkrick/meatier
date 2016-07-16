@@ -1,7 +1,7 @@
 import r from '../../../database/rethinkdriver';
 import {UserWithAuthToken, GoogleProfile} from './userSchema';
 import {GraphQLEmailType, GraphQLPasswordType} from '../types';
-import {getUserByEmail, signJwt, getAltLoginMessage, makeSecretToken} from './helpers';
+import {getUserByEmail, signJwt, getAltLoginMessage, makeSecretToken, sendVerifyEmail, sendResetPasswordEmail} from './helpers';
 import {errorObj} from '../utils';
 import {GraphQLNonNull, GraphQLBoolean} from 'graphql';
 import validateSecretToken from '../../../../universal/utils/validateSecretToken';
@@ -56,8 +56,7 @@ export default {
         if (!newUser.inserted) {
           throw errorObj({_error: 'Could not create account, please try again'});
         }
-        // TODO send email with verifiedEmailToken via mailgun or whatever
-        console.log('Verify url:', `http://localhost:3000/verify-email/${verifiedEmailToken}`);
+        await sendVerifyEmail(email, verifiedEmailToken);
         const authToken = signJwt({id});
         return {user: userDoc, authToken};
       }
@@ -78,7 +77,7 @@ export default {
       if (!result.replaced) {
         throw errorObj({_error: 'Could not find or update user'});
       }
-      console.log('Reset url:', `http://localhost:3000/login/reset-password/${resetToken}`);
+      await sendResetPasswordEmail(email, resetToken);
       return true;
     }
   },
@@ -135,8 +134,7 @@ export default {
       if (!result.replaced) {
         throw errorObj({_error: 'Could not find or update user'});
       }
-      // TODO send email with new verifiedEmailToken via mailgun or whatever
-      console.log('Verified url:', `http://localhost:3000/login/verify-email/${verifiedEmailToken}`);
+      await sendVerifyEmail(user.email, verifiedEmailToken);
       return true;
     }
   },

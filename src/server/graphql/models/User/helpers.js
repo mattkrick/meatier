@@ -7,6 +7,24 @@ export const getUserByEmail = async email => {
   return users[0];
 };
 
+export function hostUrl() {
+  const PROTOCOL = process.env.PROTOCOL;
+  const HOST = process.env.HOST;
+  const PORT = process.env.PORT;
+  const BASENAME = process.env.BASENAME || '';
+  return `${PROTOCOL}://${HOST}:${PORT}${BASENAME}`;
+}
+
+export const sendVerifyEmail = async (email, verifiedEmailToken) => {
+  // TODO send email with verifiedEmailToken via mailgun or whatever
+  console.log('Verify url:', `${hostUrl()}/verify-email/${verifiedEmailToken}`);
+};
+
+export const sendResetPasswordEmail = async (email, resetToken) => {
+  // TODO send email with resetToken via mailgun or whatever
+  console.log('Reset url:', `${hostUrl()}/login/reset-password/${resetToken}`);
+};
+
 export const signJwt = ({id}) => {
   const secret = process.env.JWT_SECRET || 'topsecret';
   // sync https://github.com/auth0/node-jsonwebtoken/issues/111
