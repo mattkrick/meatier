@@ -19,6 +19,13 @@ const prefetches = [
 ];
 
 const prefetchPlugins = prefetches.map(specifier => new webpack.PrefetchPlugin(specifier));
+const otherPlugins = [];
+const BASENAME = process.env.BASENAME || '';
+if (BASENAME) {
+  otherPlugins.push(new webpack.EnvironmentPlugin([
+    'BASENAME'
+  ]));
+}
 
 const babelQuery = {
   plugins: [
@@ -53,7 +60,7 @@ export default {
     filename: 'app.js',
     chunkFilename: '[name]_[chunkhash].js',
     path: path.join(root, 'build'),
-    publicPath: '/static/'
+    publicPath: `${BASENAME}/static/`
   },
   plugins: [
     ...prefetchPlugins,
@@ -65,11 +72,7 @@ export default {
       '__PRODUCTION__': false,
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    new webpack.EnvironmentPlugin([
-      'PROTOCOL',
-      'HOST',
-      'PORT'
-    ]),
+    ...otherPlugins,
     new HappyPack({
       loaders: ['babel'],
       threads: 4

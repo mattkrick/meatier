@@ -2,7 +2,7 @@ import React, {PropTypes, Component} from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import styles from './LostPassword.css';
-import meatierForm from 'universal/decorators/meatierForm/meatierForm'
+import meatierForm from 'universal/decorators/meatierForm/meatierForm';
 import {emailPasswordReset} from '../../ducks/auth';
 import {authSchemaEmail} from '../../schemas/auth';
 

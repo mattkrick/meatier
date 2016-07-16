@@ -3,6 +3,12 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import cssModulesValues from 'postcss-modules-values';
 import HappyPack from 'happypack';
+import {getDotenv} from '../src/universal/utils/dotenv';
+
+// Import .env and expand variables:
+getDotenv();
+
+const BASENAME = process.env.BASENAME || '';
 
 const root = process.cwd();
 const serverInclude = [path.join(root, 'src', 'server'), path.join(root, 'src', 'universal')];
@@ -25,7 +31,7 @@ export default {
     chunkFilename: '[name]_[chunkhash].js',
     filename: '[name].js',
     libraryTarget: 'commonjs2',
-    publicPath: '/static/'
+    publicPath: `${BASENAME}/static/`
   },
   // ignore anything that throws warnings & doesn't affect the view
   externals: ['isomorphic-fetch', 'es6-promisify', 'socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],

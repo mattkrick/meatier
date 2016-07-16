@@ -3,7 +3,7 @@ import {authSchemaInsert} from '../../schemas/auth';
 import {connect} from 'react-redux';
 import Auth from '../../components/Auth/Auth';
 import {ensureState} from 'redux-optimistic-ui';
-import meatierForm from 'universal/decorators/meatierForm/meatierForm'
+import meatierForm from 'universal/decorators/meatierForm/meatierForm';
 
 // use the same form to retain form values (there's really no difference between login and signup, it's just for show)
 @connect(mapStateToProps)

@@ -2,11 +2,12 @@ import promisify from 'es6-promisify';
 import google from 'googleapis';
 import Schema from '../../rootSchema';
 import {graphql} from 'graphql';
+import {hostUrl} from './helpers';
 
 const OAuth2 = google.auth.OAuth2;
 const oauth = google.oauth2('v2'); // v3 should come out soonish
 
-export const oauth2Client = new OAuth2(process.env.GOOGLE_CLIENTID, process.env.GOOGLE_SECRET, process.env.GOOGLE_CALLBACK);
+export const oauth2Client = new OAuth2(process.env.GOOGLE_CLIENTID, process.env.GOOGLE_SECRET, `${hostUrl()}/auth/google/callback`);
 const getToken = promisify(oauth2Client.getToken.bind(oauth2Client));
 const getUserInfo = promisify(oauth.userinfo.get.bind(oauth.userinfo));
 
