@@ -6,10 +6,11 @@ export function parseJSON(response) {
 }
 
 export function hostUrl() {
-  const host = process.env.HOST;
-  const protocol = process.env.PROTOCOL;
-  const port = process.env.PORT;
-  return `${protocol}://${host}:${port}`;
+  if (typeof window !== 'undefined' && window.location) {
+    const {origin, protocol, host} = window.location; 
+    return origin || `${protocol}//${host}`;
+  }
+  return 'http://localhost:3000';
 }
 
 export function postJSON(route, obj) {
