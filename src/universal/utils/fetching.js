@@ -33,10 +33,13 @@ export function getJSON(route) {
 // }
 
 export const getClientError = error => {
-  if (!error || error.indexOf('{"_error"') === -1) {
-    return {_error: 'Server query error'};
+  if (error) {
+    if (error.indexOf('{"_error"') === -1) {
+      return {_error: 'Server query error'};
+    }
+    return JSON.parse(error);
   }
-  return JSON.parse(error);
+  return null;
 };
 
 export const prepareGraphQLParams = graphParams => {
