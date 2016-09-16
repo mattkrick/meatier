@@ -37,7 +37,11 @@ const babelQuery = {
 };
 
 export default {
-  // devtool: 'source-maps',
+  // devtool: 'source-map',
+  /*
+   When changing developer tool for debugging,
+   be sure to clear happypack cache (rm -r .happypack/) to clear out old source-maps
+  */
   devtool: 'eval',
   context: srcDir,
   entry: {
