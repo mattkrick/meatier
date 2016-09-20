@@ -20,7 +20,7 @@
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js",
     "build:db": "node ./src/server/database/setupDB.babel.js",
     "update:db": "node ./src/server/database/setupDB.babel.js true",
-    "test": "NODE_ENV=testing ava ./src/**/__tests__/**/*.js --verbose",
+    "test": "NODE_ENV=testing ava --verbose",
     "lint": "xo --fix 'src/**/*.js' 'tests/*.js' 'webpack/*.js'",
     "profile": "NODE_ENV=production webpack --config ./webpack/prod.babel.js --profile --json > stats.json"
   },
@@ -28,7 +28,7 @@
   "license": "MIT",
   "devDependencies": {
     "assets-webpack-plugin": "3.4.0",
-    "ava": "0.14.0",
+    "ava": "0.16.0",
     "babel-cli": "6.14.0",
     "babel-core": "6.14.0",
     "babel-eslint": "6.1.2",
@@ -116,6 +116,9 @@
     "socketcluster": "4.6.1",
     "socketcluster-client": "4.3.17",
     "rethinkdbdash": "2.3.23"
+  },
+  "ava": {
+    "require": ["babel-register", "babel-polyfill"]
   },
   "xo": {
     "extends": "xo-meatier"
