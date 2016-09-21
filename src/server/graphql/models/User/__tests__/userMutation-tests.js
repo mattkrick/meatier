@@ -1,7 +1,5 @@
 import test from 'ava';
 import promisify from 'es6-promisify';
-import 'babel-register';
-import 'babel-polyfill';
 import bcrypt from 'bcrypt';
 import {graphql} from 'graphql';
 import Schema from '../../../rootSchema';

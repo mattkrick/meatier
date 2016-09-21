@@ -15,7 +15,7 @@ export default function validateSecretToken(secretToken) {
   let secretTokenObj;
   try {
     secretTokenObj = JSON.parse(secretTokenStr);
-  } catch (e) {
+  } catch (err) {
     return invalidToken;
   }
 

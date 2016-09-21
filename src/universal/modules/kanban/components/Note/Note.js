@@ -49,7 +49,7 @@ const noteTarget = {
     }
     if (sourceProps.laneId === targetProps.laneId) {
       // make dragging a little nicer
-      const targetBoundingRect = findDOMNode(component).getBoundingClientRect();
+      const targetBoundingRect = findDOMNode(component).getBoundingClientRect(); // eslint-disable-line react/no-find-dom-node
       const targetMiddleY = targetBoundingRect.top + targetBoundingRect.height / 2;
       const clientOffsetY = monitor.getClientOffset().y;
       if (sourceProps.index < targetProps.index && clientOffsetY < targetMiddleY) {

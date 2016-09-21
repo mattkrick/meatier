@@ -17,8 +17,10 @@ import requireAuth from 'universal/decorators/requireAuth/requireAuth';
 @DragDropContext(HTML5Backend)
 export default class KanbanContainer extends Component {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
     laneActions: PropTypes.object.isRequired,
     lanes: PropTypes.object.isRequired,
+    socketState: PropTypes.string,
     userId: PropTypes.string.isRequired
   };
 
