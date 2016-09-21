@@ -8,7 +8,7 @@ import {getFormState} from 'universal/redux/helpers';
  * options, and also injects the necessary `getFormState` for `redux-optimistic-ui`.
  */
 export default function meatierForm(options) {
-  const {schema} = options
+  const {schema} = options;
   return reduxForm(Object.assign(
     options,
     {getFormState},
