@@ -69,11 +69,6 @@ export default {
       '__PRODUCTION__': false,
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    new webpack.EnvironmentPlugin([
-      'PROTOCOL',
-      'HOST',
-      'PORT'
-    ]),
     new HappyPack({
       loaders: ['babel'],
       threads: 4
