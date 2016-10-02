@@ -42,7 +42,15 @@ export function run(worker) {
   });
   if (PROD) {
     app.use(compression());
-    app.use('/static', express.static('build'));
+    const serverOnly = ['prerender.js', 'assets.json'];
+    for (let i = serverOnly.length; i--;) {
+      app.get(`/static/${serverOnly[i]}`, (req, res) => res.status(403).send('Access Denied'));
+    }
+    const volatile = ['prerender.css'];
+    for (let i = volatile.length; i--;) {
+      app.use(`/static/${volatile[i]}`, express.static(`build/${volatile[i]}`));
+    }
+    app.use('/static', express.static('build', {maxAge: '1y'}));
   }
 
   // Oauth
