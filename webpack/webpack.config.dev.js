@@ -37,12 +37,12 @@ const babelQuery = {
 };
 
 export default {
-  // devtool: 'source-map',
+  devtool: 'source-map',
   /*
    When changing developer tool for debugging,
    be sure to clear happypack cache (rm -r .happypack/) to clear out old source-maps
   */
-  devtool: 'eval',
+  // devtool: 'eval',
   context: srcDir,
   entry: {
     app: [
@@ -75,20 +75,26 @@ export default {
       'PORT'
     ]),
     new HappyPack({
-      loaders: ['babel'],
+      loaders: ['babel-loader'],
       threads: 4
+    }),
+    new webpack.LoaderOptionsPlugin({
+      test: /\.css$/, // may apply this only for some modules
+      options: {
+        postcss: [cssModulesValues]
+      }
     })
   ],
   resolve: {
     extensions: ['.js'],
-    modules: [srcDir, 'node_modules']
+    modules: [path.join(root, 'src'), path.join(root, 'node_modules')]
   },
   // used for joi validation on client
   node: {
     dns: 'mock',
     net: 'mock'
   },
-  postcss: [cssModulesValues],
+  // postcss: [cssModulesValues],
   module: {
     loaders: [
       {test: /\.json$/, loader: 'json-loader'},
@@ -97,12 +103,12 @@ export default {
       {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
       {
         test: /\.css$/,
-        loader: 'style!css',
+        loader: 'style-loader!css-loader',
         include: globalCSS
       },
       {
         test: /\.css$/,
-        loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
+        loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss-loader',
         exclude: globalCSS,
         include: clientInclude
       },

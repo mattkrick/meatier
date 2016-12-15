@@ -53,14 +53,14 @@ export default {
   },
   resolve: {
     extensions: ['.js'],
-    modules: [path.join(root, 'src'), 'node_modules'],
+    modules: [path.join(root, 'src'), path.join(root, 'node_modules')],
     unsafeCache: true
   },
   node: {
     dns: 'mock',
     net: 'mock'
   },
-  postcss: [cssModulesValues],
+  // postcss: [cssModulesValues],
   plugins: [
     ...prefetchPlugins,
     new webpack.NamedModulesPlugin(),
@@ -84,8 +84,14 @@ export default {
       'PORT'
     ]),
     new HappyPack({
-      loaders: ['babel'],
+      loaders: ['babel-loader'],
       threads: 4
+    }),
+    new webpack.LoaderOptionsPlugin({
+      test: /\.css$/, // may apply this only for some modules
+      options: {
+        postcss: [cssModulesValues]
+      }
     })
   ],
   module: {
@@ -96,13 +102,13 @@ export default {
       {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
       {
         test: /\.css$/,
-        loader: 'fake-style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
+        loader: 'fake-style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss-loader',
         include: clientInclude,
         exclude: globalCSS
       },
       {
         test: /\.css$/,
-        loader: 'fake-style!css',
+        loader: 'fake-style-loader!css-loader',
         include: globalCSS
       },
       {
