@@ -6,7 +6,8 @@ const anyErrors = {
 };
 
 export const authSchemaInsert = Joi.object().keys({
-  email: Joi.string().email().trim().lowercase().max(200).label('Email').required().options({
+  // email: Joi.string().email().trim().lowercase().max(200).label('Email').required().options({
+  email: Joi.string().email().options({
     language: {
       any: anyErrors,
       string: {

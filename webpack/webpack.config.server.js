@@ -29,10 +29,10 @@ export default {
   },
   // ignore anything that throws warnings & doesn't affect the view
   externals: ['isomorphic-fetch', 'es6-promisify', 'socketcluster-client', 'joi', 'hoek', 'topo', 'isemail', 'moment'],
-  postcss: [cssModulesValues],
+
   resolve: {
     extensions: ['.js'],
-    modules: [path.join(root, 'src'), 'node_modules']
+    modules: [path.join(root, 'src'), path.join(root, 'node_modules')]
   },
   plugins: [...prefetchPlugins,
     new webpack.NoErrorsPlugin(),
@@ -45,8 +45,14 @@ export default {
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new HappyPack({
-      loaders: ['babel'],
+      loaders: ['babel-loader'],
       threads: 4
+    }),
+    new webpack.LoaderOptionsPlugin({
+      test: /\.css$/, // may apply this only for some modules
+      options: {
+        postcss: [cssModulesValues]
+      }
     })
   ],
   module: {
@@ -57,13 +63,16 @@ export default {
       {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('fake-style', 'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'),
+        loader: ExtractTextPlugin.extract({
+          fallbackLoader: 'fake-style-loader',
+          loader: 'css-loader?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss-loader'
+        }),
         include: serverInclude,
         exclude: globalCSS
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('fake-style', 'css'),
+        loader: ExtractTextPlugin.extract({fallbackLoader: 'fake-style-loader', loader: 'css-loader'}),
         include: globalCSS
       },
       {
