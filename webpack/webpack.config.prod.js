@@ -58,14 +58,15 @@ export default {
   },
   node: {
     dns: 'mock',
-    net: 'mock'
+    net: 'mock',
+    process: false,
   },
   postcss: [cssModulesValues],
   plugins: [
     ...prefetchPlugins,
     new webpack.NamedModulesPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'manifest'],
+      names: ['client/process.js', 'vendor', 'manifest'],
       minChunks: Infinity
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
@@ -78,11 +79,10 @@ export default {
       '__PRODUCTION__': true,
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    new webpack.EnvironmentPlugin([
-      'PROTOCOL',
-      'HOST',
-      'PORT'
-    ]),
+    new webpack.ProvidePlugin({
+      // inject certain process.env variables provided by the server
+      process: 'client/process.js'
+    }),
     new HappyPack({
       loaders: ['babel'],
       threads: 4

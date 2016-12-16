@@ -53,6 +53,7 @@
     "file-loader": "0.8.5",
     "happypack": "2.1.0",
     "json-loader": "0.5.4",
+    "node-libs-browser": "1.0.0",
     "null-loader": "0.1.1",
     "postcss-loader": "0.9.1",
     "postcss-modules-values": "1.1.2",

@@ -10,6 +10,7 @@ import {join, basename} from 'path';
 import promisify from 'es6-promisify';
 import thunkMiddleware from 'redux-thunk';
 import {Map as iMap} from 'immutable';
+import clientEnv from './clientEnv';
 
 // https://github.com/systemjs/systemjs/issues/953
 
@@ -21,6 +22,7 @@ function renderApp(res, store, assets, renderProps) {
     title="meatier"
     store={store}
     assets={assets}
+    env={clientEnv}
     renderProps={renderProps}
     />);
   res.write('<!DOCTYPE html>');

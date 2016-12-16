@@ -69,11 +69,10 @@ export default {
       '__PRODUCTION__': false,
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    new webpack.EnvironmentPlugin([
-      'PROTOCOL',
-      'HOST',
-      'PORT'
-    ]),
+    new webpack.ProvidePlugin({
+      // inject certain process.env variables provided by the server
+      process: 'client/process.js' 
+    }),
     new HappyPack({
       loaders: ['babel'],
       threads: 4
@@ -83,10 +82,12 @@ export default {
     extensions: ['.js'],
     modules: [srcDir, 'node_modules']
   },
-  // used for joi validation on client
   node: {
+    // used for joi validation on client
     dns: 'mock',
-    net: 'mock'
+    net: 'mock',
+    // we're controlling the process polyfill with environment variables passed from the server
+    process: false,
   },
   postcss: [cssModulesValues],
   module: {
