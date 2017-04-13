@@ -36,7 +36,7 @@ Some of my chief complaints with Meteor
 | Routing           | [FlowRouter](https://github.com/kadirahq/flow-router)           | [react-router-redux](https://github.com/reactjs/react-router-redux) | stick the route in the state, react-router SSR, async routes        |
 | Server            | Node 0.10.41                                                    | Node 5                                                              | Faster, maintained, not a dinosaur...                               |                             |
  
-##Installation
+## Installation
 - `brew install rethinkdb`
 - make sure you are using webpack@2.x (not a v1 installed globally)
 - `rethinkdb` (in second terminal window)
@@ -45,14 +45,14 @@ Some of my chief complaints with Meteor
 - `npm install`
 - `npm run quickstart`
 
-##Client-side development
+## Client-side development
 - `npm start`
 - http://localhost:3000
 
 Rebuilds the client code in-memory & uses hot module reload so you can develop super fast!
 On my 2013 MBA an initial build takes about 8 seconds and updates usually take 800ms
 
-##Server-side development
+## Server-side development
 - `npm run prod`
 - http://localhost:3000
 - If you edit any client or universal files, run `npm run bs` to rebuild & serve the bundle
@@ -60,35 +60,35 @@ On my 2013 MBA an initial build takes about 8 seconds and updates usually take 8
 This mode is great because you can make changes to the server ***without having to recompile the client code***
 That means you only wait for the server to restart! GAME CHANGER!
 
-##Database development
+## Database development
 - http://localhost:8080 for RethinkDB
 - All tables are managed in `./src/server/setupDB.js`. Just add your tables & indices to that file and rerun
 - A standard ORM would check for tables & ensure indices at least once per build, doing it this way keeps your build times down
 - http://localhost:3000/graphql for testing out new queries/mutations
 
-##Webpack configs
-####Development config
+## Webpack configs
+#### Development config
 When the page is opened, a basic HTML layout is sent to the client along with a stringified redux store and a request for the common chunk of the JS.
 The client then injects the redux store & router to create the page.
 The redux devtools & logger are also loaded so you track your every state-changing action. 
 The routes are loaded async, check your networks tab in chrome devtools and you'll see funny js files load now & again. 
 If this isn't crazy amazing to you, then go away.
 
-####Production config
+#### Production config
 Builds the website & saves it to the `build` folder.
 Maps the styles to the components, but uses the prerendered CSS from the server config (below)
 Separates the `vendor` packages and the `app` packages for a super quick, cachable second visit.
 Creates a webpack manifest to enable longterm caching (eg can push new vendor.js without pushing a new app.js)
 Optimizes the number of chunks, sometimes it's better to have the modules of 2 routes in the same chunk if they're small
 
-####Server config
+#### Server config
 A webpack config builds the entire contents of the routes on the server side.
 This is required because node doesn't know how to require `.css`.
 When a request is sent to the server, react-router matches the url to the correct route & sends it to the client.
 Any browser dependency is ignored & uglified away.
 To test this, disable javascript in the browser. You'll see the site & css loads without a FOUC.
 
-##How it works
+## How it works
 When the page loads, it checks your localStorage for `Meatier.token` & will automatically log you in if the token is legit. 
 If not, just head to the 'Sign up' page. The 'Sign up' page uses redux-form, which handles all errors, schema validation,
 and submissions. Your credentials are set as variables in a GraphQL mutation & sent to the GraphQL endpoint and a user document (similar to Meteor's) and authToken is returned to your state.
@@ -110,26 +110,26 @@ The kanban lane titles & notes are really basic, you click them & they turn into
 The notes can be dragged from lane to lane. This is to showcase a local state change that doesn't affect the persisted state.
 When the note is dropped to its new location, the change is persisted. 
 
-##Tutorials (not for beginners...but then again, neither is meatier)
+## Tutorials (not for beginners...but then again, neither is meatier)
  - [A production-ready realtime SaaS with webpack](https://medium.com/@matt.krick/a-production-ready-realtime-saas-with-webpack-7b11ba2fa5b0#.bifdf5iz8)
  - [GraphQL Field Guide to Auth](https://medium.com/@matt.krick/graphql-field-guide-to-auth-ead84f657ab#.f3tg2sf3d)
 
-##Similar Projects
+## Similar Projects
  - https://github.com/erikras/react-redux-universal-hot-example (Really nice, but no auth or DB)
  - https://github.com/kriasoft/react-starter-kit (nice, I borrowed their layout, but no sockets, no DB)
  - https://github.com/GordyD/3ree (uses RethinkDB, but no optimistic UI)
  - http://survivejs.com/ (A nice alt-flux & react tutorial for a kanban)
 
-##In Action
+## In Action
 I don't know of any place that hosts RethinkDB for free...so here's a gif. 
 ![Meatier](http://i.imgur.com/B3IErZr.gif)
 
-##Contributing
+## Contributing
  - Pull requests welcomed!
  - Use the gitter for any questions
  - No donations necessary (but if you know of any jobs that'll let me move back to San Diego, let me know :wink:)
 
-##Changelog
+## Changelog
 - 0.10
  - Use the redux devtools chrome extension 
  - Update just about all the deps
@@ -144,5 +144,5 @@ I don't know of any place that hosts RethinkDB for free...so here's a gif.
  - Add graphiql (http://localhost:3000/graphql) as a component & pattern to create an admin site
  - Break out auth, landing page, kanban page, and admin into 4 separate modules in the folder hierarchy
   
-##License
+## License
 MIT
